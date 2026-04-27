@@ -1,0 +1,10 @@
+name = "TutorialTools"
+uuid = "5f7a4451-2f7d-477b-8022-3bb7ed7b80c0"
+version = "0.1.0"
+authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
+
+[compat]
+julia = "1.12"
+
+[workspace]
+projects = ["test"]

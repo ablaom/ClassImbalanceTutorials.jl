@@ -1,0 +1,5 @@
+[compat]
+julia = "1.12"
+
+[workspace]
+projects = ["test", "docs", "TutorialTools", "tutorials/thyroid"]
