@@ -33,7 +33,7 @@ jobs:
             root_manifest:
               - Manifest.toml
             tutorials:
-              - docs/src/tutorials/*
+              - docs/src/tutorials/**
 
       - name: Identify, Test, and Generate Tutorial Markdown
         shell: julia --color=yes {0}
