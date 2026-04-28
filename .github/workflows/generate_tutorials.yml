@@ -17,7 +17,7 @@ jobs:
       - name: Set up Julia
         uses: julia-actions/setup-julia@v3
         with:
-          version: 'min' # smallest minor consistent with /Project.toml [compat]
+          version: '1.12.5' # needs to match version in /Manifest.toml
 
       - name: Enable Caching
         uses: julia-actions/cache@v3
