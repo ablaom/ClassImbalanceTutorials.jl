@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fecth-depth: 0 # get entire commit history, needed for changed-files to work
 
       - name: Set up Julia and build the package environment
         uses: julia-actions/setup-julia@v3
