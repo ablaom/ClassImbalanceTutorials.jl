@@ -20,10 +20,10 @@ jobs:
           version: 'min' # smallest minor consistent with /Project.toml [compat]
 
       - name: Enable Caching
-        uses: julia-actions/cache@3
+        uses: julia-actions/cache@v3
 
       - name: Instantiate/Build Julia Package Environment
-        uses: julia-actions/buildpkg@v1
+        uses: julia-actions/julia-buildpkg@v1
         
       - name: Get relevent changed files
         id: changed-files
