@@ -12,14 +12,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fecth-depth: 0 # get entire commit history, needed for changed-files to work
+          fetch-depth: 0 # get entire commit history, needed for changed-files to work
 
-      - name: Set up Julia and build the package environment
+      - name: Set up Julia
         uses: julia-actions/setup-julia@v3
         with:
-          version: 'min' # smallest minor consistent with /Project.toml [compat]
-        uses: julia-actions/cache@3
-        uses: julia-actions/buildpkg@v1
+          version: '1.12.5'
+
+      - name: Enable Caching
+        uses: julia-actions/cache@v3
+
+      - name: Instantiate/Build Julia Package Environment
+        uses: julia-actions/julia-buildpkg@v1
         
       - name: Get relevent changed files
         id: changed-files
@@ -27,9 +31,9 @@ jobs:
         with:
           files_yaml: |
             root_manifest:
-              - Manifest.toml
+              - Manifest*.toml
             tutorials:
-              - docs/src/tutorials/*
+              - docs/src/tutorials/**
 
       - name: Identify, Test, and Generate Tutorial Markdown
         shell: julia --color=yes {0}
