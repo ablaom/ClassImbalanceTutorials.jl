@@ -32,12 +32,12 @@ jobs:
       - name: Enable Caching
         uses: julia-actions/cache@v3
 
-      - name: Force Re-resolve
-        run: julia --project -e 'using Pkg; Pkg.resolve(); Pkg.instantiate()'        
-
       - name: Julia Package Environment - Instantiate and Build
         uses: julia-actions/julia-buildpkg@v1
         
+      - name: Force Re-resolve
+        run: julia --project -e 'using Pkg; Pkg.resolve(); Pkg.instantiate()'        
+
       - name: Identify, Test, and Generate Tutorial Markdown
         shell: julia --color=yes {0}
         run: |
