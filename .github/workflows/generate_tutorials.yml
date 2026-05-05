@@ -72,6 +72,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "add newly generated tutorial markdown"
           branch: auto-update-tutorials
+          base: master
           title: "Automated Update to Tutorial Markdown"
           body: |
             This PR was automatically generated to update the tutorial markdown files
