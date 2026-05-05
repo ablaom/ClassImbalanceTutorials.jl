@@ -51,7 +51,7 @@ jobs:
           tutorial_root = joinpath("docs", "src", "tutorials")
 
           # Construct a list of dirs for tutorials needing regeneration
-          tutorial_dirs = root_manifest_changed ? 
+          tutorial_dirs = workspace_changed ? 
               TutorialTools.dirs_containing(root=tutorial_root) : # all subdirs of root
               TutorialTools.dirs_containing(changed_tutorial_files; root=tutorial_root)
 
