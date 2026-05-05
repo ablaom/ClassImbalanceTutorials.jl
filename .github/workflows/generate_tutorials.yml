@@ -63,9 +63,5 @@ jobs:
               exit(1)
           else 
               @info "Successfully re-generated these markdown files:\n "*
-                  "$(join(markdownfiles, \"\n\")"
-          else
-              @info "Problems encountered testing or regenerating some tutorials that "*
-                  "require regeneration. "
-              exit(1)
+                  "$markdown_files "
           end 
