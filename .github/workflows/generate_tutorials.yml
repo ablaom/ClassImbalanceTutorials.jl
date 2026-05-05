@@ -19,8 +19,8 @@ jobs:
         uses: tj-actions/changed-files@v44
         with:
           files_yaml: |
-            root_manifest:
-              - Manifest*.toml
+            projects:
+              - **/Project.toml
             tutorials:
               - docs/src/tutorials/**
 
@@ -35,9 +35,6 @@ jobs:
       - name: Julia Package Environment - Instantiate and Build
         uses: julia-actions/julia-buildpkg@v1
         
-      - name: Force Re-resolve
-        run: julia --project -e 'using Pkg; Pkg.resolve(); Pkg.instantiate()'        
-
       - name: Identify, Test, and Generate Tutorial Markdown
         shell: julia --color=yes {0}
         run: |
@@ -45,8 +42,8 @@ jobs:
           Pkg.activate("TutorialTools")
           import TutorialTools
           
-          root_manifest_changed =
-              "${{ steps.changed-files.outputs.root_manifest_any_changed }}" == "true"
+          workspace_changed =
+              "${{ steps.changed-files.outputs.projects_any_changed }}" == "true"
           changed_tutorial_files =
               split("${{ steps.changed-files.outputs.tutorials_all_changed_files }}", " ")
 
