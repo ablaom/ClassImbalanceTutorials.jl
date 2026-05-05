@@ -1,4 +1,4 @@
-name: Test Tutorials
+name: Tutorials - Test and Generate Markdown
 env:
   ACTIONS_STEP_DEBUG: true
 on:
@@ -14,6 +14,16 @@ jobs:
         with:
           fetch-depth: 0 # get entire commit history, needed for changed-files to work
 
+      - name: Get relevent changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files_yaml: |
+            projects:
+              - "**/Project.toml"
+            tutorials:
+              - "docs/src/tutorials/**"
+
       - name: Set up Julia
         uses: julia-actions/setup-julia@v3
         with:
@@ -22,19 +32,9 @@ jobs:
       - name: Enable Caching
         uses: julia-actions/cache@v3
 
-      - name: Instantiate/Build Julia Package Environment
+      - name: Julia Package Environment - Instantiate and Build
         uses: julia-actions/julia-buildpkg@v1
         
-      - name: Get relevent changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v44
-        with:
-          files_yaml: |
-            root_manifest:
-              - Manifest*.toml
-            tutorials:
-              - docs/src/tutorials/**
-
       - name: Identify, Test, and Generate Tutorial Markdown
         shell: julia --color=yes {0}
         run: |
@@ -42,8 +42,8 @@ jobs:
           Pkg.activate("TutorialTools")
           import TutorialTools
           
-          root_manifest_changed =
-              "${{ steps.changed-files.outputs.root_manifest_any_changed }}" == "true"
+          workspace_changed =
+              "${{ steps.changed-files.outputs.projects_any_changed }}" == "true"
           changed_tutorial_files =
               split("${{ steps.changed-files.outputs.tutorials_all_changed_files }}", " ")
 
@@ -51,18 +51,17 @@ jobs:
           tutorial_root = joinpath("docs", "src", "tutorials")
 
           # Construct a list of dirs for tutorials needing regeneration
-          tutorial_dirs = root_manifest_changed ? 
+          tutorial_dirs = workspace_changed ? 
               TutorialTools.dirs_containing(root=tutorial_root) : # all subdirs of root
               TutorialTools.dirs_containing(changed_tutorial_files; root=tutorial_root)
 
-          # Test/generate the tutorials:
-          success = TutorialTools.generate(tutorial_dirs; tests=true)
+          # Test and generate the tutorials:
+          markdown_files = TutorialTools.generate(tutorial_dirs, "docs"; tests=true)
 
-          if success
-              @info "All tutorials requiring regeneration have been successfully tested "*
-                  "and regenerated. "
-          else
-              @info "Problems encountered testing or regenerating some tutorials that "*
-                  "require regeneration. "
+          if markdown_files == false
+              @error "Problem testing a tutorial or generating its markdown"
               exit(1)
+          else 
+              @info "Successfully re-generated these markdown files:\n "*
+                  "$markdown_files "
           end 
