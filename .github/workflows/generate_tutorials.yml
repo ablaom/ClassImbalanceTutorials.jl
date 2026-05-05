@@ -1,4 +1,4 @@
-name: Test Tutorials
+name: Tutorials - Test and Generate Markdown
 env:
   ACTIONS_STEP_DEBUG: true
 on:
@@ -19,10 +19,7 @@ jobs:
         with:
           version: '1.12.5'
 
-      - name: Enable Caching
-        uses: julia-actions/cache@v3
-
-      - name: Instantiate/Build Julia Package Environment
+      - name: Julia Package Environment - Instantiate and Build
         uses: julia-actions/julia-buildpkg@v1
         
       - name: Get relevent changed files
