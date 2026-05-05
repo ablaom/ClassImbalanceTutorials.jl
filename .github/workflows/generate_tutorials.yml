@@ -55,12 +55,15 @@ jobs:
               TutorialTools.dirs_containing(root=tutorial_root) : # all subdirs of root
               TutorialTools.dirs_containing(changed_tutorial_files; root=tutorial_root)
 
-          # Test/generate the tutorials:
-          success = TutorialTools.generate(tutorial_dirs; tests=true)
+          # Test and generate the tutorials:
+          markdown_files = TutorialTools.generate(tutorial_dirs, "docs"; tests=true)
 
-          if success
-              @info "All tutorials requiring regeneration have been successfully tested "*
-                  "and regenerated. "
+          if markdown_files == false
+              @error "Problem testing a tutorial or generating its markdown"
+              exit(1)
+          else 
+              @info "Successfully re-generated these markdown files:\n "*
+                  "$(join(markdownfiles, \"\n\")"
           else
               @info "Problems encountered testing or regenerating some tutorials that "*
                   "require regeneration. "

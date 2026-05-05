@@ -122,13 +122,15 @@ end
     generate(tutorial_dirs::AbstractVector, docs_project; tests=true)
 
 Attempts to generate each tutorial with directory in the provided list
-`tutorial_dirs`. Returns a list of successfully generated markdown files.
+`tutorial_dirs`. Returns re-generated markdown file paths, or `false` if there is a failed
+tutorial test or markdown generation failure.
 
 """
 function generate(tutorial_dirs::AbstractVector, docs_project; kwargs...)
     generated_files =  map(tutorial_dirs) do dir
         generate(dir, docs_project; kwargs...)
     end
+    "" in generated_files && return false
     filter(generated_files) do file
         !isempty(file)
     end

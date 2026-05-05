@@ -16,8 +16,12 @@ docs = joinpath(@__DIR__)
 @testset "generate(…)" begin
     @test @suppress generate(good_tutorial, docs) == joinpath(good_tutorial, "tutorial.md")
     @test @suppress isempty(generate(bad_tutorial, docs))
-    @test @suppress generate([good_tutorial, bad_tutorial], docs) ==
-        [joinpath(good_tutorial, "tutorial.md"),]
+    @test @suppress generate([good_tutorial, tutorial_without_tests], docs) ==
+        [
+            joinpath(good_tutorial, "tutorial.md"),
+            joinpath(tutorial_without_tests, "tutorial.md"),
+        ]
+    @test @suppress !generate([good_tutorial, bad_tutorial], docs)
     @test_throws(
         TutorialTools.ERR_BAD_SCRIPT(joinpath(tutorial_without_script, "tutorial.jl")),
         generate(tutorial_without_script, docs),
