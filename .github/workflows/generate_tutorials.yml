@@ -20,9 +20,9 @@ jobs:
         with:
           files_yaml: |
             projects:
-              - **/Project.toml
+              - "**/Project.toml"
             tutorials:
-              - docs/src/tutorials/**
+              - "docs/src/tutorials/**"
 
       - name: Set up Julia
         uses: julia-actions/setup-julia@v3
