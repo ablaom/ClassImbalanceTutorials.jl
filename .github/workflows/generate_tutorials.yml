@@ -19,6 +19,9 @@ jobs:
         with:
           version: '1.12.5'
 
+      - name: Enable Caching
+        uses: julia-actions/cache@v3
+
       - name: Julia Package Environment - Instantiate and Build
         uses: julia-actions/julia-buildpkg@v1
         
