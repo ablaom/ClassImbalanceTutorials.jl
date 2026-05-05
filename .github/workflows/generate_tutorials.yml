@@ -65,3 +65,18 @@ jobs:
               @info "Successfully re-generated these markdown files:\n "*
                   "$markdown_files "
           end 
+
+      - name: Create Pull Request for Adding new Tutorial Markdown
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "add newly generated tutorial markdown"
+          branch: auto-update-tutorials
+          base: master
+          title: "Automated Update to Tutorial Markdown"
+          body: |
+            This PR was automatically generated to update the tutorial markdown files
+            generated using TutorialTools.generate(...)
+          delete-branch: true
+          add-paths: |
+            **/tutorial.md

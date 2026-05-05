@@ -1,5 +1,5 @@
 [workspace]
-projects = ["test", "docs", "TutorialTools"]
+projects = ["docs", "TutorialTools"]
 
 [compat]
 julia = "1.12"
