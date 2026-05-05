@@ -14,17 +14,6 @@ jobs:
         with:
           fetch-depth: 0 # get entire commit history, needed for changed-files to work
 
-      - name: Set up Julia
-        uses: julia-actions/setup-julia@v3
-        with:
-          version: '1.12.5'
-
-      - name: Enable Caching
-        uses: julia-actions/cache@v3
-
-      - name: Julia Package Environment - Instantiate and Build
-        uses: julia-actions/julia-buildpkg@v1
-        
       - name: Get relevent changed files
         id: changed-files
         uses: tj-actions/changed-files@v44
@@ -35,6 +24,20 @@ jobs:
             tutorials:
               - docs/src/tutorials/**
 
+      - name: Set up Julia
+        uses: julia-actions/setup-julia@v3
+        with:
+          version: '1.12.5'
+
+      - name: Enable Caching
+        uses: julia-actions/cache@v3
+
+      - name: Force Re-resolve
+        run: julia --project -e 'using Pkg; Pkg.resolve(); Pkg.instantiate()'        
+
+      - name: Julia Package Environment - Instantiate and Build
+        uses: julia-actions/julia-buildpkg@v1
+        
       - name: Identify, Test, and Generate Tutorial Markdown
         shell: julia --color=yes {0}
         run: |
