@@ -96,7 +96,7 @@ jobs:
         uses: mshick/add-pr-comment@v3
         with:
           message: |
-            If a tutorial script file or Project.toml file has changed, new tutorial 
-            markdown has been generated, and a new PR spawned to commit the changes, and
-            redeploy documentation to gh-pages.
+            A tutorial script file or Project.toml file has changed and new tutorial 
+            markdown has been generated. Review \#{{ steps.cpr.outputs.pull-request-number }}to commit the changes
+            and update the documentation on gh-pages.
 
