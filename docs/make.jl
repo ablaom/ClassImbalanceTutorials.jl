@@ -20,7 +20,7 @@ makedocs(
 )
 
 deploydocs(
-    devbranch="dev",
+    devbranch="master", # deployment to gh-pages only happens when this is the target
     push_preview=false,
     repo="github.com/ablaom/$REPO_NAME.git",
 )
