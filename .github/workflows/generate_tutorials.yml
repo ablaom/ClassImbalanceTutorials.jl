@@ -2,12 +2,16 @@ name: Tutorials - Test and Generate Markdown
 env:
   ACTIONS_STEP_DEBUG: true
 on:
-  pull_request:
+  push:
     branches:
       - master
+    tags: '*'
+  pull_request:
+
 jobs:
   generate_tutorial_markdown:
-    if: ${{ !startsWith(github.event.pull_request.title, 'Automated Update to Tutorial Markdown') }}
+    # exclude PR's with title beginning with "[docs]"
+    if: ${{ !startsWith(github.event.pull_request.title, '[docs]') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -28,7 +32,7 @@ jobs:
       - name: Set up Julia
         uses: julia-actions/setup-julia@v3
         with:
-          version: '1.12.5'
+          version: 'min'
 
       - name: Enable Caching
         uses: julia-actions/cache@v3
@@ -74,7 +78,7 @@ jobs:
           commit-message: "add newly generated tutorial markdown"
           branch: auto-update-tutorials
           base: master
-          title: "Automated Update to Tutorial Markdown"
+          title: "[docs] Commit Changed Tutorial Markdown and Regenerate/Deploy Docs"
           body: |
             This PR was automatically generated to update the tutorial markdown files
             generated using TutorialTools.generate(...)
