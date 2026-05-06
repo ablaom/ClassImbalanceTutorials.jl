@@ -68,7 +68,7 @@ jobs:
           end 
 
       - name: Create Pull Request for Adding new Tutorial Markdown
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "add newly generated tutorial markdown"
