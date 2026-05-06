@@ -8,8 +8,6 @@ on:
 
 jobs:
   build:
-    # only act on PR's with title beginning with "[docs]"
-    if: ${{ startsWith(github.event.pull_request.title, '[docs]') }}
     permissions:
       contents: write
       actions: write
