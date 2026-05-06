@@ -1,7 +1,7 @@
 using Documenter
 
 const REPO_NAME = "ClassImbalanceTutorials.jl"
-const  REPO = Remotes.GitHub("JuliaAI", REPO_NAME)
+const  REPO = Remotes.GitHub("ablaom", REPO_NAME)
 
 makedocs(
     modules=Module[],
@@ -16,11 +16,11 @@ makedocs(
     ],
     sitename=REPO_NAME,
     warnonly = [:cross_references, :missing_docs],
-    repo = Remotes.GitHub("JuliaAI", REPO_NAME),
+    repo = Remotes.GitHub("ablaom", REPO_NAME),
 )
 
 deploydocs(
     devbranch="dev",
     push_preview=false,
-    repo="github.com/JuliaAI/$REPO_NAME.git",
+    repo="github.com/ablaom/$REPO_NAME.git",
 )
