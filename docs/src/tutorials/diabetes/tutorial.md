@@ -2,6 +2,8 @@
 EditURL = "tutorial.jl"
 ```
 
+Test for Diabetes
+
 ````@julia
 using CategoricalArrays
 v = categorical([1, 2, 3])
