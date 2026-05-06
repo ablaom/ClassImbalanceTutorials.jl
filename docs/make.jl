@@ -4,7 +4,7 @@ const REPO_NAME = "ClassImbalanceTutorials.jl"
 const  REPO = Remotes.GitHub("JuliaAI", REPO_NAME)
 
 makedocs(
-    modules=[],
+    modules=Module[],
     format=Documenter.HTML(
         prettyurls = true,
         collapselevel = 1,
