@@ -92,7 +92,7 @@ jobs:
             **/tutorial.md
 
       - name: Post Comment
-        if: {{ steps.spawn_pr.outputs.pull-request-operation == 'created' }}
+        if: steps.spawn_pr.outputs.pull-request-operation == 'created'
         uses: mshick/add-pr-comment@v3
         with:
           message: |
