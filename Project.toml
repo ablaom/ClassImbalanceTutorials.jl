@@ -1,3 +1,8 @@
+name = "ClassImbalanceTutorials"
+uuid = "eca84f39-d103-493e-b793-4901e7e2d471"
+version = "0.1.0"
+authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
+
 [workspace]
 projects = ["docs", "TutorialTools"]
 
