@@ -2,7 +2,7 @@
 EditURL = "tutorial.jl"
 ```
 
-Test for Diabetes
+# Test for Diabetes
 
 ````@julia
 using CategoricalArrays
