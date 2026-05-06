@@ -12,7 +12,8 @@ jobs:
     if: ${{ startsWith(github.event.pull_request.title, '[docs]') }}
     permissions:
       contents: write
-      pull-requests: read
+      actions: write
+      pull-requests: write
       statuses: write
     runs-on: ubuntu-latest
     steps:
