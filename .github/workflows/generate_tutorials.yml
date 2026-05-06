@@ -70,6 +70,7 @@ jobs:
           end 
 
       - name: Create Pull Request for Adding new Tutorial Markdown
+        id: spawn_pr
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -89,3 +90,13 @@ jobs:
           delete-branch: true
           add-paths: |
             **/tutorial.md
+
+      - name: Post Comment
+        if: {{ steps.spawn_pr.outputs.pull-request-operation == 'created' }}
+        uses: mshick/add-pr-comment@v3
+        with:
+          message: |
+            If a tutorial script file or Project.toml file has changed, new tutorial 
+            markdown has been generated, and a new PR spawned to commit the changes, and
+            redeploy documentation to gh-pages.
+

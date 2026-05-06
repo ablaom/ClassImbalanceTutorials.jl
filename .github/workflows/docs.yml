@@ -8,6 +8,9 @@ on:
 
 jobs:
   build:
+    if: |
+      (github.event_name == 'pull_request' && startsWith(github.head_ref, 'auto-update-tutorials')) ||
+      (github.event_name == 'push' && startsWith(github.ref_name, 'auto-update-tutorials'))
     permissions:
       contents: write
       actions: write
