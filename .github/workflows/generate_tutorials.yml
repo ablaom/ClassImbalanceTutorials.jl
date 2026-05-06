@@ -8,8 +8,8 @@ jobs:
   generate_tutorial_markdown:
     # exclude PR's spawned by this job; see "create-pull-request" below:
     if: |
-      {{ (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'auto-update-tutorials')) ||
-      (github.event_name == 'push' && !startsWith(github.ref_name, 'auto-update-tutorials')) }}
+      (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'auto-update-tutorials')) ||
+      (github.event_name == 'push' && !startsWith(github.ref_name, 'auto-update-tutorials'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
