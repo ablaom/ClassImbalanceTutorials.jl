@@ -34,7 +34,7 @@ directory.
 julia> pwd()
 "/Users/anthony/GoogleDrive/Julia/ClassImbalanceTutorials.jl"
 
-julia> setpath("~/GoogleDrive/Julia/ClassImbalanceTutorials.jl/docs/")
+julia> set_path_to_docs("~/GoogleDrive/Julia/ClassImbalanceTutorials.jl/docs/")
 ```
 
 Use [`path_to_docs()`](@ref) to inspect the path once set.

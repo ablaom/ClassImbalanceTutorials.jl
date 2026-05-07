@@ -22,7 +22,7 @@ set_path_to_docs("docs")
             joinpath(good_tutorial, "tutorial.md"),
             joinpath(tutorial_without_tests, "tutorial.md"),
         ]
-    @test @suppress !generate([good_tutorial, bad_tutorial])
+    @test @suppress isnothing(generate([good_tutorial, bad_tutorial]))
     @test_throws(
         TutorialTools.ERR_BAD_SCRIPT(joinpath(tutorial_without_script, "tutorial.jl")),
         generate(tutorial_without_script, docs),
