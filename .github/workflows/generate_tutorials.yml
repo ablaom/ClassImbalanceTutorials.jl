@@ -97,5 +97,6 @@ jobs:
           message: |
             A tutorial script file or Project.toml file has changed and new tutorial 
             markdown has been generated. After merging this PR, review \#{{ steps.cpr.outputs.pull-request-number }}
-            to commit the changes and update the documentation on gh-pages.
+            to commit the changes and update the documentation on gh-pages, as this will
+            need to be regenerated.
 
