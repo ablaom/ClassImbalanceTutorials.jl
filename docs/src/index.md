@@ -6,6 +6,9 @@
 
 ## TutorialTools API
 
+```@index
+```
+
 ```@docs
 generate
 dirs
