@@ -5,38 +5,12 @@ ERR_BAD_SCRIPT(file) = ErrorException(
 INFO_MISSING_TESTS(name) = "No runtests.jl file found. Skipping tests for $name. "
 
 """
-    generate(tutorial_dir, docs_project=tutorial_dir; tests=true)
+    generate(tutorial_dir, path_to_docs=path_to_docs(); tests=true)
 
 Attempt to generate a new markdown file from the file named "tutorial.jl" and contained in
 `tutorial_dir`, using Literate.jl and the project at `tutorial_dir`, using a version of
-Literate.jl consistent with the project specified at `docs_project` (which is pushed to
-`LOAD_PATH` to make it available). Generally, `docs_project` and `tutorial_dir` should be
-part of the same Julia package workspace. For example, your directory structure might look
-like this:
-
-```
-├── Project.toml
-├── docs
-│   ├── make.jl
-│   ├── Project.toml
-│   └── src
-│       └── tutorials
-│           ├── tutorial1
-│           │   ├── Project.toml
-│           │   ├── runtests.jl
-│           │   └── tutorial.jl
-│           └── tutorial2
-│               ├── Project.toml
-│               ├── runtests.jl
-│               ├── tutorial.jl
-│               └── tutorial.md
-```
-
-where every "Project.toml" file is part of a single (nested) workspace. In that case you
-might have `tutorial_dir="docs/src/tutorials/tutorial1"` and `docs_project="docs"`.
-
-In development, you can omit `doc_project`, provided you add `Literate` to the project at
-`tutorial_dir`, but it is not recommended that you permanently commit such additions.
+Literate.jl consistent with the project specified at `path_to_docs` (which is pushed to
+`LOAD_PATH` to make it available). 
 
 # Testing
 
@@ -57,7 +31,7 @@ Returns the path to the generated markdown, unless the Julia process exits abnor
 which case an empty string is returned.
 
 """
-function generate(tutorial_dir, docs_project=tutorial_dir; tests=true)
+function generate(tutorial_dir, path_to_docs=TutorialTools.path_to_docs(); tests=true)
     tutorial_name = splitpath(tutorial_dir) |> last
 
     script_file = joinpath(tutorial_dir, "tutorial.jl")
@@ -94,7 +68,7 @@ function generate(tutorial_dir, docs_project=tutorial_dir; tests=true)
 
                    # Add packages from the docs project to the load path; needed to
                    # use Literate:
-                   push!(LOAD_PATH, "'$docs_project'")
+                   push!(LOAD_PATH, "'$path_to_docs'")
 
                    using Pkg
                    Pkg.instantiate();
@@ -128,16 +102,20 @@ function generate(tutorial_dir, docs_project=tutorial_dir; tests=true)
 end
 
 """
-    generate(tutorial_dirs::AbstractVector, docs_project; tests=true)
+    generate(tutorial_dirs::AbstractVector, path_to_docs=path_to_docs(); tests=true)
 
 Attempts to generate each tutorial with directory in the provided list
 `tutorial_dirs`. Returns re-generated markdown file paths, or `false` if there is a failed
 tutorial test or markdown generation failure.
 
 """
-function generate(tutorial_dirs::AbstractVector, docs_project; kwargs...)
+function generate(
+    tutorial_dirs::AbstractVector,
+    path_to_docs=TutorialTools.path_to_docs();
+    kwargs...,
+    )
     generated_files =  map(tutorial_dirs) do dir
-        generate(dir, docs_project; kwargs...)
+        generate(dir, path_to_docs; kwargs...)
     end
     "" in generated_files && return false
     filter(generated_files) do file
