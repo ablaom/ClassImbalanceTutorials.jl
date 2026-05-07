@@ -23,7 +23,7 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Pkg
-            Pkg.develop(PackageSpec(path="/TutorialTools"))'
+            Pkg.develop(PackageSpec(path=joinpath(pwd(), "TutorialTools")))'
       - uses: julia-actions/cache@v3
       - uses: julia-actions/julia-docdeploy@v1
         with:
