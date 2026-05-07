@@ -35,7 +35,7 @@ jobs:
       - name: Enable caching
         uses: julia-actions/cache@v3
 
-      - name: Julia Package Environment - Instantiate and Build
+      - name: Julia package environment - instantiate and build
         uses: julia-actions/julia-buildpkg@v1
         
       - name: Identify, test, and generate tutorial markdown
@@ -44,6 +44,7 @@ jobs:
           using Pkg
           Pkg.activate("TutorialTools")
           import TutorialTools
+          TutorialTools.set_doc_path("docs")
           
           workspace_changed =
               "${{ steps.changed-files.outputs.projects_any_changed }}" == "true"
@@ -59,7 +60,7 @@ jobs:
               TutorialTools.dirs_containing(changed_tutorial_files; root=tutorial_root)
 
           # Test and generate the tutorials:
-          markdown_files = TutorialTools.generate(tutorial_dirs, "docs"; tests=true)
+          markdown_files = TutorialTools.generate(tutorial_dirs; tests=true)
 
           if markdown_files == false
               @error "Problem testing a tutorial or generating its markdown"
@@ -89,6 +90,10 @@ jobs:
 
             You can check repository "Actions" to check when deployment is complete.
             You should see: ✅ **pages build and deployment**
+
+            This pull request will automatically update if additional commits are successfully
+            added to the parent pull request, \#${{ github.event.pull_request.number }}.
+
           delete-branch: true
           add-paths: |
             **/tutorial.md
@@ -101,9 +106,7 @@ jobs:
             **Attention**
             
             A tutorial or Project.toml file has changed and new tutorial 
-            markdown has been generated. After merging this pull request, review \#${{ steps.cpr.outputs.pull-request-number }}
+            markdown has been generated. After merging this pull request, review \#${{ steps.spawn_pr.outputs.pull-request-number }}
             to commit the changes and update the documentation on gh-pages, as this will
             need to be regenerated.
-
-            This pull request will automatically update if changes are succesfully added to the parent pull request, \#${{ steps.cpr.outputs.pull-request-number }}.
 
