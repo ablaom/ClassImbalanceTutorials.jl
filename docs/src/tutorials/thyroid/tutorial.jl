@@ -54,7 +54,7 @@
 #   models
 
 # - Constructing model **pipelines**, which combine data pre-processing with a supervised
-a a#   learner, to streamline workflows and mitigate **data leakage**
+#   learner, to streamline workflows and mitigate **data leakage**
 
 # - Estimation of the **performance** of model pipelines, and associated **uncertainties**
 
