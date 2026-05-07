@@ -26,15 +26,15 @@ end
 """
     set_path_to_docs(path)
 
-Point `TutorialsTools` to the location of the doc to be modified. Ordinarily,
-this is the absolute path to the subdirectory `/src/doc` of a local clone of
-MLJModels.jl.
+Point `TutorialsTools` to the location of a directory containing a Project.toml file with
+a [deps] entry for "Literate". Typically, this is the absolute path to a repository "docs"
+directory.
 
 ```julia-repl
 julia> pwd()
-"/Users/anthony/GoogleDrive/Julia/MLJ/MLJModels.jl"
+"/Users/anthony/GoogleDrive/Julia/ClassImbalanceTutorials.jl"
 
-julia> setpath("~/GoogleDrive/Julia/MLJ/MLJModels.jl/src/doc")
+julia> setpath("~/GoogleDrive/Julia/ClassImbalanceTutorials.jl/docs/")
 ```
 
 """
