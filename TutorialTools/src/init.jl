@@ -1,3 +1,3 @@
 function __init__()
-    global DOC_PATH=Ref("")
+    global PATH_TO_DOCS=Ref("")
 end

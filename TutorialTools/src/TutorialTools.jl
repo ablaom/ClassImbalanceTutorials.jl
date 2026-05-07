@@ -36,8 +36,8 @@ Here each "Project.toml" file is part of a single (nested) workspace.
 
 # Tools
 
-- [`set_doc_path`](@ref)
-- [`doc_path`](@ref)
+- [`set_path_to_docs`](@ref)
+- [`path_to_docs`](@ref)
 - [`generate`](@ref)
 - [`dirs`](@ref)
 - [`dirs_containing`](@ref)
@@ -45,10 +45,10 @@ Here each "Project.toml" file is part of a single (nested) workspace.
 """ module TutorialTools
 
 include("utilities.jl")
-include("set_doc_path.jl")
+include("set_path_to_docs.jl")
 include("generate.jl")
 include("init.jl")
 
-export generate, dirs_containing, dirs, set_doc_path, doc_path
+export generate, dirs_containing, dirs, set_path_to_docs, path_to_docs
 
 end # module

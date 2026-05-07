@@ -9,8 +9,8 @@
 
 ```@docs
 TutorialTools
-set_doc_path
-doc_path
+set_path_to_docs
+path_to_docs
 generate
 dirs
 dirs_containing

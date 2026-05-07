@@ -5,11 +5,11 @@ ERR_BAD_SCRIPT(file) = ErrorException(
 INFO_MISSING_TESTS(name) = "No runtests.jl file found. Skipping tests for $name. "
 
 """
-    generate(tutorial_dir, doc_path=doc_path(); tests=true)
+    generate(tutorial_dir, path_to_docs=path_to_docs(); tests=true)
 
 Attempt to generate a new markdown file from the file named "tutorial.jl" and contained in
 `tutorial_dir`, using Literate.jl and the project at `tutorial_dir`, using a version of
-Literate.jl consistent with the project specified at `doc_path` (which is pushed to
+Literate.jl consistent with the project specified at `path_to_docs` (which is pushed to
 `LOAD_PATH` to make it available). 
 
 # Testing
@@ -31,7 +31,7 @@ Returns the path to the generated markdown, unless the Julia process exits abnor
 which case an empty string is returned.
 
 """
-function generate(tutorial_dir, doc_path=TutorialTools.doc_path(); tests=true)
+function generate(tutorial_dir, path_to_docs=TutorialTools.path_to_docs(); tests=true)
     tutorial_name = splitpath(tutorial_dir) |> last
 
     script_file = joinpath(tutorial_dir, "tutorial.jl")
@@ -68,7 +68,7 @@ function generate(tutorial_dir, doc_path=TutorialTools.doc_path(); tests=true)
 
                    # Add packages from the docs project to the load path; needed to
                    # use Literate:
-                   push!(LOAD_PATH, "'$doc_path'")
+                   push!(LOAD_PATH, "'$path_to_docs'")
 
                    using Pkg
                    Pkg.instantiate();
@@ -102,7 +102,7 @@ function generate(tutorial_dir, doc_path=TutorialTools.doc_path(); tests=true)
 end
 
 """
-    generate(tutorial_dirs::AbstractVector, doc_path=doc_path(); tests=true)
+    generate(tutorial_dirs::AbstractVector, path_to_docs=path_to_docs(); tests=true)
 
 Attempts to generate each tutorial with directory in the provided list
 `tutorial_dirs`. Returns re-generated markdown file paths, or `false` if there is a failed
@@ -111,11 +111,11 @@ tutorial test or markdown generation failure.
 """
 function generate(
     tutorial_dirs::AbstractVector,
-    doc_path=TutorialTools.doc_path();
+    path_to_docs=TutorialTools.path_to_docs();
     kwargs...,
     )
     generated_files =  map(tutorial_dirs) do dir
-        generate(dir, doc_path; kwargs...)
+        generate(dir, path_to_docs; kwargs...)
     end
     "" in generated_files && return false
     filter(generated_files) do file

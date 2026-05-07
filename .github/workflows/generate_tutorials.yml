@@ -44,7 +44,7 @@ jobs:
           using Pkg
           Pkg.activate("TutorialTools")
           import TutorialTools
-          TutorialTools.set_doc_path("docs")
+          TutorialTools.set_path_to_docs("docs")
           
           workspace_changed =
               "${{ steps.changed-files.outputs.projects_any_changed }}" == "true"
