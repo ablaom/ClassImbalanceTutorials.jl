@@ -30,6 +30,7 @@ makedocs(
         "Home" => "index.md",
         "Test for Hypothyroidism" => "tutorials/thyroid/tutorial.md",
         "Test for Diabetes" => "tutorials/diabetes/tutorial.md",
+        "TutorialTools.jl" => "tutorial_tools.md",
     ],
     sitename=REPO_NAME,
     warnonly = [:cross_references, :missing_docs],

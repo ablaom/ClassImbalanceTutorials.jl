@@ -10,7 +10,11 @@ INFO_MISSING_TESTS(name) = "No runtests.jl file found. Skipping tests for $name.
 Attempt to generate a new markdown file from the file named "tutorial.jl" and contained in
 `tutorial_dir`, using Literate.jl and the project at `tutorial_dir`, using a version of
 Literate.jl consistent with the project specified at `path_to_docs` (which is pushed to
-`LOAD_PATH` to make it available). 
+`LOAD_PATH` to make it available).
+
+Literate.jl executes all code cells and wraps the input cell in regular julia fencing. In
+that way, when the markdown is included in a Documenter.jl project, no code is
+re-executed.
 
 # Testing
 

@@ -36,13 +36,20 @@ Here each "Project.toml" file is part of a single (nested) workspace.
 
 # Tools
 
-- [`set_path_to_docs`](@ref)
-- [`path_to_docs`](@ref)
-- [`generate`](@ref)
-- [`dirs`](@ref)
-- [`dirs_containing`](@ref)
+- [`generate`](@ref): The main tool, used to generate markdown from annotated julia script.
 
-""" module TutorialTools
+- [`set_path_to_docs`](@ref): For pointing the generator to an appropriate version of
+  Literate.jl, the engine for the markdown generation.
+
+- [`path_to_docs`](@ref): For inspecting the above.
+
+- [`dirs`](@ref): Used in continuous integration to list tutorial directories.
+
+- [`dirs_containing`](@ref): Used in continuous integration to find tutorial directories
+  containing files known to have changed in a pull-request.
+
+"""
+module TutorialTools
 
 include("utilities.jl")
 include("set_path_to_docs.jl")
