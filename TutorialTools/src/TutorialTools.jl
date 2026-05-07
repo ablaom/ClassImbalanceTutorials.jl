@@ -7,12 +7,12 @@ Module providing tools for:
   same.
 
 - Automating this generation and testing in continuous integration, for GitHub
-  repositories providing collections of tutorials, either standalone or part of
-  documentatio of some Julia package(s) provided by the repository.
+  repositories providing collections of tutorials, either stand-alone or part of
+  documentation of some Julia package(s) provided by the repository.
 
 The tools are meant to be useful in both local development and final deployment. A
 repository of this kind will be structured using Julia's "workspace" package management
-structure. For a standalone collection of tutorials, this might look something like this:
+structure. For a stand-alone collection of tutorials, this might look something like this:
 
 ```
 ├── Project.toml     # <---- root project
