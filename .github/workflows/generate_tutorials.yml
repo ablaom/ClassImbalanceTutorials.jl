@@ -88,6 +88,7 @@ jobs:
             If successful, merge this PR to trigger deployment of the new docs to gh-pages.
 
             You can check repository "Actions" to check when deployment is complete.
+            You should see: ✅ **pages build and deployment**
           delete-branch: true
           add-paths: |
             **/tutorial.md
