@@ -13,8 +13,8 @@ const ERR_PATH_TO_DOCS = ErrorException(
 """
     path_to_docs()
 
-Return the path to a Project.toml file with a [deps] entry for \"Literate\". Use
-[`setpath`](@ref) to set or change.
+Return the path to a Project.toml file with a [deps] entry for "Literate". Use
+[`set_path_to_docs`](@ref) to set or change.
 
 """
 function path_to_docs()
@@ -36,6 +36,8 @@ julia> pwd()
 
 julia> setpath("~/GoogleDrive/Julia/ClassImbalanceTutorials.jl/docs/")
 ```
+
+Use [`path_to_docs()`](@ref) to inspect the path once set.
 
 """
 set_path_to_docs(path) = (PATH_TO_DOCS[] = expanduser(path))
