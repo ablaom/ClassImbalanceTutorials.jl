@@ -26,7 +26,7 @@ end
 """
     set_path_to_docs(path)
 
-Point `MLJModelRegistryTools` to the location of the doc to be modified. Ordinarily,
+Point `TutorialsTools` to the location of the doc to be modified. Ordinarily,
 this is the absolute path to the subdirectory `/src/doc` of a local clone of
 MLJModels.jl.
 
