@@ -20,8 +20,14 @@ jobs:
         with:
           version: 'min'
           show-versioninfo: true
+      - run: |
+          julia --project=docs -e '
+            using Pkg
+            Pkg.develop(PackageSpec(path=joinpath(pwd(), "TutorialTools")))'
       - uses: julia-actions/cache@v3
       - uses: julia-actions/julia-docdeploy@v1
+        with:
+          install-package: false # because we manually installed above
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}

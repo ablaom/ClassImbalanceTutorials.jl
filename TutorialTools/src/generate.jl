@@ -5,7 +5,7 @@ ERR_BAD_SCRIPT(file) = ErrorException(
 INFO_MISSING_TESTS(name) = "No runtests.jl file found. Skipping tests for $name. "
 
 """
-    generate(tutorial_dir, docs_project; tests=true)
+    generate(tutorial_dir, docs_project=tutorial_dir; tests=true)
 
 If `tests==true`, then, in a new Julia process, run the code appearing in the file
 "runtests.jl" appearing in the directory `tutorial_dir`, which should additionally contain
@@ -14,16 +14,16 @@ instantiating the Julia project in `tutorial_dir`.
 
 !!! note
 
-    The test file `runtests.jl` should begin with "include("tutorial.jl")".
+    The test file `runtests.jl` should begin with "using Test; include("tutorial.jl")" and
+    end with "true".
 
 In any case, attempt to generate a new markdown file from "tutorial.jl" using Literate.jl
-and the project at `tutorial_dir`, using the version of Literate.jl to be found in the
+and the project at `tutorial_dir`, using a version of Literate.jl consistent with the
 project specified at `docs_project` (which is pushed to `LOAD_PATH` to make it
 available). Generally, `docs_project` and `tutorial_dir` should be part of the same Julia
 package workspace. For example, your directory structure might look like this:
 
 ```
-├── Manifest-v1.12.toml
 ├── Project.toml
 ├── docs
 │   ├── make.jl
@@ -48,7 +48,7 @@ Returns the path to the generated markdown, unless the Julia process exits abnor
 which case an empty string is returned.
 
 """
-function generate(tutorial_dir, docs_project; tests=true)
+function generate(tutorial_dir, docs_project=tutorial_dir; tests=true)
     tutorial_name = splitpath(tutorial_dir) |> last
 
     script_file = joinpath(tutorial_dir, "tutorial.jl")

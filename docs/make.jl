@@ -3,8 +3,10 @@ using Documenter
 const REPO_NAME = "ClassImbalanceTutorials.jl"
 const  REPO = Remotes.GitHub("ablaom", REPO_NAME)
 
+using TutorialTools
+
 makedocs(
-    modules=Module[],
+    modules=Module[TutorialTools,],
     format=Documenter.HTML(
         prettyurls = true,
         collapselevel = 1,
