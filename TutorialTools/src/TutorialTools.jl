@@ -45,7 +45,7 @@ Here each "Project.toml" file is part of a single (nested) workspace.
 """ module TutorialTools
 
 include("utilities.jl")
-inclucd("set_doc_path.jl")
+include("set_doc_path.jl")
 include("generate.jl")
 include("init.jl")
 
