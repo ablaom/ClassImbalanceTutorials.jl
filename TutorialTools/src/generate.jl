@@ -7,21 +7,12 @@ INFO_MISSING_TESTS(name) = "No runtests.jl file found. Skipping tests for $name.
 """
     generate(tutorial_dir, docs_project=tutorial_dir; tests=true)
 
-If `tests==true`, then, in a new Julia process, run the code appearing in the file
-"runtests.jl" appearing in the directory `tutorial_dir`, which should additionally contain
-the julia script `tutorial.jl` for some tutorial. The code is run after activating and
-instantiating the Julia project in `tutorial_dir`.
-
-!!! note
-
-    The test file `runtests.jl` should begin with "using Test; include("tutorial.jl")" and
-    end with "true".
-
-In any case, attempt to generate a new markdown file from "tutorial.jl" using Literate.jl
-and the project at `tutorial_dir`, using a version of Literate.jl consistent with the
-project specified at `docs_project` (which is pushed to `LOAD_PATH` to make it
-available). Generally, `docs_project` and `tutorial_dir` should be part of the same Julia
-package workspace. For example, your directory structure might look like this:
+Attempt to generate a new markdown file from the file named "tutorial.jl" and contained in
+`tutorial_dir`, using Literate.jl and the project at `tutorial_dir`, using a version of
+Literate.jl consistent with the project specified at `docs_project` (which is pushed to
+`LOAD_PATH` to make it available). Generally, `docs_project` and `tutorial_dir` should be
+part of the same Julia package workspace. For example, your directory structure might look
+like this:
 
 ```
 ├── Project.toml
@@ -43,6 +34,24 @@ package workspace. For example, your directory structure might look like this:
 
 where every "Project.toml" file is part of a single (nested) workspace. In that case you
 might have `tutorial_dir="docs/src/tutorials/tutorial1"` and `docs_project="docs"`.
+
+In development, you can omit `doc_project`, provided you add `Literate` to the project at
+`tutorial_dir`, but it is not recommended that you permanently commit such additions.
+
+# Testing
+
+If `tests==true`, then, *before* attempting markdown generation, run, in a new Julia
+process, the code appearing in the file "runtests.jl" appearing in the directory
+`tutorial_dir`, which should additionally contain the julia script `tutorial.jl` for some
+tutorial. The code is run after activating and instantiating the Julia project in
+`tutorial_dir` (which happens anyway, if `tests=false`).
+
+!!! note
+
+    The test file `runtests.jl` should begin with "using Test; include("tutorial.jl")" and
+    end with "true".
+
+
 
 Returns the path to the generated markdown, unless the Julia process exits abnormally, in
 which case an empty string is returned.
