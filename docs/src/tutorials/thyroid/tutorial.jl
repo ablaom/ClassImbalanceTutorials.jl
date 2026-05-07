@@ -95,13 +95,9 @@
 # on will have it's own environment. In this case we'll download and activate the
 # environment used to develop this tutorial:
 
-
-
-
-
 # ## Downloading a dataset
 
-# Here's how we dowload our thyroid dataset
+# Here's how we dowload our thyroid dataset:
 
 # # Models and machines
 
