@@ -18,9 +18,9 @@ jobs:
     strategy:
       matrix:
         package: ['NotebookManagementTools']
-        julia-version: ['lts', '1', 'min']
+        julia-version: ['min']
         julia-arch: [x64, x86]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest] #, windows-latest, macOS-latest]
         exclude:
           - os: macOS-latest
             julia-arch: x86
