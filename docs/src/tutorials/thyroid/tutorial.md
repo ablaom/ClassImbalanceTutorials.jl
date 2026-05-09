@@ -4,10 +4,12 @@ EditURL = "tutorial.jl"
 
 # An Introduction to Machine Learning in Quantitative Medicine using Julia
 
+> Anthony D. Blaom, May 2026
+
 This tutorial presents an end-to-end application of machine learning to the problem of
 creating an automated test for the presence of some disease. Specifically, we compare
-several tests for hypothyroidisem based on machine learning models, trained using the
-well studied Garavan Institute database [@Quinlan_86].
+several tests for hypothyroidism based on machine learning models, trained using a
+well studied Garavan Institute dataset [@Quinlan_86].
 
 We assume readers are familiar with basic statistics and in particular: (i) the
 distinction between in-sample and out-of-sample estimation of a model's
@@ -30,21 +32,20 @@ nuanced metrics.  These issues are explicitly addressed here.
 
 ### The model building workflow
 
-The Thyroid Database includes several datasets, with a variety of preprocessing. We work
-with directly with the full "allhypo" dataset, which is unprocessed and includes missing
-values. By **features** (a.k.a., covariates, inputs), we mean potential predictors of
-disease, like gender or blood test results, that are recorded in the training dataset,
-and available for executing our test on new subjects. The core algorithm that learns how
-to distinguish between "positive" and "negative" test outcomes is known as a
-**supervised learner**. By **features** (a.k.a., covariates, inputs) we mean things like
-gender or blood test results, which are predictors of disease and available for
-executing our test.  Examples you may have encountered before are logistic regression
-and decision trees. However, for a complete solution, we must wrap our learner in
-several other workflows to be detailed in this tutorial:
+The Garavan Institute dataset is actually several datasets, with different amounts of
+preprocessing. We work directly with the full "allhypo" dataset, which is unprocessed
+and includes missing values. By **features** (also known as covariates or inputs), we
+will mean potential predictors of disease, like gender or blood test results, that are
+recorded in the training dataset, and available for applying our test on new
+subjects. The core algorithm that learns how to distinguish between "positive" and
+"negative" test outcomes is known as a **supervised learner**. Examples you may have
+encountered before are logistic regression and decision trees. However, for a complete
+solution, we must wrap our learner in several other workflows to be detailed in this
+tutorial:
 
 - **missing value imputation**
 
-- **outlier detection* and removal
+- **outlier detection** and removal
 
 - **coercion** of feature data types, to ensure correct "scientific" interpretation by
   MLJ models
@@ -59,7 +60,8 @@ several other workflows to be detailed in this tutorial:
 - Constructing model **pipelines**, which combine data pre-processing with a supervised
   learner, to streamline workflows and mitigate **data leakage**
 
-- Estimation of the **performance** of model pipelines, and associated **uncertainties**
+- Estimation of the predictive **performance** of model pipelines, and associated
+- **uncertainties**
 
 - **Tuning** (optimization) of user-defined hyperparameters to further boost performance
 
@@ -67,7 +69,7 @@ several other workflows to be detailed in this tutorial:
 
 - **Comparison** of a battery of supervised learning models
 
-- Plotting precision-recall curves for additional insight
+- Plotting **precision-recall curves** for additional insight
 
 - **Thresholding:** Transforming a probabilistic predictor into a predictor of
   "positive"/"negative" outcomes, by determining an appropriate threshold for the
@@ -90,10 +92,10 @@ Check the Julia version by entering `versioninfo()` at the `julia>` prompt. Quit
 REPL by entering `exit()` or Ctrl-D.
 
 You can also interact with Julia using a interactive development environment such as
-VSCode or emacs, or using notebook-style interfaces such as Juptyer (python-driven) or
-Pluto (pure Julia). These are not discussed here.
+VSCode or emacs, or using notebook-style interfaces such as Juptyer (python-driven),
+Pluto, or Neptune (pure Julia). These are not discussed here.
 
-A package **environment** is a set of third party packages, and a version number for
+A **package environment** is a set of third party packages, and a version number for
 each package that ensures they are mutually compatible. Typically each project you work
 on will have it's own environment. In this case we'll download and activate the
 environment used to develop this tutorial:
@@ -102,7 +104,7 @@ environment used to develop this tutorial:
 
 Here's how we dowload our thyroid dataset:
 
-# Models and machines
+## Models and machines
 
 > An introduction to the principal actors in an MLJ workflow
 
