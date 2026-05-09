@@ -72,8 +72,8 @@ tutorial:
 - Plotting **precision-recall curves** for additional insight
 
 - **Thresholding:** Transforming a probabilistic predictor into a predictor of
-  "positive"/"negative" outcomes, by determining an appropriate threshold for the
-  "positive" class
+  point "positive"/"negative" outcomes, by determining an appropriate threshold for the
+  "positive" class probability.
 
 - Testing the final model on a holdout test set
 
