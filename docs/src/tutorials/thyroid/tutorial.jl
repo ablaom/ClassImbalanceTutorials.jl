@@ -99,7 +99,7 @@
 
 # ## Downloading a dataset
 
-# Here's how we dowload our thyroid dataset:
+# Here's how we dowload our thyroid dataset: 
 
 # ## Models and machines
 
