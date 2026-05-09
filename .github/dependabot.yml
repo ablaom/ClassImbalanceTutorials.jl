@@ -11,6 +11,6 @@ updates:
       - "/"
       - "/docs"
       - "/docs/scr/tutorials/*"
-      - "/TutorialTools"
+      - "/NotebookManagementTools"
     schedule:
       interval: "monthly"

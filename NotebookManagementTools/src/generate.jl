@@ -35,7 +35,7 @@ Returns the path to the generated markdown, unless the Julia process exits abnor
 which case an empty string is returned.
 
 """
-function generate(tutorial_dir, path_to_docs=TutorialTools.path_to_docs(); tests=true)
+function generate(tutorial_dir, path_to_docs=NotebookManagementTools.path_to_docs(); tests=true)
     tutorial_name = splitpath(tutorial_dir) |> last
 
     script_file = joinpath(tutorial_dir, "tutorial.jl")
@@ -61,7 +61,7 @@ function generate(tutorial_dir, path_to_docs=TutorialTools.path_to_docs(); tests
                --color=yes
                --project=$tutorial_dir -e '
                    # Next if-end block makes sure the standard library is available.
-                   # When calling generate(…) from /test/runtests.jl in TutorialTools pkg,
+                   # When calling generate(…) from /test/runtests.jl in NotebookManagementTools pkg,
                    # the standard library
                    # is mysteriously disappearing from LOAD_PATH here so that Pkg is not
                    # available.
@@ -115,7 +115,7 @@ failed tutorial test or markdown generation failure.
 """
 function generate(
     tutorial_dirs::AbstractVector,
-    path_to_docs=TutorialTools.path_to_docs();
+    path_to_docs=NotebookManagementTools.path_to_docs();
     kwargs...,
     )
     generated_files =  map(tutorial_dirs) do dir

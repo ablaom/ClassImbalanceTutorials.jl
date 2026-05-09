@@ -42,9 +42,9 @@ jobs:
         shell: julia --color=yes {0}
         run: |
           using Pkg
-          Pkg.activate("TutorialTools")
-          import TutorialTools
-          TutorialTools.set_path_to_docs("docs")
+          Pkg.activate("NotebookManagementTools")
+          import NotebookManagementTools
+          NotebookManagementTools.set_path_to_docs("docs")
           
           workspace_changed =
               "${{ steps.changed-files.outputs.projects_any_changed }}" == "true"
@@ -56,11 +56,11 @@ jobs:
 
           # Construct a list of dirs for tutorials needing regeneration
           tutorial_dirs = workspace_changed ? 
-              TutorialTools.dirs(root=tutorial_root) :
-              TutorialTools.dirs_containing(changed_tutorial_files; root=tutorial_root)
+              NotebookManagementTools.dirs(root=tutorial_root) :
+              NotebookManagementTools.dirs_containing(changed_tutorial_files; root=tutorial_root)
 
           # Test and generate the tutorials:
-          markdown_files = TutorialTools.generate(tutorial_dirs; tests=true)
+          markdown_files = NotebookManagementTools.generate(tutorial_dirs; tests=true)
 
           if markdown_files == false
               @error "Problem testing a tutorial or generating its markdown"

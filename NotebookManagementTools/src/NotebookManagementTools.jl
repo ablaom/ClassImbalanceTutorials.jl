@@ -1,5 +1,5 @@
 """
-    TutorialTools
+    NotebookManagementTools
 
 Module providing tools for:
 
@@ -49,7 +49,7 @@ Here each "Project.toml" file is part of a single (nested) workspace.
   containing files known to have changed in a pull-request.
 
 """
-module TutorialTools
+module NotebookManagementTools
 
 include("utilities.jl")
 include("set_path_to_docs.jl")
