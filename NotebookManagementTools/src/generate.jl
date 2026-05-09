@@ -5,12 +5,13 @@ ERR_BAD_SCRIPT(file) = ErrorException(
 INFO_MISSING_TESTS(name) = "No runtests.jl file found. Skipping tests for $name. "
 
 """
-    generate(tutorial_dir, path_to_docs=path_to_docs(); tests=true)
+    generate(notebook_dir, path_to_docs=path_to_docs(); tests=true)
 
-Attempt to generate a new markdown file from the file named "tutorial.jl" and contained in
-`tutorial_dir`, using Literate.jl and the project at `tutorial_dir`, using a version of
-Literate.jl consistent with the project specified at `path_to_docs` (which is pushed to
-`LOAD_PATH` to make it available).
+Attempt to generate a new markdown file from the file named "notebook.jl" and contained in
+`notebook_dir`, using Literate.jl and the project at `notebook_dir`, after activating and
+instantiating the Julia project in `notebook_dir`. A version of Literate.jl is used
+consistent with the project specified at `path_to_docs` (which is pushed to `LOAD_PATH` to
+make it available).
 
 Literate.jl executes all code cells and wraps the input cell in regular julia fencing. In
 that way, when the markdown is included in a Documenter.jl project, no code is
@@ -20,13 +21,11 @@ re-executed.
 
 If `tests==true`, then, *before* attempting markdown generation, run, in a new Julia
 process, the code appearing in the file "runtests.jl" appearing in the directory
-`tutorial_dir`, which should additionally contain the julia script `tutorial.jl` for some
-tutorial. The code is run after activating and instantiating the Julia project in
-`tutorial_dir` (which happens anyway, if `tests=false`).
+`notebook_dir`, which should additionally contain the julia script `notebook.jl`.
 
 !!! note
 
-    The test file `runtests.jl` should begin with "using Test; include("tutorial.jl")" and
+    The test file `runtests.jl` should begin with "using Test; include("notebook.jl")" and
     end with "true".
 
 
@@ -35,16 +34,20 @@ Returns the path to the generated markdown, unless the Julia process exits abnor
 which case an empty string is returned.
 
 """
-function generate(tutorial_dir, path_to_docs=NotebookManagementTools.path_to_docs(); tests=true)
-    tutorial_name = splitpath(tutorial_dir) |> last
+function generate(
+    notebook_dir,
+    path_to_docs=NotebookManagementTools.path_to_docs();
+    tests=true,
+    )
+    name = splitpath(notebook_dir) |> last
 
-    script_file = joinpath(tutorial_dir, "tutorial.jl")
-    markdown_file = joinpath(tutorial_dir, "tutorial.md")
+    script_file = joinpath(notebook_dir, "notebook.jl")
+    markdown_file = joinpath(notebook_dir, "notebook.md")
     isfile(script_file) || throw(ERR_BAD_SCRIPT(script_file))
 
-    test_file = joinpath(tutorial_dir, "runtests.jl")
+    test_file = joinpath(notebook_dir, "runtests.jl")
     test_file_exists = isfile(test_file)
-    test_file_exists || @info(INFO_MISSING_TESTS(tutorial_name))
+    test_file_exists || @info(INFO_MISSING_TESTS(name))
 
     success = true
 
@@ -59,7 +62,7 @@ function generate(tutorial_dir, path_to_docs=NotebookManagementTools.path_to_doc
     cmd = `julia
                --startup-file=no
                --color=yes
-               --project=$tutorial_dir -e '
+               --project=$notebook_dir -e '
                    # Next if-end block makes sure the standard library is available.
                    # When calling generate(…) from /test/runtests.jl in NotebookManagementTools pkg,
                    # the standard library
@@ -80,17 +83,17 @@ function generate(tutorial_dir, path_to_docs=NotebookManagementTools.path_to_doc
                    using Literate
 
                    if '$testing'
-                       @testset "'$tutorial_name'" begin
+                       @testset "'$name'" begin
                            include("'$test_file'")
                            @test true
                        end
                    end
 
-                   @info "Generating markdown for '$tutorial_name'... "
+                   @info "Generating markdown for '$name'... "
 
                    Literate.markdown(
                        "'$script_file'",
-                       "'$tutorial_dir'",
+                       "'$notebook_dir'",
                        execute=true,
                        config=Dict("codefence" => Pair("\`\`\`\`@julia", "\`\`\`\`" )),
                    )'`
@@ -106,19 +109,19 @@ function generate(tutorial_dir, path_to_docs=NotebookManagementTools.path_to_doc
 end
 
 """
-    generate(tutorial_dirs::AbstractVector, path_to_docs=path_to_docs(); tests=true)
+    generate(notebook_dirs::AbstractVector, path_to_docs=path_to_docs(); tests=true)
 
-Attempts to generate each tutorial with directory in the provided list
-`tutorial_dirs`. Returns paths to re-generated markdown files, or `nothing` if there is a
-failed tutorial test or markdown generation failure.
+Attempts to generate each notebook with directory in the provided list
+`notebook_dirs`. Returns paths to re-generated markdown files, or `nothing` if there is a
+failed notebook test or markdown generation failure.
 
 """
 function generate(
-    tutorial_dirs::AbstractVector,
+    notebook_dirs::AbstractVector,
     path_to_docs=NotebookManagementTools.path_to_docs();
     kwargs...,
     )
-    generated_files =  map(tutorial_dirs) do dir
+    generated_files =  map(notebook_dirs) do dir
         generate(dir, path_to_docs; kwargs...)
     end
     "" in generated_files && return nothing

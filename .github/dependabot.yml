@@ -10,7 +10,7 @@ updates:
     directories: # Location of Julia projects
       - "/"
       - "/docs"
-      - "/docs/scr/tutorials/*"
+      - "/docs/scr/notebooks/*"
       - "/NotebookManagementTools"
     schedule:
       interval: "monthly"

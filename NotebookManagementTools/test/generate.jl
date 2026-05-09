@@ -15,32 +15,32 @@ set_path_to_docs("docs")
 ###################################
 
 @testset "generate(…)" begin
-    @test @suppress generate(good_tutorial) == joinpath(good_tutorial, "tutorial.md")
+    @test @suppress generate(good_tutorial) == joinpath(good_tutorial, "notebook.md")
     @test @suppress isempty(generate(bad_tutorial, docs))
     @test @suppress generate([good_tutorial, tutorial_without_tests], docs) ==
         [
-            joinpath(good_tutorial, "tutorial.md"),
-            joinpath(tutorial_without_tests, "tutorial.md"),
+            joinpath(good_tutorial, "notebook.md"),
+            joinpath(tutorial_without_tests, "notebook.md"),
         ]
     @test @suppress isnothing(generate([good_tutorial, bad_tutorial]))
     @test_throws(
-        NotebookManagementTools.ERR_BAD_SCRIPT(joinpath(tutorial_without_script, "tutorial.jl")),
+        NotebookManagementTools.ERR_BAD_SCRIPT(joinpath(tutorial_without_script, "notebook.jl")),
         generate(tutorial_without_script, docs),
     )
     @test_logs(
         (:info, NotebookManagementTools.INFO_MISSING_TESTS("tutorial_without_tests")),
         generate(tutorial_without_tests),
     )
-    firstline = open(readline, joinpath(good_tutorial, "tutorial.md"))
+    firstline = open(readline, joinpath(good_tutorial, "notebook.md"))
     @test firstline == "```@meta"
-    firstline = open(readline, joinpath(tutorial_without_tests, "tutorial.md"))
+    firstline = open(readline, joinpath(tutorial_without_tests, "notebook.md"))
     @test firstline == "```@meta"
 end
 
 # remove the generated markdown files:
 
 for dir in [good_tutorial, tutorial_without_tests]
-    rm(joinpath(dir, "tutorial.md"))
+    rm(joinpath(dir, "notebook.md"))
 end
 
 true

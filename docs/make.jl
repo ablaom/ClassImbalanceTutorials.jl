@@ -28,9 +28,9 @@ makedocs(
     ),
     pages=[
         "Home" => "index.md",
-        "Test for Hypothyroidism" => "tutorials/thyroid/tutorial.md",
-        "Test for Diabetes" => "tutorials/diabetes/tutorial.md",
-        "NotebookManagementTools.jl" => "tutorial_tools.md",
+        "Test for Hypothyroidism" => "notebooks/thyroid/notebook.md",
+        "Test for Diabetes" => "notebooks/diabetes/notebook.md",
+        "NotebookManagementTools.jl" => "notebook_management_tools.md",
     ],
     sitename=REPO_NAME,
     warnonly = [:cross_references, :missing_docs],

@@ -82,7 +82,7 @@
 # We suppose the user is interacting with Julia using the commandline interface known as
 # the **REPL**. This is typically launched by running the `julia` command from a terminal
 # window, which delivers a `julia>` prompt, after which you can enter all the commands in
-# this tutorial.  Before doing so, ensure version 1.12 is used by running `juliaup default
+# this notebook.  Before doing so, ensure version 1.12 is used by running `juliaup default
 # 1.12` from your operating system terminal.
 
 # Check the Julia version by entering `versioninfo()` at the `julia>` prompt. Quit the
@@ -106,7 +106,7 @@
 # > An introduction to the principal actors in an MLJ workflow
 
 # The word "model", ubiquitous in statistics and machine learning, has a specific meaning
-# in MLJ documentation and in this tutorial. A **model** is an object encapsulating a
+# in MLJ documentation and in this notebook. A **model** is an object encapsulating a
 # machine learning algorithm, such as least-squares fitting of a polynomial, or logistic
 # regression, together with parameters that must be specified before the algorithm can be
 # executed, such as the degree of the polynomial. These parameters are the model

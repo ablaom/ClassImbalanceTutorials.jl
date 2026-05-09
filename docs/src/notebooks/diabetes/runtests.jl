@@ -1,4 +1,4 @@
-include("tutorial.jl")
+include("notebook.jl")
 using Test
 
 @test a == 1
