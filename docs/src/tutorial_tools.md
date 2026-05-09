@@ -1,7 +1,7 @@
-# TutorialTools.jl
+# NotebookManagementTools.jl
 
 ```@docs
-TutorialTools
+NotebookManagementTools
 set_path_to_docs
 path_to_docs
 generate

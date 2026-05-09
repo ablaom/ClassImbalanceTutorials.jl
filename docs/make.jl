@@ -3,10 +3,10 @@ using Documenter
 const REPO_NAME = "ClassImbalanceTutorials.jl"
 const  REPO = Remotes.GitHub("ablaom", REPO_NAME)
 
-using TutorialTools
+using NotebookManagementTools
 
 makedocs(
-    modules=Module[TutorialTools,],
+    modules=Module[NotebookManagementTools,],
     format = Documenter.HTML(
         collapselevel = 1,
         assets = [
@@ -30,7 +30,7 @@ makedocs(
         "Home" => "index.md",
         "Test for Hypothyroidism" => "tutorials/thyroid/tutorial.md",
         "Test for Diabetes" => "tutorials/diabetes/tutorial.md",
-        "TutorialTools.jl" => "tutorial_tools.md",
+        "NotebookManagementTools.jl" => "tutorial_tools.md",
     ],
     sitename=REPO_NAME,
     warnonly = [:cross_references, :missing_docs],

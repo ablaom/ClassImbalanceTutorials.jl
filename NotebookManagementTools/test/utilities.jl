@@ -1,10 +1,10 @@
 using Test
-using TutorialTools
+using NotebookManagementTools
 
 root = joinpath(@__DIR__, "..")
 
 testfile = joinpath(root, "test", "runtests.jl")
-srcfile = joinpath(root, "src", "TutorialTools.jl")
+srcfile = joinpath(root, "src", "NotebookManagementTools.jl")
 
 @testset "dirs_containing" begin
     @test dirs_containing([testfile,]; root) == [dirname(testfile),]

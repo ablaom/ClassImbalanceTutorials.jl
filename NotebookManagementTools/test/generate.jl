@@ -1,5 +1,5 @@
 using Test
-using TutorialTools
+using NotebookManagementTools
 using Suppressor
 
 tutorial_root = joinpath(@__DIR__, "dummy_tutorials")
@@ -24,11 +24,11 @@ set_path_to_docs("docs")
         ]
     @test @suppress isnothing(generate([good_tutorial, bad_tutorial]))
     @test_throws(
-        TutorialTools.ERR_BAD_SCRIPT(joinpath(tutorial_without_script, "tutorial.jl")),
+        NotebookManagementTools.ERR_BAD_SCRIPT(joinpath(tutorial_without_script, "tutorial.jl")),
         generate(tutorial_without_script, docs),
     )
     @test_logs(
-        (:info, TutorialTools.INFO_MISSING_TESTS("tutorial_without_tests")),
+        (:info, NotebookManagementTools.INFO_MISSING_TESTS("tutorial_without_tests")),
         generate(tutorial_without_tests),
     )
     firstline = open(readline, joinpath(good_tutorial, "tutorial.md"))
