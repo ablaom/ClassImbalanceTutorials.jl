@@ -20,16 +20,16 @@ structure. For a stand-alone collection of tutorials, this might look something 
 │   ├── make.jl
 │   ├── Project.toml # <--- project for generating documentation (including "Literate")
 │   └── src
-│       └── tutorials
+│       └── notebooks
 │           ├── tutorial1
 │           │   ├── Project.toml  # <--- tutorial-specific project
 │           │   ├── runtests.jl
-│           │   └── tutorial.jl
+│           │   └── notebook.jl
 │           └── tutorial2
 │               ├── Project.toml
 │               ├── runtests.jl
-│               ├── tutorial.jl
-│               └── tutorial.md
+│               ├── notebook.jl
+│               └── notebook.md
 ```
 
 Here each "Project.toml" file is part of a single (nested) workspace.

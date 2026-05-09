@@ -1,5 +1,5 @@
 ```@meta
-EditURL = "tutorial.jl"
+EditURL = "notebook.jl"
 ```
 
 # Test for Diabetes
