@@ -1,4 +1,4 @@
-name: Notebooks - Test and Generate Notebooks
+name: Test and Generate Notebooks as Needed
 env:
   ACTIONS_STEP_DEBUG: true
   NOTEBOOK_ROOT: docs/src/notebooks/
