@@ -5,13 +5,13 @@ ERR_BAD_SCRIPT(file) = ErrorException(
 INFO_MISSING_TESTS(name) = "No runtests.jl file found. Skipping tests for $name. "
 
 """
-    generate(notebook_dir, path_to_docs=path_to_docs(); tests=true)
+    generate(notebook_dir, path_to_literate=path_to_literate(); tests=true)
 
 Attempt to generate a new markdown file from the file named "notebook.jl" and contained in
 `notebook_dir`, using Literate.jl and the project at `notebook_dir`, after activating and
 instantiating the Julia project in `notebook_dir`. A version of Literate.jl is used
-consistent with the project specified at `path_to_docs` (which is pushed to `LOAD_PATH` to
-make it available).
+consistent with the project specified at `path_to_literate` (which is pushed to
+`LOAD_PATH` to make it available).
 
 Literate.jl executes all code cells and wraps the input cell in regular julia fencing. In
 that way, when the markdown is included in a Documenter.jl project, no code is
@@ -36,7 +36,7 @@ which case an empty string is returned.
 """
 function generate(
     notebook_dir,
-    path_to_docs=NotebookManagementTools.path_to_docs();
+    path_to_literate=NotebookManagementTools.path_to_literate();
     tests=true,
     )
     name = splitpath(notebook_dir) |> last
@@ -64,7 +64,8 @@ function generate(
                --color=yes
                --project=$notebook_dir -e '
                    # Next if-end block makes sure the standard library is available.
-                   # When calling generate(…) from /test/runtests.jl in NotebookManagementTools pkg,
+                   # When calling generate(…) from
+                   # NotebookManagementTools//test/runtests.jl in,
                    # the standard library
                    # is mysteriously disappearing from LOAD_PATH here so that Pkg is not
                    # available.
@@ -73,9 +74,8 @@ function generate(
                        push!(LOAD_PATH, "@stdlib")
                    end
 
-                   # Add packages from the docs project to the load path; needed to
-                   # use Literate:
-                   push!(LOAD_PATH, "'$path_to_docs'")
+                   # To make sure Literate is available for use:
+                   push!(LOAD_PATH, "'$path_to_literate'")
 
                    using Pkg
                    Pkg.instantiate();
@@ -109,7 +109,7 @@ function generate(
 end
 
 """
-    generate(notebook_dirs::AbstractVector, path_to_docs=path_to_docs(); tests=true)
+    generate(notebook_dirs::AbstractVector, path_to_literate=path_to_literate(); tests=true)
 
 Attempts to generate each notebook with directory in the provided list
 `notebook_dirs`. Returns paths to re-generated markdown files, or `nothing` if there is a
@@ -118,11 +118,11 @@ failed notebook test or markdown generation failure.
 """
 function generate(
     notebook_dirs::AbstractVector,
-    path_to_docs=NotebookManagementTools.path_to_docs();
+    path_to_literate=NotebookManagementTools.path_to_literate();
     kwargs...,
     )
     generated_files =  map(notebook_dirs) do dir
-        generate(dir, path_to_docs; kwargs...)
+        generate(dir, path_to_literate; kwargs...)
     end
     "" in generated_files && return nothing
     filter(generated_files) do file

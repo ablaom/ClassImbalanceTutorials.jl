@@ -7,8 +7,7 @@ good_tutorial = joinpath(tutorial_root, "good_tutorial")
 bad_tutorial = joinpath(tutorial_root, "bad_tutorial")
 tutorial_without_script = joinpath(tutorial_root, "tutorial_without_script")
 tutorial_without_tests = joinpath(tutorial_root, "tutorial_without_tests")
-docs = joinpath(@__DIR__)
-set_path_to_docs("docs")
+here = @__DIR__
 
 ###################################
 # REMOVE @suppress WHEN DEBUGGING #
@@ -16,16 +15,19 @@ set_path_to_docs("docs")
 
 @testset "generate(…)" begin
     @test @suppress generate(good_tutorial) == joinpath(good_tutorial, "notebook.md")
-    @test @suppress isempty(generate(bad_tutorial, docs))
-    @test @suppress generate([good_tutorial, tutorial_without_tests], docs) ==
+    @test @suppress isempty(generate(bad_tutorial, here))
+    @test @suppress generate([good_tutorial, tutorial_without_tests], here) ==
         [
             joinpath(good_tutorial, "notebook.md"),
             joinpath(tutorial_without_tests, "notebook.md"),
         ]
+    set_path_to_literate(here)
     @test @suppress isnothing(generate([good_tutorial, bad_tutorial]))
     @test_throws(
-        NotebookManagementTools.ERR_BAD_SCRIPT(joinpath(tutorial_without_script, "notebook.jl")),
-        generate(tutorial_without_script, docs),
+    NotebookManagementTools.ERR_BAD_SCRIPT(
+        joinpath(tutorial_without_script, "notebook.jl"),
+    ),
+    generate(tutorial_without_script, here),
     )
     @test_logs(
         (:info, NotebookManagementTools.INFO_MISSING_TESTS("tutorial_without_tests")),

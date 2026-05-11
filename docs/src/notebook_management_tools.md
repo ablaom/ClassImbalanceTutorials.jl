@@ -2,8 +2,8 @@
 
 ```@docs
 NotebookManagementTools
-set_path_to_docs
-path_to_docs
+set_path_to_literate
+path_to_literate
 generate
 dirs
 dirs_containing
