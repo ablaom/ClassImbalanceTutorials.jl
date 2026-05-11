@@ -52,7 +52,7 @@ workspace package pattern, this might look something like this:
 """
 module NotebookManagementTools
 
-const NOTEBOOK_MANAGEMENT_TOOLS_PATH = @__DIR__
+const NOTEBOOK_MANAGEMENT_TOOLS_PATH = joinpath(@__DIR__, "..")
 
 include("utilities.jl")
 include("path_to_literate.jl")
