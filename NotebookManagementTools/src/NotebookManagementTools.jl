@@ -1,24 +1,24 @@
 """
     NotebookManagementTools
 
-Module providing tools for:
+Module providing tools for generating markdown from Literate.jl-compliant julia scripts,
+after testing those scripts.
 
-- Generating markdown from Literate.jl-compliant julia scripts, including testing of the
-  same.
+Intended to facilitate the separate execution and generation of notebooks that are part of
+a larger Documenter.jl documentation deployment. In this scenario, notebook "ground truth"
+is always a julia script (with Literate.jl-compatible narrative). Furthermore, when used
+with appropriate continuous integration workflows, notebooks can be generated on a
+need-to basis, to speed up document generation and the development of new tutorials.
 
-- Automating this generation and testing in continuous integration, for GitHub
-  repositories providing collections of tutorials, either stand-alone or part of
-  documentation of some Julia package(s) provided by the repository.
-
-The tools are meant to be useful in both local development and final deployment. A
-repository of this kind will be structured using Julia's "workspace" package management
-structure. For a stand-alone collection of tutorials, this might look something like this:
+The model we have repository of this kind will be structured using Julia's "workspace"
+package management structure. For a stand-alone collection of tutorials following Julia's
+workspace package pattern, this might look something like this:
 
 ```
 ├── Project.toml     # <---- root project
 ├── docs
 │   ├── make.jl
-│   ├── Project.toml # <--- project for generating documentation (including "Literate")
+│   ├── Project.toml # <--- project for generating documentation wrapping the notebooks
 │   └── src
 │       └── notebooks
 │           ├── tutorial1
@@ -32,30 +32,33 @@ structure. For a stand-alone collection of tutorials, this might look something 
 │               └── notebook.md
 ```
 
-Here each "Project.toml" file is part of a single (nested) workspace.
-
 # Tools
 
 - [`generate`](@ref): The main tool, used to generate markdown from annotated julia script.
-
-- [`set_path_to_docs`](@ref): For pointing the generator to an appropriate version of
-  Literate.jl, the engine for the markdown generation.
-
-- [`path_to_docs`](@ref): For inspecting the above.
 
 - [`dirs`](@ref): Used in continuous integration to list tutorial directories.
 
 - [`dirs_containing`](@ref): Used in continuous integration to find tutorial directories
   containing files known to have changed in a pull-request.
 
+# Advanced Tools
+
+- [`set_path_to_literate`](@ref): For pointing the generator to a version of Literate.jl
+  different from the one in the NotebookManagmentTools project.
+
+- [`path_to_literate`](@ref): For inspecting the above.
+
+
 """
 module NotebookManagementTools
 
+const NOTEBOOK_MANAGEMENT_TOOLS_PATH = @__DIR__
+
 include("utilities.jl")
-include("set_path_to_docs.jl")
+include("path_to_literate.jl")
 include("generate.jl")
 include("init.jl")
 
-export generate, dirs_containing, dirs, set_path_to_docs, path_to_docs
+export generate, dirs_containing, dirs, set_path_to_literate, path_to_literate
 
 end # module
