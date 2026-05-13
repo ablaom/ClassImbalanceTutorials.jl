@@ -82,7 +82,7 @@ function generate(
                        literate_lost = !haskey(Pkg.project().dependencies, "Literate")
                        literate_lost && @warn "You are generating notebook markdown using "*
                                "julia version < 1.12. You may need to explicitly "*
-                               "add Literate to your notebook projects. ")
+                               "add Literate to your notebook projects. "
                    end
 
                    Pkg.instantiate();
