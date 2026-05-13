@@ -79,9 +79,8 @@ function generate(
 
                    # make Literate available:
                    if VERSION < v"1.12"
-                       literate_lost = isnothing(Base.identify_package("Literate"))
-                       println("Is literate lost? ", literate_lost)
-                       literate_lost && error("You are generating notebook markdown using "*
+                       literate_lost = !haskey(Pkg.project().dependencies, "Literate")
+                       literate_lost && @warn "You are generating notebook markdown using "*
                                "julia version < 1.12. You may need to explicitly "*
                                "add Literate to your notebook projects. ")
                    end
