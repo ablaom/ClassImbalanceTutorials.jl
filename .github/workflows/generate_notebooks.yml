@@ -59,6 +59,8 @@ jobs:
               NotebookManagementTools.dirs(root=notebook_root) :
               NotebookManagementTools.dirs_containing(changed_notebook_files; root=notebook_root)
 
+          @info NotebookManagementTools.path_to_literate()
+              
           # Test and generate the notebooks:
           markdown_files = NotebookManagementTools.generate(notebook_dirs; tests=true)
 
