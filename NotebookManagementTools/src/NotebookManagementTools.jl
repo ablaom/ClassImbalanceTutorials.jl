@@ -32,6 +32,12 @@ workspace package pattern, this might look something like this:
 │               └── notebook.md
 ```
 
+!!! note
+
+    If you are not using Julia 1.12 or higher with a workspace project structure, you will
+    need to explicitly add Literate to each notebook's project.
+
+
 # Tools
 
 - [`generate`](@ref): The main tool, used to generate markdown from annotated julia script.

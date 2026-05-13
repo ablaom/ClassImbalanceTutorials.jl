@@ -2,12 +2,12 @@ using Test
 using NotebookManagementTools
 using Suppressor
 
-tutorial_root = joinpath(@__DIR__, "dummy_tutorials")
+here = @__DIR__
+tutorial_root = joinpath(here, "dummy_tutorials")
 good_tutorial = joinpath(tutorial_root, "good_tutorial")
 bad_tutorial = joinpath(tutorial_root, "bad_tutorial")
 tutorial_without_script = joinpath(tutorial_root, "tutorial_without_script")
 tutorial_without_tests = joinpath(tutorial_root, "tutorial_without_tests")
-here = @__DIR__
 
 ###################################
 # REMOVE @suppress WHEN DEBUGGING #

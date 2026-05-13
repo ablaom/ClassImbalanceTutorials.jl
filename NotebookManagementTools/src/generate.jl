@@ -74,10 +74,17 @@ function generate(
                        push!(LOAD_PATH, "@stdlib")
                    end
 
-                   # To make sure Literate is available for use:
+                   using Pkg
                    push!(LOAD_PATH, "'$path_to_literate'")
 
-                   using Pkg
+                   # make Literate available:
+                   if VERSION < v"1.12"
+                       literate_lost = !haskey(Pkg.project().dependencies, "Literate")
+                       literate_lost && @warn "You are generating notebook markdown using "*
+                               "julia version < 1.12. You may need to explicitly "*
+                               "add Literate to your notebook projects. "
+                   end
+
                    Pkg.instantiate();
                    using Test
                    using Literate
