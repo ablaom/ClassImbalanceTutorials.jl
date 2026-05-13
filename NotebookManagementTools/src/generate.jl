@@ -74,14 +74,23 @@ function generate(
                        push!(LOAD_PATH, "@stdlib")
                    end
 
+                   using Pkg
+
+                   # make Literate available:
+                   push!(LOAD_PATH, "'$path_to_literate'")
+
+                   # for pre-workspaces versions of Julia:
+                   need_hack = VERSION < v"1.12.0
+
                    # To make sure Literate is available for use:
-                   if VERSION < v"1.12.0" # pre-workspaces hack:
-                       Pkg.add("Literate")
-                   else # use NotebookManagementTools version:
-                       push!(LOAD_PATH, "'$path_to_literate'")
+                   if need_hack
+                       remove_literate = false
+                       if isnothing(Base.identify_package("Literate"))
+                           Pkg.add("Literate")
+                           remove_literate = true
+                       end
                    end
 
-                   using Pkg
                    Pkg.instantiate();
                    using Test
                    using Literate
@@ -100,7 +109,8 @@ function generate(
                        "'$notebook_dir'",
                        execute=true,
                        config=Dict("codefence" => Pair("\`\`\`\`@julia", "\`\`\`\`" )),
-                   )'`
+                   )
+                   remove_literate && Pkg.remove("Literate")'`
 
     try
         run(cmd)
