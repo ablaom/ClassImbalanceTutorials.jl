@@ -62,7 +62,7 @@ jobs:
           # Test and generate the notebooks:
           markdown_files = NotebookManagementTools.generate(notebook_dirs; tests=true)
 
-          if markdown_files == false
+          if isnothing(markdown_files)
               @error "Problem testing a notebook or generating its markdown"
               exit(1)
           else 
