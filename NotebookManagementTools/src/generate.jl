@@ -75,7 +75,11 @@ function generate(
                    end
 
                    # To make sure Literate is available for use:
-                   push!(LOAD_PATH, "'$path_to_literate'")
+                   if VERSION < v"1.12.0" # pre-workspaces hack:
+                       Pkg.add("Literate")
+                   else # use NotebookManagementTools version:
+                       push!(LOAD_PATH, "'$path_to_literate'")
+                   end
 
                    using Pkg
                    Pkg.instantiate();
