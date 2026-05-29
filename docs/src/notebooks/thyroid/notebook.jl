@@ -95,31 +95,21 @@
 
 # ### Package management
 
-# A **package environment** is a set of specific third party packages known to be mutually
-# compatible, and compatible with the version of Julia you are using. Typically, each
+# A **package environment** is a set of specific third party packages known to be
+# compatible with eachother and the version of Julia you are using. Typically, each
 # project you work on will have it's own environment, which you will want to share with
 # coworkers to ensure workflow reproducibility. Although you can start to learn Julia
-# without worrying too much about package management, we recommend you invest the effort
-# to understand Julia package packagement before carrying out serious work, including this
-# tutorial.
+# without worrying too much about [package management](https://pkgdocs.julialang.org/v1/),
+# it is worth investing time understanding this excellent Julia feature before carrying
+# out serious work, including this tutorial.
 
-# To create a package environment compatible with the code in this tutorial, you will need
-# to:
+# To create a package environment compatible with the code in this tutorial, you can:
 #
 # 1. Clone the GitHub repository at [https://github.com/ablaom/ClassImbalanceTutorials.jl/tree/master](https://github.com/ablaom/ClassImbalanceTutorials.jl/tree/master).
 #
 # 2. In a fresh REPL session, edit the right-hand side of following definition to point to the root directory of your clone: `path_to_clone = "path/to/ClassImbalanceTutorials.jl/tree/master/"`.
 #
 # 3. Still in the REPL, run `using Pkg; Pkg.activate(path_to_local); Pkg.resolve(); Pkg.instantiate()`.
-
-# **Going deeper.**¹ In Step 3, Julia looks for a file named `Project.toml` in
-# `path_to_local`, which contains a list of packages we want to use together, and any
-# constraints on the verions we want to enforce. The file also includes pointers to any
-# other Project.toml files (under `[workspaces]`) whose requirements we additionally want
-# to include. The `resolve` command determines exact versions of all packages that
-# simultaneously meet the requirements, and these versions are stored in a file called
-# `Manifest.toml` at the top level. The `instantiate` command downloads those packages to
-# your computer, in a hidden folder named `.julia` in your home directory.
 
 # If you encounter issues, you can try manually installing the packages you need in a new
 # environment, created with `Pkg.activate("my_env")`, based on the output printed below:
@@ -129,14 +119,6 @@ Pkg.status()
 
 # For example, to add MLJ v0.23.2, do `Pkg.add("MLJ@0.23.2")`.
 
-# **Going deeper.** In this case you get an *exact* replica of the top-level dependencies
-# used to create and test this tutorial. In Julia one can pass around an exact version of
-# *all* packages (not just top-level dependencies) using the Manifest.toml file,
-# but unfortunately there can be small differences across platforms, so this only works
-# reliably if you are sticking with the same platform (e.g., silicon Mac).
-
-# See the [package management documentation](https://pkgdocs.julialang.org/v1/) for
-# more on package management.
 
 # ### Making our workflow reproducible
 
@@ -162,6 +144,7 @@ rand(rng)
 
 rng = stable_rng() # reset the rng
 rand(rng)          # same result as above
+
 
 # ## Downloading a dataset
 
