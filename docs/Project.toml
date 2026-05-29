@@ -1,5 +1,5 @@
 [workspace]
-projects = ["src/tutorials/thyroid", "src/tutorials/diabetes"]
+projects = ["src/notebooks/thyroid", "src/notebooks/diabetes"]
 
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
