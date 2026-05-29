@@ -30,6 +30,8 @@ process, the code appearing in the file "runtests.jl" appearing in the directory
 
 
 
+# Return value
+
 Returns the path to the generated markdown, unless the Julia process exits abnormally, in
 which case an empty string is returned.
 
