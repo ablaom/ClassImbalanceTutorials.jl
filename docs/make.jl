@@ -24,6 +24,7 @@ makedocs(
                 class = :css,
             ),
         ],
+        size_threshold = 10485760,
         repolink = "https://github.com/ablaom/ClassImbalanceTutorials.jl",
     ),
     pages=[
