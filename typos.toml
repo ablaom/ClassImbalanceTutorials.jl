@@ -1,0 +1,10 @@
+[files]
+extend-exclude = ["*.svg", "*.drawio", "*.html", "*.pdf"]
+
+[default.extend-words]
+# Don't correct "mape" to "map"
+mape = "mape"
+yhat = "yhat"
+Jupyter = "Jupyter"
+
+
