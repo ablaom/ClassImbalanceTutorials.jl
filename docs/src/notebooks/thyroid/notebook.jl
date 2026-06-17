@@ -124,9 +124,9 @@
 #   performance**](@ref evaluate) of model pipelines
 
 # - [**tuning**](@ref tuning) (optimization) of user-defined hyperparameters to further
+#   boost performance
 
-# - boosting performance through [**oversampling**](@ref imbalance) training data, to
-#   correct for class imbalance
+# - [**oversampling**](@ref imbalance) training data, to correct for class imbalance
 
 # - [**comparison**](@ref compare) of several supervised learning models (**model
 #   selection**)
