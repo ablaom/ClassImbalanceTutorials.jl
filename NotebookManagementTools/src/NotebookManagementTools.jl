@@ -50,7 +50,7 @@ workspace package pattern, this might look something like this:
 # Advanced Tools
 
 - [`set_path_to_literate`](@ref): For pointing the generator to a version of Literate.jl
-  different from the one in the NotebookManagmentTools project.
+  different from the one in the NotebookManagementTools project.
 
 - [`path_to_literate`](@ref): For inspecting the above.
 

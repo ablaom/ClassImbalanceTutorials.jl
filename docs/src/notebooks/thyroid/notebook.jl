@@ -184,7 +184,7 @@ localfile(name) = joinpath(LOCAL, name);
 # using Pkg
 # Pkg.activate(path_to_clone)  # activate a set of packages
 # Pkg.resolve()                # determine mutually compatible versions
-# Pkg.instantiate()            # dowload packages to your computer
+# Pkg.instantiate()            # download packages to your computer
 # ```
 
 # You should expect this last step to take some time, as all the software for the tutorial
@@ -541,7 +541,7 @@ data = coerce(
 );
 
 # And we can simultaneously ensure all `Textual` scitypes (mostly "true"/"false" answers
-# in the subject questionaire) are re-encoded as `OrderedFactor`:
+# in the subject questionnaire) are re-encoded as `OrderedFactor`:
 
 data = coerce(data, Textual => OrderedFactor);
 
