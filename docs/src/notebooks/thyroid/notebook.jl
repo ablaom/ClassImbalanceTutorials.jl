@@ -2,7 +2,7 @@
 
 # > Anthony D. Blaom, May 2026
 
-# This tutorial presents a detailed, end-to-end application of machine learning to the
+# This tutorial presents an end-to-end application of machine learning to the
 # problem of creating an automated test for the presence of some disease. Specifically, we
 # compare several tests for hypothyroidism based on machine learning models, trained using
 # the well studied Garavan Institute dataset (Quinlan,
@@ -19,7 +19,7 @@
 # computing needs. Julia's potential in computational biology is well established (Roesch
 # et al., [2023](https://doi.org/10.1038/s41592-023-01832-z)). In Pharmacometrics
 # modeling, for example, [PumasAI](https://pumas.ai) software for non-linear mixed effects
-# modeling, written in Julia, runs much considerably faster than all the commonly adopted
+# modeling, written in Julia, runs much considerably faster than commonly adopted
 # alternatives (Zeng et al.,
 # [2026](https://link.springer.com/article/10.1007/s00228-025-03974-9)).
 
@@ -28,8 +28,8 @@
 # website](https://julialang.org).
 
 # We assume readers are familiar with basic statistics, including the use of
-# cross-validation to guard against over-fitting. Readers new to Julia will benefit
-# significantly from previous exposure to a scripting language, such as those cited above.
+# cross-validation to guard against over-fitting. Readers new to Julia will benefit from
+# previous exposure to a scripting language, such as those cited above.
 
 
 # ## Overview
@@ -42,12 +42,12 @@
 # proportion of correct predictions, are inappropriate; we should turn to more
 # nuanced metrics.
 
-# Most crucially, among subjects with hypothyroidism, we seek to reduce the number for
+# Crucially, among subjects with hypothyroidism, we seek to reduce the number for
 # which our test fails to return a positive result. Equivalently, we want a high
 # [recall](https://en.wikipedia.org/wiki/Precision_and_recall). On the other hand, we must
 # account for the tendency that higher recall means more false alarms, or a lower
 # [precision](https://en.wikipedia.org/wiki/Precision_and_recall), where we have
-# proportionally more positive tests results for which a follow up investigation is
+# proportionally more positive test results for which a follow up investigation is
 # required, despite the subject not having the disease.
 
 # The approach we take here is to fix a target recall, say 0.95, and seek the test that
@@ -104,7 +104,7 @@
 
 # - [**outlier detection**](@ref pipeline) and removal
 
-# - [**coercion**](@ref scitype) of feature data types, to ensure "scientifically" correct
+# - [**coercion**](@ref scitype) of feature data types, to ensure "scientifically correct"
 #   interpretation by MLJ models
 
 # - [**one-hot encoding**](@ref pipeline), which transforms categorical features (such as the
@@ -113,7 +113,8 @@
 # - [**feature standardization**](@ref pipeline) (normalization)
 
 # - constructing model [**pipelines**](@ref pipeline), which combine data pre-processing
-#   with a supervised learner, to streamline workflows and mitigate **data leakage**
+#   with a supervised learner, to streamline workflows and mitigate [**data
+#   leakage**](https://en.wikipedia.org/wiki/Leakage_(machine_learning))
 
 # - training of supervised models that report **feature importances**, with a view to
 #   applying [**recursive feature elimination**](@ref rfe), which can address the "curse of
@@ -278,7 +279,7 @@ model = DecisionTreeClassifier(min_samples_split=5, rng=stable_rng())  # model i
 # **Going deeper.** To see all registered MLJ models that can be immediately applied to
 # our data, do `models(matching(X, Y))`. See the [Model
 # Search](https://juliaai.github.io/MLJ.jl/dev/model_search/) section of the MLJ
-# documentation for more options.
+# documentation for more options. 
 
 # So far, we have seen three different ways to load package code. When we run `import
 # DataFrames` we load the DataFrames.jl package but must qualify the name of any function
@@ -351,7 +352,7 @@ fitted_params(mach).tree
 # restart](https://juliaai.github.io/MLJ.jl/dev/machines/#Warm-restarts) for some
 # iterative models, such as a random forest, or the gradient tree boosting model appearing
 # later in this tutorial. In model pipelines, discussed later, `fit!` only retrains
-# component models that actually need retraining.
+# component models that actually need retraining. ♣
 
 # Here is how we can make predictions on some other view of the bound data:
 
@@ -366,9 +367,10 @@ Xnew = (sepal_length = [5.1, 6.3],
         petal_width = [0.3, 1.5])
 yhat = predict(mach, Xnew)
 
-# These are *probabilistic* predictions which can be manipulated using a
-# widely adopted interface defined in the Distributions.jl
-# package. For example, we can get raw probabilities like this:
+# These are *probabilistic* predictions which can be manipulated using a widely adopted
+# interface defined in the
+# [Distributions.jl](https://juliastats.org/Distributions.jl/stable/) package. For
+# example, we can get raw probabilities like this:
 
 pdf.(yhat, "virginica")
 
@@ -395,7 +397,7 @@ path = Downloads.download(url)
 # ```
 
 # The dataset file is comma-separated, but has no header. The header can be gleaned from
-# [https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disea/allhypo.names](https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disea/allhypo.names),
+# [https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names](https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names),
 # which has further information about the dataset. We manually provide the header as
 # follows:
 
@@ -549,7 +551,8 @@ data = coerce(data, Textual => OrderedFactor);
 
 # There is no separate binary scitype in Julia, only `Finite{2}` and `Multiclass{2}`. We
 # use the latter for data with a natural choice of "positive" class, as we have for the
-# `diagnosis` field, and use `Multiclass{2}` otherwise, as we have for `sex`.
+# `diagnosis` field and true/false questions in the subject questionnaire, and use
+# `Multiclass{2}` otherwise, as we have for `sex`.
 
 # **Going deeper.** For more on scientific types see the [ScientificTypes.jl
 # documentation](https://juliaai.github.io/ScientificTypes.jl/dev/). See also the MLJ
@@ -1029,9 +1032,10 @@ tuned_tree = TunedModel(
 );
 
 # Here `tuned_tree` is a new supervised model, which we can think of as a "self-tuning"
-# version of the original `tree` model. Stated differently, it is a new model in which one
-# or more hyper-parameters have become *learned* parameters. When we train `tuned_model`
-# on data `(X, y)`, the following happens behind the scenes:
+# version of the original `tree` model. Stated differently, it is a new model in which the
+# hyper-parameters `min_samples_split` and `max_depth` have become *learned*
+# parameters. When we train `tuned_model` on data `(X, y)`, the following happens behind
+# the scenes:
 
 # 1. A sequence of `tree` mutations `tree1`, `tree2`, `tree3`, ... , of `tree`, with hyper-parameters varying over the specified `range`, are constructed.
 
@@ -1348,7 +1352,7 @@ display(plts[1]) # to display the first plot
 
 # The "perfect" performance of the dummy model against average precision is an artifact of
 # how the implementation of `average_precision` handles the case of a single probability
-# across all predictions in any test fold, and can be regarded as spurious
+# across all predictions in any test fold, and can be regarded as spurious.
 
 # The support vector machine (SVM) achieves the best expected precision at 0.95 recall and
 # the associated 95% confidence interval is relatively sharp. The gradient tree booster
@@ -1357,11 +1361,11 @@ display(plts[1]) # to display the first plot
 # for performance has significant variability, and on that basis, the SVM is preferred.
 
 # On the other hand, the decision tree scores very well against both average precision and
-# balanced accuracy scores, and our estimates in these cases are sharp. The performance of
-# the SVM is relatively poor. However, average precision, an approximation to the area
-# under the precision-recall curve, is more a global measure of performance across all
-# choices of probability threshold. Since we are focused on high recall, it's not the
-# relevant score here.
+# balanced accuracy scores, and our estimates in these cases are sharp. Meanwhile, the
+# performance of the SVM is relatively poor. However, average precision, an approximation
+# to the area under the precision-recall curve, is more a global measure of performance
+# across all choices of probability threshold. Since we are focused on high recall, it's
+# not the relevant score here.
 
 # In passing, we note that average precision is used more generally when the target is
 # imbalanced, because the traditional [area under the receiver-operator
