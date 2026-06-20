@@ -19,9 +19,8 @@
 # computing needs. Julia's potential in computational biology is well established (Roesch
 # et al., [2023](https://doi.org/10.1038/s41592-023-01832-z)). In Pharmacometrics
 # modeling, for example, [PumasAI](https://pumas.ai) software for non-linear mixed effects
-# modeling, written in Julia, runs much considerably faster than commonly adopted
-# alternatives (Zeng et al.,
-# [2026](https://link.springer.com/article/10.1007/s00228-025-03974-9)).
+# modeling, written in Julia, runs considerably faster than commonly adopted alternatives
+# (Zeng et al., [2026](https://link.springer.com/article/10.1007/s00228-025-03974-9)).
 
 # For resources on
 # learning Julia, installing Julia packages, etc, the reader is referred to the [Julia
