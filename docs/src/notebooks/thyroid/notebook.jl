@@ -119,7 +119,7 @@
 #   applying [**recursive feature elimination**](@ref rfe), which can address the "curse of
 #   dimensionality" and reduce noise
 
-# - constructing approximate confidence intervals expected for the [**predictive
+# - constructing approximate confidence intervals for the expected [**predictive
 #   performance**](@ref evaluate) of model pipelines
 
 # - [**tuning**](@ref tuning) (optimization) of user-defined hyperparameters to further
