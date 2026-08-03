@@ -1349,10 +1349,6 @@ display(plts[1]) # to display the first plot
 
 # ### Commentary
 
-# The "perfect" performance of the dummy model against average precision is an artifact of
-# how the implementation of `average_precision` handles the case of a single probability
-# across all predictions in any test fold, and can be regarded as spurious.
-
 # The support vector machine (SVM) achieves the best expected precision at 0.95 recall and
 # the associated 95% confidence interval is relatively sharp. The gradient tree booster
 # performs nearly as well, and on the basis of the uncertainties, we cannot rule it out as

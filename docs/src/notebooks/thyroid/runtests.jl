@@ -52,7 +52,7 @@ end
 @testset "top three models for average precision" begin
     sort!(performance_summary, :AveragePrecision, rev=true)
     @test Set(performance_summary.tag[1:3]) ==
-        Set(["dummy", "decision tree", "decision tree, tuned"])
+        Set(["decision tree", "decision tree, tuned", "gradient booster"])
 end
 @testset "oversampling reduced variance of svm average precision"  begin
     i = findfirst(==("SVM"), performance_summary.tag)
