@@ -10,7 +10,7 @@ is always a julia script (with Literate.jl-compatible narrative). Furthermore, w
 with appropriate continuous integration workflows, notebooks can be generated on a
 need-to basis, to speed up document generation and the development of new tutorials.
 
-The model we have repository of this kind will be structured using Julia's "workspace"
+The kind of repository we have in mind will be structured using Julia's "workspace"
 package management structure. For a stand-alone collection of tutorials following Julia's
 workspace package pattern, this might look something like this:
 
@@ -42,10 +42,10 @@ workspace package pattern, this might look something like this:
 
 - [`generate`](@ref): The main tool, used to generate markdown from annotated julia script.
 
-- [`dirs`](@ref): Used in continuous integration to list tutorial directories.
+- [`notebook_dirs`](@ref): Used in continuous integration to list notebook directories.
 
-- [`dirs_containing`](@ref): Used in continuous integration to find tutorial directories
-  containing files known to have changed in a pull-request.
+- [`notebook_dirs_containing`](@ref): Used in continuous integration to find tutorial
+  directories containing files known to have changed in a pull-request.
 
 # Advanced Tools
 
@@ -65,6 +65,7 @@ include("path_to_literate.jl")
 include("generate.jl")
 include("init.jl")
 
-export generate, dirs_containing, dirs, set_path_to_literate, path_to_literate
+export generate, notebook_dirs_containing, notebook_dirs,
+    set_path_to_literate, path_to_literate
 
 end # module
