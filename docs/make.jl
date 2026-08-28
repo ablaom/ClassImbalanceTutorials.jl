@@ -31,7 +31,6 @@ makedocs(
         "Home" => "index.md",
         "Test for Hypothyroidism" => "notebooks/thyroid/notebook.md",
         "Test for Diabetes" => "notebooks/diabetes/notebook.md",
-        "NotebookManagementTools.jl" => "notebook_management_tools.md",
     ],
     plugins = [CodeBlocks()],
     sitename=REPO_NAME,
