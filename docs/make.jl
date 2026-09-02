@@ -1,4 +1,4 @@
-using Documenter, DocumenterCodeBlocks
+using Documenter
 
 const REPO_NAME = "ClassImbalanceTutorials.jl"
 const  REPO = Remotes.GitHub("ablaom", REPO_NAME)
@@ -32,7 +32,6 @@ makedocs(
         "Test for Hypothyroidism" => "notebooks/thyroid/notebook.md",
         "Test for Diabetes" => "notebooks/diabetes/notebook.md",
     ],
-    plugins = [CodeBlocks()],
     sitename=REPO_NAME,
     warnonly = [:cross_references, :missing_docs],
     repo = Remotes.GitHub("ablaom", REPO_NAME),
