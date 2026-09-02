@@ -61,7 +61,7 @@ function generate(
     setup = quote
         # Next if-end block makes sure the standard library is available.
         # When calling generate(…) from
-        # NotebookManagementTools/test/runtests.jl in,
+        # NotebookManagementTools/test/runtests.jl,
         # the standard library
         # is mysteriously disappearing from LOAD_PATH here so that Pkg is not
         # available.
