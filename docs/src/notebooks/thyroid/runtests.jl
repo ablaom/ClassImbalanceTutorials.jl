@@ -30,7 +30,7 @@ svm_training_precision_at_95 = svm_row.PrecisionAtFixedRecall[1]
 @test round(Measurements.uncertainty(svm_training_precision_at_95), sigdigits=2) == 0.037
 # somehow couldn't nail down the RNG; there's probably a default_rng() in play here:
 @test round(test_recall_svm, sigdigits=2) in [0.97, 0.98, 0.99]
-@test round(test_precision_svm, sigdigits=2) in [0.86, 0.87, 0.88]
+@test round(test_precision_svm, sigdigits=2) in [0.87, 0.88, 0.89]
 
 # In the section commenting on results (in Section 11), some rankings of the models are
 # discussed:

@@ -65,7 +65,7 @@
 #
 # As we detail later, using a probability threshold determined from the training data
 # delivers a model which, on the 30% holdout set, has a **recall of about 98%** (i.e., 2%
-# of subjects with the disease tested negative) and **precision of about 87%** (13% of
+# of subjects with the disease tested negative) and **precision of about 88%** (13% of
 # patients testing positive did not have the disease). We can also see, from the following
 # empirical precision-recall curve, that we may be able to increase the recall further,
 # without dropping the precision dramatically.
