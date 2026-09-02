@@ -53,21 +53,14 @@
 # will maximize the corresponding precision. Other metrics commonly used for imbalanced
 # data will be reported alongside this main one, the **precision at 0.95 recall.**
 
-# **Going deeper.** Recall that the precision and recall of a model predicting positive or
-# negative outcomes can be expressed by the formulae,
-
-# $$\mathrm{recall} = 1 - \frac{\mathrm{false~negatives}}{\mathrm{positives}},\quad\mathrm{precision}=\frac{1}{1+(\mathrm{false~positives})/(\mathrm{true~negatives})}.$$
-
-# These metrics always lie between 0 and 1, and the higher, the better. ♣
-
 # ### [Performance of the best model](@id best)
 
 # In this tutorial, we estimate the 95% confidence interval (CI) for the expected
 # precision at 0.95 recall of assorted machine learning models, using 70% of the Garavan
 # Institute dataset to do so. Promising models are then evaluated on the remaining 30%
 # holdout test set. For our most promising model, a probability-predicting [support vector
-# machine](https://en.wikipedia.org/wiki/Support_vector_machine), the CI is 0.927 ±
-# 0.024. This estimated CI is approximate. Generally, it is challenging to obtain reliable
+# machine](https://en.wikipedia.org/wiki/Support_vector_machine), the CI is 0.904 ±
+# 0.037. This estimated CI is approximate. Generally, it is challenging to obtain reliable
 # uncertainty estimates in machine learning.
 #
 # As we detail later, using a probability threshold determined from the training data
@@ -278,7 +271,7 @@ model = DecisionTreeClassifier(min_samples_split=5, rng=stable_rng())  # model i
 # **Going deeper.** To see all registered MLJ models that can be immediately applied to
 # our data, do `models(matching(X, Y))`. See the [Model
 # Search](https://juliaai.github.io/MLJ.jl/dev/model_search/) section of the MLJ
-# documentation for more options. 
+# documentation for more options.
 
 # So far, we have seen three different ways to load package code. When we run `import
 # DataFrames` we load the DataFrames.jl package but must qualify the name of any function
@@ -1237,7 +1230,7 @@ tree = preprocess |> bare_tree;
 ## decision tree with tuning of `min_samples_split`:
 tuned_tree = TunedModel(
     deepcopy(tree);
-    range = range(tree, :(decision_tree_classifier.min_samples_split), lower=2,upper=21),
+    range=range(tree, :(decision_tree_classifier.min_samples_split), lower=2,upper=21),
     tuning=Grid(goal=8, shuffle=false),
     resampling=StratifiedCV(nfolds=3),
     measure=precision_at_95,
@@ -1246,6 +1239,15 @@ tuned_tree = TunedModel(
 ## gradient tree booster:
 bare_booster = EvoTreeClassifier()
 booster = preprocess |> bare_booster
+
+## a tuned gradient tree booster:
+tuned_booster = TunedModel(
+    deepcopy(booster),
+    range=range(booster, :(evo_tree_classifier.max_depth), lower=1, upper=9),
+    tuning=Grid(goal=5, shuffle=false),
+    resampling=StratifiedCV(nfolds=3),
+    measure=precision_at_95,
+)
 
 ## support vector machine:
 ProbabilisticSVC = @load ProbabilisticSVC pkg=LIBSVM verbosity=0
@@ -1281,6 +1283,7 @@ named_models = [
     "decision tree" => tree,
     "decision tree, tuned" => tuned_tree,
     "gradient booster" =>booster,
+    "gradient booster, tuned" => tuned_booster,
     "SVM" => svm,
     "SVM, balanced" => balanced_svm,
     "KNN" => knn,
@@ -1349,11 +1352,10 @@ display(plts[1]) # to display the first plot
 
 # ### Commentary
 
-# The support vector machine (SVM) achieves the best expected precision at 0.95 recall and
-# the associated 95% confidence interval is relatively sharp. The gradient tree booster
-# performs nearly as well, and on the basis of the uncertainties, we cannot rule it out as
-# the better model. While the decision tree classifier scores almost as well, our estimate
-# for performance has significant variability, and on that basis, the SVM is preferred.
+# Although the simple, untuned, decision tree achieves the best estimate of the expected
+# precision at 0.95 recall, the estimate for the support vector machine (SVM), which is
+# only slightly less, is much sharper (has smaller 95% confidence interval). This is
+# clearly the preferred model.
 
 # On the other hand, the decision tree scores very well against both average precision and
 # balanced accuracy scores, and our estimates in these cases are sharp. Meanwhile, the
