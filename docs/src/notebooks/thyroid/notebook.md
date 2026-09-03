@@ -6,12 +6,12 @@ EditURL = "notebook.jl"
 
 > Anthony D. Blaom, May 2026
 
-This tutorial presents an end-to-end application of machine learning to the
-problem of creating an automated test for the presence of some disease. Specifically, we
-compare several tests for hypothyroidism based on machine learning models, trained using
-the well studied Garavan Institute dataset (Quinlan,
-[1986](https://doi.org/10.24432/C5D010)). While our main goal is pedagogical, the models
-we propose are fully developed, and not mere toy examples.
+This tutorial presents an end-to-end application of machine learning to the problem of
+testing for the presence of some disease. Specifically, we compare several tests for
+hypothyroidism based on machine learning models, trained using the well studied Garavan
+Institute dataset (Quinlan, [1986](https://doi.org/10.24432/C5D010)). While our main
+goal is pedagogical, the models we propose are fully developed, and not mere toy
+examples.
 
 The principal software tool will be the [MLJ.jl](https://juliaml.ai) machine learning
 toolbox, written for the Julia programming language (Blaom et al.,
@@ -278,7 +278,7 @@ rand()
 ````
 
 ````
-0.5563178809533877
+0.5723898275020673
 ````
 
 ## 2. Models and machines
@@ -566,7 +566,7 @@ path = Downloads.download(url)
 ````
 
 ````
-"/tmp/jl_7j4AYD/allhypo.data"
+"/tmp/jl_qYUeC7/allhypo.data"
 ````
 
 Entering these lines of code downloads the dataset to the temporary location on your
@@ -1242,7 +1242,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-835
+Tag: ProbabilisticPipeline-946
 Extract:
 ┌────────────────────────────┬───────────┬─────────────┐
 │ measure                    │ operation │ measurement │
@@ -1300,7 +1300,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-657
+Tag: ProbabilisticPipeline-302
 Extract:
 ┌───┬────────────────────────────┬──────────────┬─────────────┐
 │   │ measure                    │ operation    │ measurement │
@@ -1613,7 +1613,7 @@ savefig(fig, localfile("tree_learning_curve.svg"));
 ````
 [ Info: Training machine(ProbabilisticTunedModel(model = ProbabilisticPipeline(fill_imputer = FillImputer(features = Symbol[], …), …), …), …).
 [ Info: Attempting to evaluate 20 models.
-Evaluating over 20 metamodels:  10%[==>                      ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  15%[===>                     ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  20%[=====>                   ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  25%[======>                  ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  30%[=======>                 ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  35%[========>                ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  40%[==========>              ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  45%[===========>             ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  50%[============>            ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  55%[=============>           ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  60%[===============>         ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  65%[================>        ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  70%[=================>       ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  75%[==================>      ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  80%[====================>    ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  85%[=====================>   ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  90%[======================>  ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  95%[=======================> ]  ETA: 0:00:00[KEvaluating over 20 metamodels: 100%[=========================] Time: 0:00:00[K
+Evaluating over 20 metamodels:   0%[>                        ]  ETA: N/A[KEvaluating over 20 metamodels:   5%[=>                       ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  10%[==>                      ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  15%[===>                     ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  20%[=====>                   ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  25%[======>                  ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  30%[=======>                 ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  35%[========>                ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  40%[==========>              ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  45%[===========>             ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  50%[============>            ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  55%[=============>           ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  60%[===============>         ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  65%[================>        ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  70%[=================>       ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  75%[==================>      ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  80%[====================>    ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  85%[=====================>   ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  90%[======================>  ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  95%[=======================> ]  ETA: 0:00:00[KEvaluating over 20 metamodels: 100%[=========================] Time: 0:00:00[K
 
 ````
 
@@ -1957,7 +1957,7 @@ sort!(performance_summary, :PrecisionAtFixedRecall, rev=true)
 ````
 
 ```@raw html
-<div><div style = "float: left;"><span>11×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">decision tree</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.99939±0.0008</td><td style = "text-align: right;">0.9833±0.0079</td><td style = "text-align: right;">0.9948±0.0016</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">SVM</td><td style = "text-align: right;">0.904±0.037</td><td style = "text-align: right;">0.94±0.029</td><td style = "text-align: right;">0.965±0.024</td><td style = "text-align: right;">0.946±0.014</td><td style = "text-align: right;">0.9898±0.0025</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">decision tree, tuned</td><td style = "text-align: right;">0.86±0.15</td><td style = "text-align: right;">0.965±0.016</td><td style = "text-align: right;">0.9981±0.0012</td><td style = "text-align: right;">0.9863±0.0087</td><td style = "text-align: right;">0.9961±0.0019</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">gradient booster, tuned</td><td style = "text-align: right;">0.854±0.082</td><td style = "text-align: right;">0.945±0.024</td><td style = "text-align: right;">0.973±0.013</td><td style = "text-align: right;">0.956±0.013</td><td style = "text-align: right;">0.9882±0.0028</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">5</td><td style = "text-align: left;">gradient booster</td><td style = "text-align: right;">0.842±0.076</td><td style = "text-align: right;">0.938±0.02</td><td style = "text-align: right;">0.969±0.013</td><td style = "text-align: right;">0.955±0.015</td><td style = "text-align: right;">0.9884±0.0025</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">6</td><td style = "text-align: left;">linear (logistic)</td><td style = "text-align: right;">0.81±0.13</td><td style = "text-align: right;">0.956±0.015</td><td style = "text-align: right;">0.97±0.014</td><td style = "text-align: right;">0.941±0.015</td><td style = "text-align: right;">0.9889±0.0022</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">7</td><td style = "text-align: left;">KNN</td><td style = "text-align: right;">0.807±0.061</td><td style = "text-align: right;">0.887±0.048</td><td style = "text-align: right;">0.968±0.016</td><td style = "text-align: right;">0.833±0.029</td><td style = "text-align: right;">0.9749±0.0043</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">8</td><td style = "text-align: left;">SVM, balanced</td><td style = "text-align: right;">0.776±0.09</td><td style = "text-align: right;">0.917±0.038</td><td style = "text-align: right;">0.961±0.016</td><td style = "text-align: right;">0.9658±0.0095</td><td style = "text-align: right;">0.9839±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">9</td><td style = "text-align: left;">KNN, balanced</td><td style = "text-align: right;">0.67±0.1</td><td style = "text-align: right;">0.846±0.053</td><td style = "text-align: right;">0.965±0.011</td><td style = "text-align: right;">0.968±0.0092</td><td style = "text-align: right;">0.9726±0.003</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">10</td><td style = "text-align: left;">neural network</td><td style = "text-align: right;">0.52±0.13</td><td style = "text-align: right;">0.763±0.095</td><td style = "text-align: right;">0.931±0.02</td><td style = "text-align: right;">0.91±0.02</td><td style = "text-align: right;">0.981±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">11</td><td style = "text-align: left;">dummy</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.5±3.1e-16</td><td style = "text-align: right;">0.92857±0.00055</td></tr></tbody></table></div>
+<div><div style = "float: left;"><span>11×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">decision tree</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.99939±0.0008</td><td style = "text-align: right;">0.9833±0.0079</td><td style = "text-align: right;">0.9948±0.0016</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">SVM</td><td style = "text-align: right;">0.904±0.037</td><td style = "text-align: right;">0.94±0.029</td><td style = "text-align: right;">0.965±0.024</td><td style = "text-align: right;">0.948±0.016</td><td style = "text-align: right;">0.9902±0.0029</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">decision tree, tuned</td><td style = "text-align: right;">0.86±0.15</td><td style = "text-align: right;">0.965±0.016</td><td style = "text-align: right;">0.9981±0.0012</td><td style = "text-align: right;">0.9863±0.0087</td><td style = "text-align: right;">0.9961±0.0019</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">gradient booster, tuned</td><td style = "text-align: right;">0.854±0.082</td><td style = "text-align: right;">0.945±0.024</td><td style = "text-align: right;">0.973±0.013</td><td style = "text-align: right;">0.956±0.013</td><td style = "text-align: right;">0.9882±0.0028</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">5</td><td style = "text-align: left;">gradient booster</td><td style = "text-align: right;">0.842±0.076</td><td style = "text-align: right;">0.938±0.02</td><td style = "text-align: right;">0.969±0.013</td><td style = "text-align: right;">0.955±0.015</td><td style = "text-align: right;">0.9884±0.0025</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">6</td><td style = "text-align: left;">linear (logistic)</td><td style = "text-align: right;">0.81±0.13</td><td style = "text-align: right;">0.956±0.015</td><td style = "text-align: right;">0.97±0.014</td><td style = "text-align: right;">0.941±0.015</td><td style = "text-align: right;">0.9889±0.0022</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">7</td><td style = "text-align: left;">KNN</td><td style = "text-align: right;">0.807±0.061</td><td style = "text-align: right;">0.887±0.048</td><td style = "text-align: right;">0.968±0.016</td><td style = "text-align: right;">0.833±0.029</td><td style = "text-align: right;">0.9749±0.0043</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">8</td><td style = "text-align: left;">SVM, balanced</td><td style = "text-align: right;">0.776±0.09</td><td style = "text-align: right;">0.917±0.038</td><td style = "text-align: right;">0.961±0.016</td><td style = "text-align: right;">0.9661±0.0095</td><td style = "text-align: right;">0.9844±0.0029</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">9</td><td style = "text-align: left;">KNN, balanced</td><td style = "text-align: right;">0.67±0.1</td><td style = "text-align: right;">0.846±0.053</td><td style = "text-align: right;">0.965±0.011</td><td style = "text-align: right;">0.968±0.0092</td><td style = "text-align: right;">0.9726±0.003</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">10</td><td style = "text-align: left;">neural network</td><td style = "text-align: right;">0.52±0.13</td><td style = "text-align: right;">0.763±0.095</td><td style = "text-align: right;">0.931±0.02</td><td style = "text-align: right;">0.91±0.02</td><td style = "text-align: right;">0.981±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">11</td><td style = "text-align: left;">dummy</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.5±3.1e-16</td><td style = "text-align: right;">0.92857±0.00055</td></tr></tbody></table></div>
 ```
 
 To better visualize the confidence intervals, we plot the results for some of the
@@ -2086,11 +2086,11 @@ thresholds[[1,2,3,end-2,end-1,end]]
 ````
 6-element Vector{Float64}:
  0.9999999
- 0.9999998744809885
- 0.9999988208877302
- 1.4557162534289958e-6
- 1.2139704972380372e-6
- 1.1707927604076573e-6
+ 0.9999998247157191
+ 0.9999984267033775
+ 1.8923854436803111e-6
+ 1.5839607714340787e-6
+ 1.5287486053727761e-6
 ````
 
 There is one less threshold than recall or precision, and the recalls and precisions are
@@ -2122,7 +2122,7 @@ threshold = thresholds[i - 1]
 ````
 
 ````
-0.4276770276745723
+0.42646080532039277
 ````
 
 To transform our probabilistic predictor into point predictor, we use another MLJ
