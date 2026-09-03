@@ -1003,6 +1003,7 @@ _, _, splits, precisions = learning_curve(
     range=r,
     resampling=StratifiedCV(nfolds=3),
     measure=precision_at_95,
+    verbosity=0,
 )
 
 using Plots
@@ -1029,7 +1030,6 @@ tuned_tree = TunedModel(
     tuning=Grid(goal=32, shuffle=false), # test on a parameter grid with about 32 points
     resampling=StratifiedCV(nfolds=3),
     measure=precision_at_95,
-    verbosity=0,
 );
 
 # Here `tuned_tree` is a new supervised model, which we can think of as a "self-tuning"
