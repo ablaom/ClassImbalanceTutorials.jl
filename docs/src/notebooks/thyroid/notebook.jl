@@ -64,7 +64,7 @@
 # uncertainty estimates in machine learning.
 #
 # As we detail later, using a probability threshold determined from the training data
-# delivers a model which, on the 30% holdout set, has a **recall of about 98%** (i.e., 2%
+# delivers a model which, on the 30% holdout set, has a **recall of about 97%** (i.e., 2%
 # of subjects with the disease tested negative) and **precision of about 88%** (13% of
 # patients testing positive did not have the disease). We can also see, from the following
 # empirical precision-recall curve, that we may be able to increase the recall further,
@@ -146,8 +146,8 @@
 
 # You can also interact with Julia using a interactive development environment such as
 # VSCode or emacs, or using notebook-style interfaces such as
-# [Jupyter](https://ijulia.org/stable/) (python-driven), [Pluto](https://plutojl.org), or
-# [Neptune](https://github.com/compleathorseplayer/Neptune.jl), not discussed here.
+# [Jupyter](https://ijulia.org/stable/) (python-driven) or [Pluto](https://plutojl.org),
+# not discussed here.
 
 # Edit the definition of `LOCAL` below, to point to the directory to which you would like
 # figures to be saved.
@@ -268,7 +268,7 @@ model = DecisionTreeClassifier(min_samples_split=5, rng=stable_rng())  # model i
 # **hyper-parameters** of the model, namely those parameters we need to specify before any
 # learning begins.  Never mind about the meaning of these hyper-parameters for now.
 
-# **Going deeper.** To see all registered MLJ models that can be immediately applied to
+# **Going deeper.**² To see all registered MLJ models that can be immediately applied to
 # our data, do `models(matching(X, Y))`. See the [Model
 # Search](https://juliaai.github.io/MLJ.jl/dev/model_search/) section of the MLJ
 # documentation for more options.
@@ -596,7 +596,7 @@ proportions_test = StatsBase.proportionmap(data_test.diagnosis)
 # To remove missing values, we will use an imputation algorithm called `FillImputer`.  To
 # search for available models related to imputation, you can run
 # `models("impute")`. Unlike the `DecisionTreeClassifier` we used earlier, `FillImputer`
-# is is immediately available (no need to `@load` it). To see all currently loaded models,
+# is immediately available (no need to `@load` it). To see all currently loaded models,
 # run `localmodels()`.
 
 # Enter `?FillImputer` in the REPL to pull up its document string. From there we can see
@@ -611,7 +611,7 @@ model = FillImputer()
 mach = machine(model, data);
 fit!(mach);
 
-# Now, as `FillImputer` is "transformer" rather than a supervised learner, we use
+# Now, as `FillImputer` is a "transformer" rather than a supervised learner, we use
 # `transform` instead of `predict` to get the imputed output:
 
 data_clean = transform(mach, data);
@@ -661,8 +661,9 @@ first(data_continuous, 3)
 # We are ready to instantiate our K-nearest neighbor outlier detector. We additionally
 # need the `ProbabilisticDetector` wrapper for detectors, so that the detector's
 # predictions are probabilistic. This wrapper is provided by the package
-# OutlierDetection.jl, which we must explicitly import. Training and prediction proceeds
-# following a familiar pattern:
+# [OutlierDetection.jl](https://outlierdetectionjl.github.io/OutlierDetection.jl/dev/documentation/simple-usage/)
+# (Muhr et al., [2020](https://doi.org/10.48550/arXiv.2211.04550)) which we must
+# explicitly import. Training and prediction proceeds following a familiar pattern:
 
 import OutlierDetection
 KNNDetector = @load KNNDetector pkg=OutlierDetectionNeighbors verbosity=0
@@ -899,7 +900,9 @@ options() = (
 evaluations = evaluate(
     [
         "booster" => preprocess |> bare_booster,
-        "booster with RFE" => preprocess |> bare_booster_with_rfe(4),
+        "booster with 2 features" => preprocess |> bare_booster_with_rfe(2),
+        "booster with 4 features" => preprocess |> bare_booster_with_rfe(4),
+        "booster with 8 features" => preprocess |> bare_booster_with_rfe(8),
     ],
     X,
     y; # this semicolon is important!
@@ -911,12 +914,10 @@ evaluations = evaluate(
 
 describe.(evaluations) |> DataFrames.DataFrame
 
-# So we see a small, if statistically insignificant, improvement, for the precision at
-# 0.95 recall (second column).
-
-# Now suppose we want to apply the same internal feature selection ahead of training
-# some other supervised model. The `transform` method, which is implemented for models
-# wrapped with `RecursiveFeatureElimination`, performs precisely that feature selection:
+# Okay, no real improvment here. Hower, we can apply the same internal feature selection
+# ahead of training some other supervised model. The `transform` method, which is
+# implemented for models wrapped with `RecursiveFeatureElimination`, performs precisely
+# that feature selection:
 
 mach = machine(bare_booster_with_rfe(4), X_continuous, y)
 fit!(mach)
@@ -930,19 +931,26 @@ schema(X_reduced)
 
 reducer(n) = Transformer(bare_booster_with_rfe(n));
 
-# which we can demonstrate by defining a pipeline that combines our previous data
-# preprocessing with feature selection:
+# Let's demonstrate this by applying recursive feature elimination (as learned by the
+# booster) to ordinary logistic regression (called logistic classification in MLJ):
 
-preprocess_reduce = preprocess |> reducer(4)
-mach = machine(preprocess_reduce, X, y)
-fit!(mach, verbosity=0)
-transform(mach, X) ≈ X_reduced
+LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels verbosity=0
+bare_linear = LogisticClassifier()
 
-# **Going deeper.** At the REPL, you can get the `≈` symbol, syntactic sugar for applying
-#  the `isapprox` function, by typing `\approx` followed by the TAB key. If you are
-#  familiar with the LaTex typesetting package, you will find many of your favorite
-#  symbols can be generated this way, for example, enter `\theta` + TAB to get `θ`. See
-#  [here](https://docs.julialang.org/en/v1/manual/unicode-input/) for details. ♣
+evaluations_linear = evaluate(
+    [
+        "linear, all features" => preprocess |> bare_linear,
+        "linear, 2 features" => preprocess |> reducer(2) |> bare_linear,
+        "linear, 4 features" => preprocess |> reducer(4) |> bare_linear,
+        "linear, 8 features" => preprocess |> reducer(8) |> bare_linear,
+    ],
+    X,
+    y;
+    options()...,
+)
+describe.(evaluations_linear) |> DataFrames.DataFrame
+
+# Here see a definite benefit.
 
 # ## [9. Hyper-parameter tuning](@id tuning)
 
@@ -1021,6 +1029,7 @@ tuned_tree = TunedModel(
     tuning=Grid(goal=32, shuffle=false), # test on a parameter grid with about 32 points
     resampling=StratifiedCV(nfolds=3),
     measure=precision_at_95,
+    verbosity=0,
 );
 
 # Here `tuned_tree` is a new supervised model, which we can think of as a "self-tuning"
@@ -1098,13 +1107,13 @@ describe.(evaluations) |> DataFrames.DataFrame
 # > Synthesize new subjects to correct for the imbalance in positive and negative
 # > outcomes.
 
-# The most naive way to correct for our excess of "negative" diagnoses, is to randomly
-# duplicate subjects with "positive" outcomes, and add these to the training dataset. This
-# is an example of **oversampling**. In the more commonly applied variations of this idea,
-# one synthesizes, using some heuristic, new data examples which are not literal copies of
-# existing examples, but are close to them in some sense. Of course, we always check
-# the performance of models trained with oversampled data using using data that is *not*
-# oversampled.
+# The most naive way to correct for our excess of negative diagnoses in the training data,
+# is to randomly duplicate subjects with positive outcomes, and add these to the
+# training dataset. This is an example of **oversampling**. In the more commonly applied
+# variations of this idea, one synthesizes, using some heuristic, new data examples which
+# are not literal copies of existing examples, but are close to them in some sense. Of
+# course, we always check the performance of models trained with oversampled data using
+# using data that is *not* oversampled.
 
 # For the current dataset, and for several supervised models tested, we observed, at
 # best, modest benefits to oversampling, with respect to our target metric. For
@@ -1219,8 +1228,6 @@ neural_network = preprocess |> bare_neural_network;
 constant = ConstantClassifier() # a built-in model
 
 ## linear:
-LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels verbosity=0
-bare_linear = LogisticClassifier()
 linear = preprocess |> reducer(4) |> bare_linear
 
 ## decision tree:
@@ -1388,12 +1395,13 @@ display(plts[1]) # to display the first plot
 # > Estimate the probability threshold needed for a desired recall, and create a model
 # > predicting either "positive" or "negative" based on that threshold.
 
-# Recall that all our models predict probabilities of the "positive" and "negative" class,
-# not an actual class. To estimate a probability threshold giving us a recall of 0.95, we
-# train our chosen model on a subset of the training data, and compute the corresponding
-# out-of-sample recalls using the remaining training data, as we vary the probability
-# threshold for the "positive" class. An MLJ method called `precision_recall_curve`
-# automates this procedure and gives us the corresponding `precisions` at the same time.
+# Recall that all our models predict *probabilities* of the "positive" and "negative"
+# class, not an actual class. To estimate a probability threshold giving us a recall of
+# 0.95, we train our chosen model on a subset of the training data, and compute the
+# corresponding out-of-sample recalls using the remaining training data, as we vary the
+# probability threshold for the "positive" class. An MLJ method called
+# `precision_recall_curve` automates this procedure and gives us the corresponding
+# `precisions` at the same time.
 
 # First we must train on a subset of the full training data `(X, y)`, so we split the
 # training indices (as we did once before):
@@ -1438,7 +1446,7 @@ threshold = thresholds[i - 1]
 # To transform our probabilistic predictor into point predictor, we use another MLJ
 # wrapper, `BinaryThresholdPredictor`:
 
-threshold_svm = BinaryThresholdPredictor(svm; threshold);
+svm_after_thresholding = BinaryThresholdPredictor(svm; threshold);
 
 # We now repeat some of the preceding operations for the decision tree classifier:
 
@@ -1453,7 +1461,7 @@ thresholds
 # validation set, it makes no difference what we use to set the threshold. However, on new
 # data, it may make a difference. So we will adopt the threshold extracted for the SVM:
 
-threshold_tree = BinaryThresholdPredictor(tree; threshold);
+tree_after_thresholding = BinaryThresholdPredictor(tree; threshold);
 
 # ## [13. Final testing](@id test)
 
@@ -1470,9 +1478,9 @@ ytest, Xtest = unpack(data_test, ==(:diagnosis));
 # `Xtest`, comparing prediction with `ytest` to get a [confusion
 # matrix](https://en.wikipedia.org/wiki/Confusion_matrix), precision and recall. In Julia,
 # the name `precision` is reserved for a different purpose; in MLJ you use `ppv` (positive
-# predictive value).
+# predictive value, a synonym).
 
-mach = machine(threshold_svm, X, y)
+mach = machine(svm_after_thresholding, X, y)
 fit!(mach; verbosity=0)
 yhat = predict(mach, Xtest);
 test_confusion_matrix_svm = confmat(yhat, ytest)
@@ -1485,7 +1493,7 @@ test_precision_svm = ppv(yhat, ytest)
 
 # Repeating the process for the decision tree:
 
-mach = machine(threshold_tree, X, y)
+mach = machine(tree_after_thresholding, X, y)
 fit!(mach, verbosity=0)
 yhat = predict(mach, Xtest);
 test_confusion_matrix_tree = confmat(yhat, ytest)
@@ -1509,3 +1517,5 @@ test_precision_tree = ppv(yhat, ytest) # precision
 # computing platforms mean this method is only 100% reliable when sharing the environment
 # with someone using the same platform (e.g., a silicon Mac). Refer to
 # [documentation](https://pkgdocs.julialang.org/v1/) for details.
+
+# ²"Going deeper" sections can be safely skipped on a first reading.

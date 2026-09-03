@@ -76,8 +76,8 @@ end
 end
 
 # And at the end of the section on RFE,
-two = (DataFrames.DataFrame(describe.(evaluations))).PrecisionAtFixedRecall
-@test first(two) < last(two)
+p_at_95  = (DataFrames.DataFrame(describe.(evaluations_linear))).PrecisionAtFixedRecall
+@test p_at_95[3] > p_at_95[1]
 
 # probability thresholds for the tree are reported in the section on thresholding to be
 # these:
