@@ -914,7 +914,7 @@ evaluations = evaluate(
 
 describe.(evaluations) |> DataFrames.DataFrame
 
-# Okay, no real improvment here. Hower, we can apply the same internal feature selection
+# Okay, no real improvement here. Hower, we can apply the same internal feature selection
 # ahead of training some other supervised model. The `transform` method, which is
 # implemented for models wrapped with `RecursiveFeatureElimination`, performs precisely
 # that feature selection:
