@@ -2,12 +2,12 @@
 
 # > Anthony D. Blaom, May 2026
 
-# This tutorial presents an end-to-end application of machine learning to the
-# problem of creating an automated test for the presence of some disease. Specifically, we
-# compare several tests for hypothyroidism based on machine learning models, trained using
-# the well studied Garavan Institute dataset (Quinlan,
-# [1986](https://doi.org/10.24432/C5D010)). While our main goal is pedagogical, the models
-# we propose are fully developed, and not mere toy examples.
+# This tutorial presents an end-to-end application of machine learning to the problem of
+# testing for the presence of some disease. Specifically, we compare several tests for
+# hypothyroidism based on machine learning models, trained using the well studied Garavan
+# Institute dataset (Quinlan, [1986](https://doi.org/10.24432/C5D010)). While our main
+# goal is pedagogical, the models we propose are fully developed, and not mere toy
+# examples.
 
 # The principal software tool will be the [MLJ.jl](https://juliaml.ai) machine learning
 # toolbox, written for the Julia programming language (Blaom et al.,
