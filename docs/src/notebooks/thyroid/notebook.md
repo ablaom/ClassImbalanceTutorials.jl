@@ -56,26 +56,19 @@ The approach we take here is to fix a target recall, say 0.95, and seek the test
 will maximize the corresponding precision. Other metrics commonly used for imbalanced
 data will be reported alongside this main one, the **precision at 0.95 recall.**
 
-**Going deeper.** Recall that the precision and recall of a model predicting positive or
-negative outcomes can be expressed by the formulae,
-
-$$\mathrm{recall} = 1 - \frac{\mathrm{false~negatives}}{\mathrm{positives}},\quad\mathrm{precision}=\frac{1}{1+(\mathrm{false~positives})/(\mathrm{true~negatives})}.$$
-
-These metrics always lie between 0 and 1, and the higher, the better. ♣
-
 ### [Performance of the best model](@id best)
 
 In this tutorial, we estimate the 95% confidence interval (CI) for the expected
 precision at 0.95 recall of assorted machine learning models, using 70% of the Garavan
 Institute dataset to do so. Promising models are then evaluated on the remaining 30%
 holdout test set. For our most promising model, a probability-predicting [support vector
-machine](https://en.wikipedia.org/wiki/Support_vector_machine), the CI is 0.927 ±
-0.024. This estimated CI is approximate. Generally, it is challenging to obtain reliable
+machine](https://en.wikipedia.org/wiki/Support_vector_machine), the CI is 0.904 ±
+0.037. This estimated CI is approximate. Generally, it is challenging to obtain reliable
 uncertainty estimates in machine learning.
 
 As we detail later, using a probability threshold determined from the training data
 delivers a model which, on the 30% holdout set, has a **recall of about 98%** (i.e., 2%
-of subjects with the disease tested negative) and **precision of about 87%** (13% of
+of subjects with the disease tested negative) and **precision of about 88%** (13% of
 patients testing positive did not have the disease). We can also see, from the following
 empirical precision-recall curve, that we may be able to increase the recall further,
 without dropping the precision dramatically.
@@ -208,8 +201,8 @@ Status `~/work/ClassImbalanceTutorials.jl/ClassImbalanceTutorials.jl/docs/src/no
   [1520ce14] AbstractTrees v0.4.5
   [336ed68f] CSV v0.10.17
   [a93c6f00] DataFrames v1.8.2
-⌅ [f6006082] EvoTrees v0.18.7
-⌅ [c709b415] Imbalance v0.1.7
+  [f6006082] EvoTrees v0.19.0
+  [c709b415] Imbalance v0.2.1
   [add582a8] MLJ v0.23.3
   [c6f25543] MLJDecisionTreeInterface v0.5.0
   [094fc8d1] MLJFlux v0.6.8
@@ -224,7 +217,6 @@ Status `~/work/ClassImbalanceTutorials.jl/ClassImbalanceTutorials.jl/docs/src/no
   [a19d573c] StatisticalMeasures v0.3.7
   [2913bbd2] StatsBase v0.34.13
   [f43a241f] Downloads v1.7.0
-Info Packages marked with ⌅ have new versions available but compatibility constraints restrict them from upgrading. To see why use `status --outdated`
 
 ````
 
@@ -286,7 +278,7 @@ rand()
 ````
 
 ````
-0.47864299435595203
+0.5563178809533877
 ````
 
 ## 2. Models and machines
@@ -574,7 +566,7 @@ path = Downloads.download(url)
 ````
 
 ````
-"/tmp/jl_BbHLBN/allhypo.data"
+"/tmp/jl_7j4AYD/allhypo.data"
 ````
 
 Entering these lines of code downloads the dataset to the temporary location on your
@@ -1183,9 +1175,9 @@ first(yhat, 3)
 
 ````
 3-element CategoricalDistributions.UnivariateFiniteVector{OrderedFactor{2}, String, UInt32, Float32}:
- UnivariateFinite{OrderedFactor{2}}(negative=>0.00633, positive=>0.994)
- UnivariateFinite{OrderedFactor{2}}(negative=>0.00646, positive=>0.994)
- UnivariateFinite{OrderedFactor{2}}(negative=>0.0048, positive=>0.995)
+ UnivariateFinite{OrderedFactor{2}}(negative=>0.00182, positive=>0.998)
+ UnivariateFinite{OrderedFactor{2}}(negative=>0.00177, positive=>0.998)
+ UnivariateFinite{OrderedFactor{2}}(negative=>0.00224, positive=>0.998)
 ````
 
 Our metric is defined like this:
@@ -1206,7 +1198,7 @@ precision_at_95(yhat, y[validation])
 ````
 
 ````
-0.864406779661017
+0.8870235934664247
 ````
 
 This is an estimate of the expected precision if we choose a probability threshold for
@@ -1250,18 +1242,18 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-931
+Tag: ProbabilisticPipeline-835
 Extract:
 ┌────────────────────────────┬───────────┬─────────────┐
 │ measure                    │ operation │ measurement │
 ├────────────────────────────┼───────────┼─────────────┤
-│ PrecisionAtFixedRecall(    │ predict   │ 0.888       │
+│ PrecisionAtFixedRecall(    │ predict   │ 0.869       │
 │   recall_threshold = 0.95) │           │             │
 └────────────────────────────┴───────────┴─────────────┘
 ┌────────────────────────────────────────────┬─────────┐
 │ per_fold                                   │ 1.96*SE │
 ├────────────────────────────────────────────┼─────────┤
-│ [0.894, 0.777, 0.914, 0.875, 0.913, 0.955] │ 0.053   │
+│ [0.913, 0.646, 0.914, 0.875, 0.914, 0.955] │ 0.0986  │
 └────────────────────────────────────────────┴─────────┘
 
 ````
@@ -1308,28 +1300,28 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-217
+Tag: ProbabilisticPipeline-657
 Extract:
 ┌───┬────────────────────────────┬──────────────┬─────────────┐
 │   │ measure                    │ operation    │ measurement │
 ├───┼────────────────────────────┼──────────────┼─────────────┤
-│ A │ PrecisionAtFixedRecall(    │ predict      │ 0.9         │
+│ A │ PrecisionAtFixedRecall(    │ predict      │ 0.868       │
 │   │   recall_threshold = 0.95) │              │             │
-│ B │ PrecisionAtFixedRecall(    │ predict      │ 0.932       │
+│ B │ PrecisionAtFixedRecall(    │ predict      │ 0.922       │
 │   │   recall_threshold = 0.9)  │              │             │
-│ C │ AveragePrecision()         │ predict      │ 0.976       │
-│ D │ BalancedAccuracy(          │ predict_mode │ 0.961       │
+│ C │ AveragePrecision()         │ predict      │ 0.967       │
+│ D │ BalancedAccuracy(          │ predict_mode │ 0.96        │
 │   │   adjusted = false)        │              │             │
-│ E │ Accuracy()                 │ predict_mode │ 0.988       │
+│ E │ Accuracy()                 │ predict_mode │ 0.987       │
 └───┴────────────────────────────┴──────────────┴─────────────┘
 ┌───┬───────────────────────────────────────────────────────────────────────────
 │   │ per_fold                                                                 ⋯
 ├───┼───────────────────────────────────────────────────────────────────────────
-│ A │ [0.894, 0.957, 0.914, 0.824, 0.896, 0.955, 0.913, 0.978, 0.917, 0.764, 0 ⋯
-│ B │ [0.909, 0.955, 0.976, 0.833, 0.952, 0.976, 0.909, 1.0, 1.0, 0.801, 0.954 ⋯
-│ C │ [0.941, 0.994, 0.992, 0.957, 0.955, 0.996, 0.983, 0.998, 0.993, 0.963, 0 ⋯
-│ D │ [0.993, 0.955, 0.976, 0.904, 0.97, 0.953, 0.951, 0.977, 0.955, 0.925, 0. ⋯
-│ E │ [0.987, 0.99, 0.994, 0.977, 0.984, 0.99, 0.987, 0.994, 0.994, 0.977, 0.9 ⋯
+│ A │ [0.913, 0.957, 0.956, 0.824, 0.858, 0.875, 0.913, 0.937, 0.917, 0.75, 0. ⋯
+│ B │ [0.909, 0.955, 1.0, 0.851, 0.889, 0.933, 0.931, 0.955, 1.0, 0.786, 0.933 ⋯
+│ C │ [0.912, 0.985, 0.996, 0.961, 0.887, 0.988, 0.982, 0.98, 0.993, 0.936, 0. ⋯
+│ D │ [0.993, 0.955, 0.974, 0.904, 0.97, 0.953, 0.951, 0.975, 0.977, 0.925, 0. ⋯
+│ E │ [0.987, 0.99, 0.99, 0.977, 0.984, 0.99, 0.987, 0.99, 0.997, 0.977, 0.987 ⋯
 └───┴───────────────────────────────────────────────────────────────────────────
                                                                2 columns omitted
 
@@ -1341,11 +1333,11 @@ evaluation.uncertainty_radius_95
 
 ````
 5-element Vector{Float64}:
- 0.02889011278675546
- 0.02744380228996827
- 0.010680508218138386
- 0.01191521074337819
- 0.0025763830400369306
+ 0.04654515560829987
+ 0.026502951149399684
+ 0.014736973557733332
+ 0.011270615078788696
+ 0.0026552249644034246
 ````
 
 ## [8. Recursive feature elimination](@id rfe)
@@ -1373,9 +1365,9 @@ predict(mach, rows=1:3) # predictions for the first three subjects
 
 ````
 3-element CategoricalDistributions.UnivariateFiniteVector{OrderedFactor{2}, String, UInt32, Float32}:
- UnivariateFinite{OrderedFactor{2}}(negative=>1.0, positive=>0.000135)
- UnivariateFinite{OrderedFactor{2}}(negative=>1.0, positive=>0.000135)
- UnivariateFinite{OrderedFactor{2}}(negative=>0.72, positive=>0.28)
+ UnivariateFinite{OrderedFactor{2}}(negative=>1.0, positive=>8.07e-5)
+ UnivariateFinite{OrderedFactor{2}}(negative=>1.0, positive=>5.57e-5)
+ UnivariateFinite{OrderedFactor{2}}(negative=>0.941, positive=>0.0588)
 ````
 
 ````@julia
@@ -1384,35 +1376,35 @@ feature_importances(mach)
 
 ````
 29-element Vector{Pair{Symbol, Float64}}:
-                          :TSH => 0.8316919049509355
-              :on_thyroxine__f => 0.10002191284680408
-                          :TT4 => 0.021654206671828317
-           :thyroid_surgery__f => 0.01697782343189321
-                          :FTI => 0.008180754477390252
-                           :T3 => 0.007822549551806283
-                          :age => 0.007264735240605748
-                          :T4U => 0.0022565625755009183
-               :T3_measured__f => 0.001336622466787517
-         :query_hypothyroid__f => 0.0011732113418532664
-                       :sex__F => 0.0007351739924125332
-         :referral_source__SVI => 0.0007039935425648304
-            :I131_treatment__f => 0.0001805489096175619
-        :referral_source__SVHD => 0.0
-        :query_hyperthyroid__f => 0.0
- :on_antithyroid_medication__f => 0.0
+                          :TSH => 0.8465732486025339
+              :on_thyroxine__f => 0.0807252692038523
+                          :TT4 => 0.02436441018351323
+                           :T3 => 0.01170242150570036
+           :thyroid_surgery__f => 0.01108429739929545
+                          :age => 0.008957494419934006
+                          :FTI => 0.00888975533456939
+                          :T4U => 0.0029528247804422206
+               :T3_measured__f => 0.0017558634258870965
+                       :sex__F => 0.0011257671108760275
+         :query_hypothyroid__f => 0.001000719642876672
+         :referral_source__SVI => 0.0005633197799465425
+            :I131_treatment__f => 0.0001724462704739558
+                     :tumor__f => 0.00011125643389966268
+        :query_hyperthyroid__f => 7.558836638324587e-6
+              :T4U_measured__f => 7.11352735204822e-6
+              :FTI_measured__f => 4.4913813736086414e-6
+ :on_antithyroid_medication__f => 1.7375521191483677e-6
+              :TT4_measured__f => 4.608716007683241e-9
+        :query_on_thyroxine__f => 0.0
+                      :sick__f => 0.0
+                  :pregnant__f => 0.0
                    :lithium__f => 0.0
                     :goitre__f => 0.0
-              :TT4_measured__f => 0.0
-        :referral_source__SVHC => 0.0
                      :psych__f => 0.0
-        :referral_source__STMW => 0.0
               :TSH_measured__f => 0.0
-                     :tumor__f => 0.0
-        :query_on_thyroxine__f => 0.0
-                  :pregnant__f => 0.0
-                      :sick__f => 0.0
-              :FTI_measured__f => 0.0
-              :T4U_measured__f => 0.0
+        :referral_source__STMW => 0.0
+        :referral_source__SVHC => 0.0
+        :referral_source__SVHD => 0.0
 ````
 
 The precise definition of "importance" is a heuristic one, specific to tree-based
@@ -1464,8 +1456,8 @@ evaluations = evaluate(
 
 ````
 2-element Vector{PerformanceEvaluation{M, Vector{StatisticalMeasuresBase.RobustMeasure}, Vector{Float64}, Vector{Float64}, Vector{Function}, Vector{Vector{Float64}}, Vector{Vector{AbstractVector}}, FittedParamsPerFold, ReportPerFold, StratifiedCV} where {M, FittedParamsPerFold, ReportPerFold}}:
- PerformanceEvaluation("booster", 0.9 ± 0.0289, 0.932 ± 0.0274, 0.976 ± 0.0107, 0.961 ± 0.0119, 0.988 ± 0.00258)
- PerformanceEvaluation("booster with RFE", 0.913 ± 0.0329, 0.951 ± 0.0247, 0.975 ± 0.0144, 0.969 ± 0.0108, 0.99 ± 0.0017)
+ PerformanceEvaluation("booster", 0.868 ± 0.0465, 0.922 ± 0.0265, 0.967 ± 0.0147, 0.96 ± 0.0113, 0.987 ± 0.00266)
+ PerformanceEvaluation("booster with RFE", 0.831 ± 0.0845, 0.925 ± 0.024, 0.968 ± 0.0122, 0.966 ± 0.0118, 0.99 ± 0.0022)
 ````
 
 Here a vector of evaluation objects is being returned, but we can get a nice summary
@@ -1476,7 +1468,7 @@ describe.(evaluations) |> DataFrames.DataFrame
 ````
 
 ```@raw html
-<div><div style = "float: left;"><span>2×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">booster</td><td style = "text-align: right;">0.9±0.029</td><td style = "text-align: right;">0.932±0.027</td><td style = "text-align: right;">0.976±0.011</td><td style = "text-align: right;">0.961±0.012</td><td style = "text-align: right;">0.9882±0.0026</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">booster with RFE</td><td style = "text-align: right;">0.913±0.033</td><td style = "text-align: right;">0.951±0.025</td><td style = "text-align: right;">0.975±0.014</td><td style = "text-align: right;">0.969±0.011</td><td style = "text-align: right;">0.9902±0.0017</td></tr></tbody></table></div>
+<div><div style = "float: left;"><span>2×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">booster</td><td style = "text-align: right;">0.868±0.047</td><td style = "text-align: right;">0.922±0.027</td><td style = "text-align: right;">0.967±0.015</td><td style = "text-align: right;">0.96±0.011</td><td style = "text-align: right;">0.9873±0.0027</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">booster with RFE</td><td style = "text-align: right;">0.831±0.084</td><td style = "text-align: right;">0.925±0.024</td><td style = "text-align: right;">0.968±0.012</td><td style = "text-align: right;">0.966±0.012</td><td style = "text-align: right;">0.9896±0.0022</td></tr></tbody></table></div>
 ```
 
 So we see a small, if statistically insignificant, improvement, for the precision at
@@ -1621,7 +1613,7 @@ savefig(fig, localfile("tree_learning_curve.svg"));
 ````
 [ Info: Training machine(ProbabilisticTunedModel(model = ProbabilisticPipeline(fill_imputer = FillImputer(features = Symbol[], …), …), …), …).
 [ Info: Attempting to evaluate 20 models.
-Evaluating over 20 metamodels:   0%[>                        ]  ETA: N/A[KEvaluating over 20 metamodels:   5%[=>                       ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  10%[==>                      ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  15%[===>                     ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  20%[=====>                   ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  25%[======>                  ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  30%[=======>                 ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  35%[========>                ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  40%[==========>              ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  45%[===========>             ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  50%[============>            ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  55%[=============>           ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  60%[===============>         ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  65%[================>        ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  70%[=================>       ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  75%[==================>      ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  80%[====================>    ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  85%[=====================>   ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  90%[======================>  ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  95%[=======================> ]  ETA: 0:00:00[KEvaluating over 20 metamodels: 100%[=========================] Time: 0:00:00[K
+Evaluating over 20 metamodels:  10%[==>                      ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  15%[===>                     ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  20%[=====>                   ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  25%[======>                  ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  30%[=======>                 ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  35%[========>                ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  40%[==========>              ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  45%[===========>             ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  50%[============>            ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  55%[=============>           ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  60%[===============>         ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  65%[================>        ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  70%[=================>       ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  75%[==================>      ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  80%[====================>    ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  85%[=====================>   ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  90%[======================>  ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  95%[=======================> ]  ETA: 0:00:00[KEvaluating over 20 metamodels: 100%[=========================] Time: 0:00:00[K
 
 ````
 
@@ -1808,9 +1800,9 @@ predict(mach, rows=1:3)
 
 ````
 3-element CategoricalDistributions.UnivariateFiniteVector{OrderedFactor{2}, String, UInt32, Float32}:
- UnivariateFinite{OrderedFactor{2}}(negative=>1.0, positive=>0.000178)
- UnivariateFinite{OrderedFactor{2}}(negative=>1.0, positive=>0.000178)
- UnivariateFinite{OrderedFactor{2}}(negative=>0.997, positive=>0.00263)
+ UnivariateFinite{OrderedFactor{2}}(negative=>1.0, positive=>4.23e-5)
+ UnivariateFinite{OrderedFactor{2}}(negative=>1.0, positive=>0.000113)
+ UnivariateFinite{OrderedFactor{2}}(negative=>1.0, positive=>0.000188)
 ````
 
 The supervised model comparisons that follow include some models wrapped in
@@ -1896,7 +1888,7 @@ tree = preprocess |> bare_tree;
 # decision tree with tuning of `min_samples_split`:
 tuned_tree = TunedModel(
     deepcopy(tree);
-    range = range(tree, :(decision_tree_classifier.min_samples_split), lower=2,upper=21),
+    range=range(tree, :(decision_tree_classifier.min_samples_split), lower=2,upper=21),
     tuning=Grid(goal=8, shuffle=false),
     resampling=StratifiedCV(nfolds=3),
     measure=precision_at_95,
@@ -1905,6 +1897,15 @@ tuned_tree = TunedModel(
 # gradient tree booster:
 bare_booster = EvoTreeClassifier()
 booster = preprocess |> bare_booster
+
+# a tuned gradient tree booster:
+tuned_booster = TunedModel(
+    deepcopy(booster),
+    range=range(booster, :(evo_tree_classifier.max_depth), lower=1, upper=9),
+    tuning=Grid(goal=5, shuffle=false),
+    resampling=StratifiedCV(nfolds=3),
+    measure=precision_at_95,
+)
 
 # support vector machine:
 ProbabilisticSVC = @load ProbabilisticSVC pkg=LIBSVM verbosity=0
@@ -1942,6 +1943,7 @@ named_models = [
     "decision tree" => tree,
     "decision tree, tuned" => tuned_tree,
     "gradient booster" =>booster,
+    "gradient booster, tuned" => tuned_booster,
     "SVM" => svm,
     "SVM, balanced" => balanced_svm,
     "KNN" => knn,
@@ -1955,7 +1957,7 @@ sort!(performance_summary, :PrecisionAtFixedRecall, rev=true)
 ````
 
 ```@raw html
-<div><div style = "float: left;"><span>10×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">SVM</td><td style = "text-align: right;">0.927±0.024</td><td style = "text-align: right;">0.956±0.019</td><td style = "text-align: right;">0.962±0.023</td><td style = "text-align: right;">0.951±0.015</td><td style = "text-align: right;">0.9902±0.0022</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">gradient booster</td><td style = "text-align: right;">0.911±0.021</td><td style = "text-align: right;">0.944±0.016</td><td style = "text-align: right;">0.9784±0.0074</td><td style = "text-align: right;">0.961±0.013</td><td style = "text-align: right;">0.9884±0.0022</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">decision tree</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.99939±0.0008</td><td style = "text-align: right;">0.9833±0.0079</td><td style = "text-align: right;">0.9948±0.0016</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">decision tree, tuned</td><td style = "text-align: right;">0.86±0.15</td><td style = "text-align: right;">0.965±0.016</td><td style = "text-align: right;">0.9981±0.0012</td><td style = "text-align: right;">0.9863±0.0087</td><td style = "text-align: right;">0.9961±0.0019</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">5</td><td style = "text-align: left;">KNN</td><td style = "text-align: right;">0.831±0.077</td><td style = "text-align: right;">0.881±0.057</td><td style = "text-align: right;">0.968±0.015</td><td style = "text-align: right;">0.85±0.033</td><td style = "text-align: right;">0.9773±0.0048</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">6</td><td style = "text-align: left;">linear (logistic)</td><td style = "text-align: right;">0.81±0.13</td><td style = "text-align: right;">0.959±0.016</td><td style = "text-align: right;">0.97±0.014</td><td style = "text-align: right;">0.948±0.014</td><td style = "text-align: right;">0.99±0.0022</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">7</td><td style = "text-align: left;">SVM, balanced</td><td style = "text-align: right;">0.769±0.088</td><td style = "text-align: right;">0.898±0.051</td><td style = "text-align: right;">0.963±0.015</td><td style = "text-align: right;">0.97±0.01</td><td style = "text-align: right;">0.9851±0.0028</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">8</td><td style = "text-align: left;">KNN, balanced</td><td style = "text-align: right;">0.752±0.058</td><td style = "text-align: right;">0.859±0.053</td><td style = "text-align: right;">0.967±0.014</td><td style = "text-align: right;">0.9684±0.0096</td><td style = "text-align: right;">0.9757±0.0037</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">9</td><td style = "text-align: left;">neural network</td><td style = "text-align: right;">0.55±0.12</td><td style = "text-align: right;">0.761±0.072</td><td style = "text-align: right;">0.929±0.016</td><td style = "text-align: right;">0.911±0.014</td><td style = "text-align: right;">0.9814±0.0028</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">10</td><td style = "text-align: left;">dummy</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.5±5.5e-17</td><td style = "text-align: right;">0.92857±0.00055</td></tr></tbody></table></div>
+<div><div style = "float: left;"><span>11×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">decision tree</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.99939±0.0008</td><td style = "text-align: right;">0.9833±0.0079</td><td style = "text-align: right;">0.9948±0.0016</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">SVM</td><td style = "text-align: right;">0.904±0.037</td><td style = "text-align: right;">0.94±0.029</td><td style = "text-align: right;">0.965±0.024</td><td style = "text-align: right;">0.946±0.014</td><td style = "text-align: right;">0.9898±0.0025</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">decision tree, tuned</td><td style = "text-align: right;">0.86±0.15</td><td style = "text-align: right;">0.965±0.016</td><td style = "text-align: right;">0.9981±0.0012</td><td style = "text-align: right;">0.9863±0.0087</td><td style = "text-align: right;">0.9961±0.0019</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">gradient booster, tuned</td><td style = "text-align: right;">0.854±0.082</td><td style = "text-align: right;">0.945±0.024</td><td style = "text-align: right;">0.973±0.013</td><td style = "text-align: right;">0.956±0.013</td><td style = "text-align: right;">0.9882±0.0028</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">5</td><td style = "text-align: left;">gradient booster</td><td style = "text-align: right;">0.842±0.076</td><td style = "text-align: right;">0.938±0.02</td><td style = "text-align: right;">0.969±0.013</td><td style = "text-align: right;">0.955±0.015</td><td style = "text-align: right;">0.9884±0.0025</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">6</td><td style = "text-align: left;">linear (logistic)</td><td style = "text-align: right;">0.81±0.13</td><td style = "text-align: right;">0.956±0.015</td><td style = "text-align: right;">0.97±0.014</td><td style = "text-align: right;">0.941±0.015</td><td style = "text-align: right;">0.9889±0.0022</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">7</td><td style = "text-align: left;">KNN</td><td style = "text-align: right;">0.807±0.061</td><td style = "text-align: right;">0.887±0.048</td><td style = "text-align: right;">0.968±0.016</td><td style = "text-align: right;">0.833±0.029</td><td style = "text-align: right;">0.9749±0.0043</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">8</td><td style = "text-align: left;">SVM, balanced</td><td style = "text-align: right;">0.776±0.09</td><td style = "text-align: right;">0.917±0.038</td><td style = "text-align: right;">0.961±0.016</td><td style = "text-align: right;">0.9658±0.0095</td><td style = "text-align: right;">0.9839±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">9</td><td style = "text-align: left;">KNN, balanced</td><td style = "text-align: right;">0.67±0.1</td><td style = "text-align: right;">0.846±0.053</td><td style = "text-align: right;">0.965±0.011</td><td style = "text-align: right;">0.968±0.0092</td><td style = "text-align: right;">0.9726±0.003</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">10</td><td style = "text-align: left;">neural network</td><td style = "text-align: right;">0.52±0.13</td><td style = "text-align: right;">0.763±0.095</td><td style = "text-align: right;">0.931±0.02</td><td style = "text-align: right;">0.91±0.02</td><td style = "text-align: right;">0.981±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">11</td><td style = "text-align: left;">dummy</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.5±3.1e-16</td><td style = "text-align: right;">0.92857±0.00055</td></tr></tbody></table></div>
 ```
 
 To better visualize the confidence intervals, we plot the results for some of the
@@ -2017,11 +2019,10 @@ display(plts[1]) # to display the first plot
 
 ### Commentary
 
-The support vector machine (SVM) achieves the best expected precision at 0.95 recall and
-the associated 95% confidence interval is relatively sharp. The gradient tree booster
-performs nearly as well, and on the basis of the uncertainties, we cannot rule it out as
-the better model. While the decision tree classifier scores almost as well, our estimate
-for performance has significant variability, and on that basis, the SVM is preferred.
+Although the simple, untuned, decision tree achieves the best estimate of the expected
+precision at 0.95 recall, the estimate for the support vector machine (SVM), which is
+only slightly less, is much sharper (has smaller 95% confidence interval). This is
+clearly the preferred model.
 
 On the other hand, the decision tree scores very well against both average precision and
 balanced accuracy scores, and our estimates in these cases are sharp. Meanwhile, the
@@ -2085,11 +2086,11 @@ thresholds[[1,2,3,end-2,end-1,end]]
 ````
 6-element Vector{Float64}:
  0.9999999
- 0.9999998242652965
- 0.9999996315517311
- 1.9845265883944307e-6
- 1.5465651665991231e-6
- 1.5373712206612211e-6
+ 0.9999998744809885
+ 0.9999988208877302
+ 1.4557162534289958e-6
+ 1.2139704972380372e-6
+ 1.1707927604076573e-6
 ````
 
 There is one less threshold than recall or precision, and the recalls and precisions are
@@ -2121,7 +2122,7 @@ threshold = thresholds[i - 1]
 ````
 
 ````
-0.33457974884500563
+0.4276770276745723
 ````
 
 To transform our probabilistic predictor into point predictor, we use another MLJ
@@ -2193,13 +2194,13 @@ test_precision_svm = ppv(yhat, ytest)
 │    ┌─────────┼────────┬────────┤
 │    │Predicted│negative│positive│
 │    ├─────────┼────────┼────────┤
-│    │negative │  764   │   1    │
+│    │negative │  765   │   2    │
 │    ├─────────┼────────┼────────┤
-│    │positive │   10   │   65   │
+│    │positive │   9    │   64   │
 │    └─────────┴────────┴────────┘
 │    
-│   test_recall_svm = 0.9848484848484849
-└   test_precision_svm = 0.8666666666666667
+│   test_recall_svm = 0.9696969696969697
+└   test_precision_svm = 0.8767123287671232
 
 ````
 
