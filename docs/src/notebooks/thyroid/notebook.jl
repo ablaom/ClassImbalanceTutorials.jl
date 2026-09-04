@@ -914,7 +914,7 @@ evaluations = evaluate(
 
 describe.(evaluations) |> DataFrames.DataFrame
 
-# Okay, no real improvement here. Hower, we can apply the same internal feature selection
+# Okay, no real improvement here. Hower, we can apply the same feature selection
 # ahead of training some other supervised model. The `transform` method, which is
 # implemented for models wrapped with `RecursiveFeatureElimination`, performs precisely
 # that feature selection:
@@ -950,7 +950,7 @@ evaluations_linear = evaluate(
 )
 describe.(evaluations_linear) |> DataFrames.DataFrame
 
-# Here see a definite benefit.
+# Here we see a definite benefit.
 
 # ## [9. Hyper-parameter tuning](@id tuning)
 
