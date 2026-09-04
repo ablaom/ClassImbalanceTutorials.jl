@@ -6,12 +6,12 @@ EditURL = "notebook.jl"
 
 > Anthony D. Blaom, May 2026
 
-This tutorial presents an end-to-end application of machine learning to the problem of
-testing for the presence of some disease. Specifically, we compare several tests for
-hypothyroidism based on machine learning models, trained using the well studied Garavan
-Institute dataset (Quinlan, [1986](https://doi.org/10.24432/C5D010)). While our main
-goal is pedagogical, the models we propose are fully developed, and not mere toy
-examples.
+This tutorial presents an end-to-end application of machine learning to the
+problem of creating an automated test for the presence of some disease. Specifically, we
+compare several tests for hypothyroidism based on machine learning models, trained using
+the well studied Garavan Institute dataset (Quinlan,
+[1986](https://doi.org/10.24432/C5D010)). While our main goal is pedagogical, the models
+we propose are fully developed, and not mere toy examples.
 
 The principal software tool will be the [MLJ.jl](https://juliaml.ai) machine learning
 toolbox, written for the Julia programming language (Blaom et al.,
@@ -67,7 +67,7 @@ machine](https://en.wikipedia.org/wiki/Support_vector_machine), the CI is 0.904 
 uncertainty estimates in machine learning.
 
 As we detail later, using a probability threshold determined from the training data
-delivers a model which, on the 30% holdout set, has a **recall of about 98%** (i.e., 2%
+delivers a model which, on the 30% holdout set, has a **recall of about 97%** (i.e., 2%
 of subjects with the disease tested negative) and **precision of about 88%** (13% of
 patients testing positive did not have the disease). We can also see, from the following
 empirical precision-recall curve, that we may be able to increase the recall further,
@@ -149,8 +149,8 @@ REPL by entering `exit()` or Ctrl-D.
 
 You can also interact with Julia using a interactive development environment such as
 VSCode or emacs, or using notebook-style interfaces such as
-[Jupyter](https://ijulia.org/stable/) (python-driven), [Pluto](https://plutojl.org), or
-[Neptune](https://github.com/compleathorseplayer/Neptune.jl), not discussed here.
+[Jupyter](https://ijulia.org/stable/) (python-driven) or [Pluto](https://plutojl.org),
+not discussed here.
 
 Edit the definition of `LOCAL` below, to point to the directory to which you would like
 figures to be saved.
@@ -278,7 +278,7 @@ rand()
 ````
 
 ````
-0.5723898275020673
+0.12909681946845364
 ````
 
 ## 2. Models and machines
@@ -367,7 +367,7 @@ With the exception of `min_samples_split`, we have selected default values of th
 **hyper-parameters** of the model, namely those parameters we need to specify before any
 learning begins.  Never mind about the meaning of these hyper-parameters for now.
 
-**Going deeper.** To see all registered MLJ models that can be immediately applied to
+**Going deeper.**² To see all registered MLJ models that can be immediately applied to
 our data, do `models(matching(X, Y))`. See the [Model
 Search](https://juliaai.github.io/MLJ.jl/dev/model_search/) section of the MLJ
 documentation for more options.
@@ -566,7 +566,7 @@ path = Downloads.download(url)
 ````
 
 ````
-"/tmp/jl_qYUeC7/allhypo.data"
+"/tmp/jl_XM1CxB/allhypo.data"
 ````
 
 Entering these lines of code downloads the dataset to the temporary location on your
@@ -940,7 +940,7 @@ proportions_test = StatsBase.proportionmap(data_test.diagnosis)
 To remove missing values, we will use an imputation algorithm called `FillImputer`.  To
 search for available models related to imputation, you can run
 `models("impute")`. Unlike the `DecisionTreeClassifier` we used earlier, `FillImputer`
-is is immediately available (no need to `@load` it). To see all currently loaded models,
+is immediately available (no need to `@load` it). To see all currently loaded models,
 run `localmodels()`.
 
 Enter `?FillImputer` in the REPL to pull up its document string. From there we can see
@@ -962,7 +962,7 @@ fit!(mach);
 
 ````
 
-Now, as `FillImputer` is "transformer" rather than a supervised learner, we use
+Now, as `FillImputer` is a "transformer" rather than a supervised learner, we use
 `transform` instead of `predict` to get the imputed output:
 
 ````@julia
@@ -1047,8 +1047,9 @@ section of the manual for more on this advanced topic. ♣
 We are ready to instantiate our K-nearest neighbor outlier detector. We additionally
 need the `ProbabilisticDetector` wrapper for detectors, so that the detector's
 predictions are probabilistic. This wrapper is provided by the package
-OutlierDetection.jl, which we must explicitly import. Training and prediction proceeds
-following a familiar pattern:
+[OutlierDetection.jl](https://outlierdetectionjl.github.io/OutlierDetection.jl/dev/documentation/simple-usage/)
+(Muhr et al., [2020](https://doi.org/10.48550/arXiv.2211.04550)) which we must
+explicitly import. Training and prediction proceeds following a familiar pattern:
 
 ````@julia
 import OutlierDetection
@@ -1242,7 +1243,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-946
+Tag: ProbabilisticPipeline-373
 Extract:
 ┌────────────────────────────┬───────────┬─────────────┐
 │ measure                    │ operation │ measurement │
@@ -1300,7 +1301,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-302
+Tag: ProbabilisticPipeline-688
 Extract:
 ┌───┬────────────────────────────┬──────────────┬─────────────┐
 │   │ measure                    │ operation    │ measurement │
@@ -1333,10 +1334,10 @@ evaluation.uncertainty_radius_95
 
 ````
 5-element Vector{Float64}:
- 0.04654515560829987
- 0.026502951149399684
- 0.014736973557733332
- 0.011270615078788696
+ 0.04654515560829978
+ 0.026502951149399583
+ 0.01473697355773345
+ 0.011270615078788593
  0.0026552249644034246
 ````
 
@@ -1446,7 +1447,9 @@ options() = (
 evaluations = evaluate(
     [
         "booster" => preprocess |> bare_booster,
-        "booster with RFE" => preprocess |> bare_booster_with_rfe(4),
+        "booster with 2 features" => preprocess |> bare_booster_with_rfe(2),
+        "booster with 4 features" => preprocess |> bare_booster_with_rfe(4),
+        "booster with 8 features" => preprocess |> bare_booster_with_rfe(8),
     ],
     X,
     y; # this semicolon is important!
@@ -1455,9 +1458,11 @@ evaluations = evaluate(
 ````
 
 ````
-2-element Vector{PerformanceEvaluation{M, Vector{StatisticalMeasuresBase.RobustMeasure}, Vector{Float64}, Vector{Float64}, Vector{Function}, Vector{Vector{Float64}}, Vector{Vector{AbstractVector}}, FittedParamsPerFold, ReportPerFold, StratifiedCV} where {M, FittedParamsPerFold, ReportPerFold}}:
+4-element Vector{PerformanceEvaluation{M, Vector{StatisticalMeasuresBase.RobustMeasure}, Vector{Float64}, Vector{Float64}, Vector{Function}, Vector{Vector{Float64}}, Vector{Vector{AbstractVector}}, FittedParamsPerFold, ReportPerFold, StratifiedCV} where {M, FittedParamsPerFold, ReportPerFold}}:
  PerformanceEvaluation("booster", 0.868 ± 0.0465, 0.922 ± 0.0265, 0.967 ± 0.0147, 0.96 ± 0.0113, 0.987 ± 0.00266)
- PerformanceEvaluation("booster with RFE", 0.831 ± 0.0845, 0.925 ± 0.024, 0.968 ± 0.0122, 0.966 ± 0.0118, 0.99 ± 0.0022)
+ PerformanceEvaluation("booster with 2 features", 0.766 ± 0.0584, 0.837 ± 0.0608, 0.974 ± 0.0123, 0.965 ± 0.0111, 0.991 ± 0.00191)
+ PerformanceEvaluation("booster with 4 features", 0.818 ± 0.111, 0.941 ± 0.0349, 0.973 ± 0.0146, 0.962 ± 0.0146, 0.99 ± 0.00315)
+ PerformanceEvaluation("booster with 8 features", 0.813 ± 0.106, 0.945 ± 0.02, 0.969 ± 0.0142, 0.965 ± 0.0114, 0.988 ± 0.00224)
 ````
 
 Here a vector of evaluation objects is being returned, but we can get a nice summary
@@ -1468,15 +1473,13 @@ describe.(evaluations) |> DataFrames.DataFrame
 ````
 
 ```@raw html
-<div><div style = "float: left;"><span>2×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">booster</td><td style = "text-align: right;">0.868±0.047</td><td style = "text-align: right;">0.922±0.027</td><td style = "text-align: right;">0.967±0.015</td><td style = "text-align: right;">0.96±0.011</td><td style = "text-align: right;">0.9873±0.0027</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">booster with RFE</td><td style = "text-align: right;">0.831±0.084</td><td style = "text-align: right;">0.925±0.024</td><td style = "text-align: right;">0.968±0.012</td><td style = "text-align: right;">0.966±0.012</td><td style = "text-align: right;">0.9896±0.0022</td></tr></tbody></table></div>
+<div><div style = "float: left;"><span>4×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">booster</td><td style = "text-align: right;">0.868±0.047</td><td style = "text-align: right;">0.922±0.027</td><td style = "text-align: right;">0.967±0.015</td><td style = "text-align: right;">0.96±0.011</td><td style = "text-align: right;">0.9873±0.0027</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">booster with 2 features</td><td style = "text-align: right;">0.766±0.058</td><td style = "text-align: right;">0.837±0.061</td><td style = "text-align: right;">0.974±0.012</td><td style = "text-align: right;">0.965±0.011</td><td style = "text-align: right;">0.9909±0.0019</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">booster with 4 features</td><td style = "text-align: right;">0.82±0.11</td><td style = "text-align: right;">0.941±0.035</td><td style = "text-align: right;">0.973±0.015</td><td style = "text-align: right;">0.962±0.015</td><td style = "text-align: right;">0.99±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">booster with 8 features</td><td style = "text-align: right;">0.81±0.11</td><td style = "text-align: right;">0.945±0.02</td><td style = "text-align: right;">0.969±0.014</td><td style = "text-align: right;">0.965±0.011</td><td style = "text-align: right;">0.9884±0.0022</td></tr></tbody></table></div>
 ```
 
-So we see a small, if statistically insignificant, improvement, for the precision at
-0.95 recall (second column).
-
-Now suppose we want to apply the same internal feature selection ahead of training
-some other supervised model. The `transform` method, which is implemented for models
-wrapped with `RecursiveFeatureElimination`, performs precisely that feature selection:
+Okay, no real improvement here. Hower, we can apply the same internal feature selection
+ahead of training some other supervised model. The `transform` method, which is
+implemented for models wrapped with `RecursiveFeatureElimination`, performs precisely
+that feature selection:
 
 ````@julia
 mach = machine(bare_booster_with_rfe(4), X_continuous, y)
@@ -1506,25 +1509,32 @@ need to first wrap it using MLJ's `Transformer` wrapper. So we define
 reducer(n) = Transformer(bare_booster_with_rfe(n));
 ````
 
-which we can demonstrate by defining a pipeline that combines our previous data
-preprocessing with feature selection:
+Let's demonstrate this by applying recursive feature elimination (as learned by the
+booster) to ordinary logistic regression (called logistic classification in MLJ):
 
 ````@julia
-preprocess_reduce = preprocess |> reducer(4)
-mach = machine(preprocess_reduce, X, y)
-fit!(mach, verbosity=0)
-transform(mach, X) ≈ X_reduced
+LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels verbosity=0
+bare_linear = LogisticClassifier()
+
+evaluations_linear = evaluate(
+    [
+        "linear, all features" => preprocess |> bare_linear,
+        "linear, 2 features" => preprocess |> reducer(2) |> bare_linear,
+        "linear, 4 features" => preprocess |> reducer(4) |> bare_linear,
+        "linear, 8 features" => preprocess |> reducer(8) |> bare_linear,
+    ],
+    X,
+    y;
+    options()...,
+)
+describe.(evaluations_linear) |> DataFrames.DataFrame
 ````
 
-````
-true
-````
+```@raw html
+<div><div style = "float: left;"><span>4×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">linear, all features</td><td style = "text-align: right;">0.54±0.15</td><td style = "text-align: right;">0.81±0.12</td><td style = "text-align: right;">0.936±0.018</td><td style = "text-align: right;">0.923±0.021</td><td style = "text-align: right;">0.986±0.0028</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">linear, 2 features</td><td style = "text-align: right;">0.69±0.16</td><td style = "text-align: right;">0.948±0.022</td><td style = "text-align: right;">0.971±0.014</td><td style = "text-align: right;">0.933±0.018</td><td style = "text-align: right;">0.9878±0.0029</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">linear, 4 features</td><td style = "text-align: right;">0.8±0.13</td><td style = "text-align: right;">0.954±0.023</td><td style = "text-align: right;">0.965±0.017</td><td style = "text-align: right;">0.934±0.016</td><td style = "text-align: right;">0.9878±0.0023</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">linear, 8 features</td><td style = "text-align: right;">0.79±0.13</td><td style = "text-align: right;">0.947±0.02</td><td style = "text-align: right;">0.965±0.014</td><td style = "text-align: right;">0.941±0.014</td><td style = "text-align: right;">0.9885±0.0022</td></tr></tbody></table></div>
+```
 
-**Going deeper.** At the REPL, you can get the `≈` symbol, syntactic sugar for applying
- the `isapprox` function, by typing `\approx` followed by the TAB key. If you are
- familiar with the LaTex typesetting package, you will find many of your favorite
- symbols can be generated this way, for example, enter `\theta` + TAB to get `θ`. See
- [here](https://docs.julialang.org/en/v1/manual/unicode-input/) for details. ♣
+Here see a definite benefit.
 
 ## [9. Hyper-parameter tuning](@id tuning)
 
@@ -1600,6 +1610,7 @@ _, _, splits, precisions = learning_curve(
     range=r,
     resampling=StratifiedCV(nfolds=3),
     measure=precision_at_95,
+    verbosity=0,
 )
 
 using Plots
@@ -1608,13 +1619,6 @@ xlabel!(fig, "min_samples_split")
 ylabel!(fig, "precision at 0.95 recall")
 title!(fig, "Decision Tree Learning Curve")
 savefig(fig, localfile("tree_learning_curve.svg"));
-````
-
-````
-[ Info: Training machine(ProbabilisticTunedModel(model = ProbabilisticPipeline(fill_imputer = FillImputer(features = Symbol[], …), …), …), …).
-[ Info: Attempting to evaluate 20 models.
-Evaluating over 20 metamodels:   0%[>                        ]  ETA: N/A[KEvaluating over 20 metamodels:   5%[=>                       ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  10%[==>                      ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  15%[===>                     ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  20%[=====>                   ]  ETA: 0:00:01[KEvaluating over 20 metamodels:  25%[======>                  ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  30%[=======>                 ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  35%[========>                ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  40%[==========>              ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  45%[===========>             ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  50%[============>            ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  55%[=============>           ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  60%[===============>         ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  65%[================>        ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  70%[=================>       ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  75%[==================>      ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  80%[====================>    ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  85%[=====================>   ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  90%[======================>  ]  ETA: 0:00:00[KEvaluating over 20 metamodels:  95%[=======================> ]  ETA: 0:00:00[KEvaluating over 20 metamodels: 100%[=========================] Time: 0:00:00[K
-
 ````
 
 Note that `localfile` was defined [above](@ref setup).
@@ -1730,13 +1734,13 @@ dive, refer to the [documentation](https://juliaai.github.io/MLJ.jl/dev/tuning_m
 > Synthesize new subjects to correct for the imbalance in positive and negative
 > outcomes.
 
-The most naive way to correct for our excess of "negative" diagnoses, is to randomly
-duplicate subjects with "positive" outcomes, and add these to the training dataset. This
-is an example of **oversampling**. In the more commonly applied variations of this idea,
-one synthesizes, using some heuristic, new data examples which are not literal copies of
-existing examples, but are close to them in some sense. Of course, we always check
-the performance of models trained with oversampled data using using data that is *not*
-oversampled.
+The most naive way to correct for our excess of negative diagnoses in the training data,
+is to randomly duplicate subjects with positive outcomes, and add these to the
+training dataset. This is an example of **oversampling**. In the more commonly applied
+variations of this idea, one synthesizes, using some heuristic, new data examples which
+are not literal copies of existing examples, but are close to them in some sense. Of
+course, we always check the performance of models trained with oversampled data using
+using data that is *not* oversampled.
 
 For the current dataset, and for several supervised models tested, we observed, at
 best, modest benefits to oversampling, with respect to our target metric. For
@@ -1877,8 +1881,6 @@ Below is the complete list of supervised models to be compared. Recall that
 constant = ConstantClassifier() # a built-in model
 
 # linear:
-LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels verbosity=0
-bare_linear = LogisticClassifier()
 linear = preprocess |> reducer(4) |> bare_linear
 
 # decision tree:
@@ -1957,7 +1959,7 @@ sort!(performance_summary, :PrecisionAtFixedRecall, rev=true)
 ````
 
 ```@raw html
-<div><div style = "float: left;"><span>11×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">decision tree</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.99939±0.0008</td><td style = "text-align: right;">0.9833±0.0079</td><td style = "text-align: right;">0.9948±0.0016</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">SVM</td><td style = "text-align: right;">0.904±0.037</td><td style = "text-align: right;">0.94±0.029</td><td style = "text-align: right;">0.965±0.024</td><td style = "text-align: right;">0.948±0.016</td><td style = "text-align: right;">0.9902±0.0029</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">decision tree, tuned</td><td style = "text-align: right;">0.86±0.15</td><td style = "text-align: right;">0.965±0.016</td><td style = "text-align: right;">0.9981±0.0012</td><td style = "text-align: right;">0.9863±0.0087</td><td style = "text-align: right;">0.9961±0.0019</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">gradient booster, tuned</td><td style = "text-align: right;">0.854±0.082</td><td style = "text-align: right;">0.945±0.024</td><td style = "text-align: right;">0.973±0.013</td><td style = "text-align: right;">0.956±0.013</td><td style = "text-align: right;">0.9882±0.0028</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">5</td><td style = "text-align: left;">gradient booster</td><td style = "text-align: right;">0.842±0.076</td><td style = "text-align: right;">0.938±0.02</td><td style = "text-align: right;">0.969±0.013</td><td style = "text-align: right;">0.955±0.015</td><td style = "text-align: right;">0.9884±0.0025</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">6</td><td style = "text-align: left;">linear (logistic)</td><td style = "text-align: right;">0.81±0.13</td><td style = "text-align: right;">0.956±0.015</td><td style = "text-align: right;">0.97±0.014</td><td style = "text-align: right;">0.941±0.015</td><td style = "text-align: right;">0.9889±0.0022</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">7</td><td style = "text-align: left;">KNN</td><td style = "text-align: right;">0.807±0.061</td><td style = "text-align: right;">0.887±0.048</td><td style = "text-align: right;">0.968±0.016</td><td style = "text-align: right;">0.833±0.029</td><td style = "text-align: right;">0.9749±0.0043</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">8</td><td style = "text-align: left;">SVM, balanced</td><td style = "text-align: right;">0.776±0.09</td><td style = "text-align: right;">0.917±0.038</td><td style = "text-align: right;">0.961±0.016</td><td style = "text-align: right;">0.9661±0.0095</td><td style = "text-align: right;">0.9844±0.0029</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">9</td><td style = "text-align: left;">KNN, balanced</td><td style = "text-align: right;">0.67±0.1</td><td style = "text-align: right;">0.846±0.053</td><td style = "text-align: right;">0.965±0.011</td><td style = "text-align: right;">0.968±0.0092</td><td style = "text-align: right;">0.9726±0.003</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">10</td><td style = "text-align: left;">neural network</td><td style = "text-align: right;">0.52±0.13</td><td style = "text-align: right;">0.763±0.095</td><td style = "text-align: right;">0.931±0.02</td><td style = "text-align: right;">0.91±0.02</td><td style = "text-align: right;">0.981±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">11</td><td style = "text-align: left;">dummy</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.5±3.1e-16</td><td style = "text-align: right;">0.92857±0.00055</td></tr></tbody></table></div>
+<div><div style = "float: left;"><span>11×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">decision tree</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.99939±0.0008</td><td style = "text-align: right;">0.9833±0.0079</td><td style = "text-align: right;">0.9948±0.0016</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">SVM</td><td style = "text-align: right;">0.904±0.037</td><td style = "text-align: right;">0.94±0.029</td><td style = "text-align: right;">0.965±0.024</td><td style = "text-align: right;">0.95±0.018</td><td style = "text-align: right;">0.9903±0.003</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">decision tree, tuned</td><td style = "text-align: right;">0.86±0.15</td><td style = "text-align: right;">0.965±0.016</td><td style = "text-align: right;">0.9981±0.0012</td><td style = "text-align: right;">0.9863±0.0087</td><td style = "text-align: right;">0.9961±0.0019</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">gradient booster, tuned</td><td style = "text-align: right;">0.854±0.082</td><td style = "text-align: right;">0.945±0.024</td><td style = "text-align: right;">0.973±0.013</td><td style = "text-align: right;">0.956±0.013</td><td style = "text-align: right;">0.9882±0.0028</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">5</td><td style = "text-align: left;">gradient booster</td><td style = "text-align: right;">0.842±0.076</td><td style = "text-align: right;">0.938±0.02</td><td style = "text-align: right;">0.969±0.013</td><td style = "text-align: right;">0.955±0.015</td><td style = "text-align: right;">0.9884±0.0025</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">6</td><td style = "text-align: left;">linear (logistic)</td><td style = "text-align: right;">0.81±0.13</td><td style = "text-align: right;">0.956±0.015</td><td style = "text-align: right;">0.97±0.014</td><td style = "text-align: right;">0.941±0.015</td><td style = "text-align: right;">0.9889±0.0022</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">7</td><td style = "text-align: left;">KNN</td><td style = "text-align: right;">0.807±0.061</td><td style = "text-align: right;">0.887±0.048</td><td style = "text-align: right;">0.968±0.016</td><td style = "text-align: right;">0.833±0.029</td><td style = "text-align: right;">0.9749±0.0043</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">8</td><td style = "text-align: left;">SVM, balanced</td><td style = "text-align: right;">0.776±0.09</td><td style = "text-align: right;">0.917±0.038</td><td style = "text-align: right;">0.961±0.016</td><td style = "text-align: right;">0.9661±0.0094</td><td style = "text-align: right;">0.9844±0.003</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">9</td><td style = "text-align: left;">KNN, balanced</td><td style = "text-align: right;">0.67±0.1</td><td style = "text-align: right;">0.846±0.053</td><td style = "text-align: right;">0.965±0.011</td><td style = "text-align: right;">0.968±0.0092</td><td style = "text-align: right;">0.9726±0.003</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">10</td><td style = "text-align: left;">neural network</td><td style = "text-align: right;">0.52±0.13</td><td style = "text-align: right;">0.763±0.095</td><td style = "text-align: right;">0.931±0.02</td><td style = "text-align: right;">0.91±0.02</td><td style = "text-align: right;">0.981±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">11</td><td style = "text-align: left;">dummy</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.5±5.5e-17</td><td style = "text-align: right;">0.92857±0.00055</td></tr></tbody></table></div>
 ```
 
 To better visualize the confidence intervals, we plot the results for some of the
@@ -2054,12 +2056,13 @@ significantly effect the expected value.
 > Estimate the probability threshold needed for a desired recall, and create a model
 > predicting either "positive" or "negative" based on that threshold.
 
-Recall that all our models predict probabilities of the "positive" and "negative" class,
-not an actual class. To estimate a probability threshold giving us a recall of 0.95, we
-train our chosen model on a subset of the training data, and compute the corresponding
-out-of-sample recalls using the remaining training data, as we vary the probability
-threshold for the "positive" class. An MLJ method called `precision_recall_curve`
-automates this procedure and gives us the corresponding `precisions` at the same time.
+Recall that all our models predict *probabilities* of the "positive" and "negative"
+class, not an actual class. To estimate a probability threshold giving us a recall of
+0.95, we train our chosen model on a subset of the training data, and compute the
+corresponding out-of-sample recalls using the remaining training data, as we vary the
+probability threshold for the "positive" class. An MLJ method called
+`precision_recall_curve` automates this procedure and gives us the corresponding
+`precisions` at the same time.
 
 First we must train on a subset of the full training data `(X, y)`, so we split the
 training indices (as we did once before):
@@ -2086,11 +2089,11 @@ thresholds[[1,2,3,end-2,end-1,end]]
 ````
 6-element Vector{Float64}:
  0.9999999
- 0.9999998247157191
- 0.9999984267033775
- 1.8923854436803111e-6
- 1.5839607714340787e-6
- 1.5287486053727761e-6
+ 0.9999996650078213
+ 0.999999549467471
+ 5.959296313085005e-7
+ 4.898494071481352e-7
+ 4.71069892316045e-7
 ````
 
 There is one less threshold than recall or precision, and the recalls and precisions are
@@ -2122,14 +2125,14 @@ threshold = thresholds[i - 1]
 ````
 
 ````
-0.42646080532039277
+0.4650068823318434
 ````
 
 To transform our probabilistic predictor into point predictor, we use another MLJ
 wrapper, `BinaryThresholdPredictor`:
 
 ````@julia
-threshold_svm = BinaryThresholdPredictor(svm; threshold);
+svm_after_thresholding = BinaryThresholdPredictor(svm; threshold);
 ````
 
 We now repeat some of the preceding operations for the decision tree classifier:
@@ -2154,7 +2157,7 @@ validation set, it makes no difference what we use to set the threshold. However
 data, it may make a difference. So we will adopt the threshold extracted for the SVM:
 
 ````@julia
-threshold_tree = BinaryThresholdPredictor(tree; threshold);
+tree_after_thresholding = BinaryThresholdPredictor(tree; threshold);
 ````
 
 ## [13. Final testing](@id test)
@@ -2174,10 +2177,10 @@ We train the SVM on the full training data set `(X, y)` and predict on the test 
 `Xtest`, comparing prediction with `ytest` to get a [confusion
 matrix](https://en.wikipedia.org/wiki/Confusion_matrix), precision and recall. In Julia,
 the name `precision` is reserved for a different purpose; in MLJ you use `ppv` (positive
-predictive value).
+predictive value, a synonym).
 
 ````@julia
-mach = machine(threshold_svm, X, y)
+mach = machine(svm_after_thresholding, X, y)
 fit!(mach; verbosity=0)
 yhat = predict(mach, Xtest);
 test_confusion_matrix_svm = confmat(yhat, ytest)
@@ -2209,7 +2212,7 @@ test_precision_svm = ppv(yhat, ytest)
 Repeating the process for the decision tree:
 
 ````@julia
-mach = machine(threshold_tree, X, y)
+mach = machine(tree_after_thresholding, X, y)
 fit!(mach, verbosity=0)
 yhat = predict(mach, Xtest);
 test_confusion_matrix_tree = confmat(yhat, ytest)
@@ -2252,6 +2255,8 @@ recreate an *exact* replica the environment later on. However, small differences
 computing platforms mean this method is only 100% reliable when sharing the environment
 with someone using the same platform (e.g., a silicon Mac). Refer to
 [documentation](https://pkgdocs.julialang.org/v1/) for details.
+
+²"Going deeper" sections can be safely skipped on a first reading.
 
 ---
 
