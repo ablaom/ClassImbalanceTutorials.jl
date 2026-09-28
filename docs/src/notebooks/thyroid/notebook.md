@@ -199,7 +199,7 @@ Pkg.status()
 ````
 Status `~/work/ClassImbalanceTutorials.jl/ClassImbalanceTutorials.jl/docs/src/notebooks/thyroid/Project.toml`
   [1520ce14] AbstractTrees v0.4.5
-  [336ed68f] CSV v0.10.17
+⌅ [336ed68f] CSV v0.10.17
   [a93c6f00] DataFrames v1.8.2
   [f6006082] EvoTrees v0.19.0
   [c709b415] Imbalance v0.2.1
@@ -217,6 +217,7 @@ Status `~/work/ClassImbalanceTutorials.jl/ClassImbalanceTutorials.jl/docs/src/no
   [a19d573c] StatisticalMeasures v0.3.7
   [2913bbd2] StatsBase v0.34.13
   [f43a241f] Downloads v1.7.0
+Info Packages marked with ⌅ have new versions available but compatibility constraints restrict them from upgrading. To see why use `status --outdated`
 
 ````
 
@@ -278,7 +279,7 @@ rand()
 ````
 
 ````
-0.6767756584066215
+0.004724057014607097
 ````
 
 ## 2. Models and machines
@@ -566,7 +567,7 @@ path = Downloads.download(url)
 ````
 
 ````
-"/tmp/jl_rnhrIG/allhypo.data"
+"/tmp/jl_tc0ieq/allhypo.data"
 ````
 
 Entering these lines of code downloads the dataset to the temporary location on your
@@ -1240,23 +1241,24 @@ evaluate(booster, X, y; resampling=StratifiedCV(nfolds=6), measure=precision_at_
 ````
 PerformanceEvaluation object with these fields:
   model, tag, measure, operation,
-  measurement, uncertainty_radius_95, per_fold, per_observation,
+  measurement (per-fold aggregate), uncertainty_radius_95 (1.96*SE),
+  per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-988
+Tag: ProbabilisticPipeline-233
 Extract:
-┌────────────────────────────┬───────────┬─────────────┐
-│ measure                    │ operation │ measurement │
-├────────────────────────────┼───────────┼─────────────┤
-│ PrecisionAtFixedRecall(    │ predict   │ 0.869       │
-│   recall_threshold = 0.95) │           │             │
-└────────────────────────────┴───────────┴─────────────┘
-┌────────────────────────────────────────────┬─────────┐
-│ per_fold                                   │ 1.96*SE │
-├────────────────────────────────────────────┼─────────┤
-│ [0.913, 0.646, 0.914, 0.875, 0.914, 0.955] │ 0.0986  │
-└────────────────────────────────────────────┴─────────┘
-
+┌────────────────────────────┬───────────┬─────────────┬─────────┐
+│ measure                    │ operation │ measurement │ 1.96*SE │
+├────────────────────────────┼───────────┼─────────────┼─────────┤
+│ PrecisionAtFixedRecall(    │ predict   │ 0.869       │ 0.099   │
+│   recall_threshold = 0.95) │           │             │         │
+└────────────────────────────┴───────────┴─────────────┴─────────┘
+┌────────────────────────────────────────────┐
+│ per_fold                                   │
+├────────────────────────────────────────────┤
+│ [0.913, 0.646, 0.914, 0.875, 0.914, 0.955] │
+└────────────────────────────────────────────┘
+Apply `describe` to this result for a named tuple summary.
 ````
 
 The bottom box shows the individual cross-validation scores, while their aggregate (in
@@ -1298,23 +1300,24 @@ evaluation = evaluate(
 ````
 PerformanceEvaluation object with these fields:
   model, tag, measure, operation,
-  measurement, uncertainty_radius_95, per_fold, per_observation,
+  measurement (per-fold aggregate), uncertainty_radius_95 (1.96*SE),
+  per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-765
+Tag: ProbabilisticPipeline-367
 Extract:
-┌───┬────────────────────────────┬──────────────┬─────────────┐
-│   │ measure                    │ operation    │ measurement │
-├───┼────────────────────────────┼──────────────┼─────────────┤
-│ A │ PrecisionAtFixedRecall(    │ predict      │ 0.868       │
-│   │   recall_threshold = 0.95) │              │             │
-│ B │ PrecisionAtFixedRecall(    │ predict      │ 0.922       │
-│   │   recall_threshold = 0.9)  │              │             │
-│ C │ AveragePrecision()         │ predict      │ 0.967       │
-│ D │ BalancedAccuracy(          │ predict_mode │ 0.96        │
-│   │   adjusted = false)        │              │             │
-│ E │ Accuracy()                 │ predict_mode │ 0.987       │
-└───┴────────────────────────────┴──────────────┴─────────────┘
+┌───┬────────────────────────────┬──────────────┬─────────────┬─────────┐
+│   │ measure                    │ operation    │ measurement │ 1.96*SE │
+├───┼────────────────────────────┼──────────────┼─────────────┼─────────┤
+│ A │ PrecisionAtFixedRecall(    │ predict      │ 0.868       │ 0.047   │
+│   │   recall_threshold = 0.95) │              │             │         │
+│ B │ PrecisionAtFixedRecall(    │ predict      │ 0.922       │ 0.027   │
+│   │   recall_threshold = 0.9)  │              │             │         │
+│ C │ AveragePrecision()         │ predict      │ 0.967       │ 0.015   │
+│ D │ BalancedAccuracy(          │ predict_mode │ 0.96        │ 0.011   │
+│   │   adjusted = false)        │              │             │         │
+│ E │ Accuracy()                 │ predict_mode │ 0.9873      │ 0.0027  │
+└───┴────────────────────────────┴──────────────┴─────────────┴─────────┘
 ┌───┬───────────────────────────────────────────────────────────────────────────
 │   │ per_fold                                                                 ⋯
 ├───┼───────────────────────────────────────────────────────────────────────────
@@ -1324,8 +1327,8 @@ Extract:
 │ D │ [0.993, 0.955, 0.974, 0.904, 0.97, 0.953, 0.951, 0.975, 0.977, 0.925, 0. ⋯
 │ E │ [0.987, 0.99, 0.99, 0.977, 0.984, 0.99, 0.987, 0.99, 0.997, 0.977, 0.987 ⋯
 └───┴───────────────────────────────────────────────────────────────────────────
-                                                               2 columns omitted
-
+                                                                1 column omitted
+Apply `describe` to this result for a named tuple summary.
 ````
 
 ````@julia
@@ -1334,10 +1337,10 @@ evaluation.uncertainty_radius_95
 
 ````
 5-element Vector{Float64}:
- 0.04654515560829978
- 0.026502951149399583
- 0.01473697355773345
- 0.011270615078788593
+ 0.04654515560829987
+ 0.026502951149399684
+ 0.014736973557733332
+ 0.011270615078788696
  0.0026552249644034246
 ````
 
@@ -1459,10 +1462,10 @@ evaluations = evaluate(
 
 ````
 4-element Vector{PerformanceEvaluation{M, Vector{StatisticalMeasuresBase.RobustMeasure}, Vector{Float64}, Vector{Float64}, Vector{Function}, Vector{Vector{Float64}}, Vector{Vector{AbstractVector}}, FittedParamsPerFold, ReportPerFold, StratifiedCV} where {M, FittedParamsPerFold, ReportPerFold}}:
- PerformanceEvaluation("booster", 0.868 ± 0.0465, 0.922 ± 0.0265, 0.967 ± 0.0147, 0.96 ± 0.0113, 0.987 ± 0.00266)
- PerformanceEvaluation("booster with 2 features", 0.766 ± 0.0584, 0.837 ± 0.0608, 0.974 ± 0.0123, 0.965 ± 0.0111, 0.991 ± 0.00191)
- PerformanceEvaluation("booster with 4 features", 0.818 ± 0.111, 0.941 ± 0.0349, 0.973 ± 0.0146, 0.962 ± 0.0146, 0.99 ± 0.00315)
- PerformanceEvaluation("booster with 8 features", 0.813 ± 0.106, 0.945 ± 0.02, 0.969 ± 0.0142, 0.965 ± 0.0114, 0.988 ± 0.00224)
+ PerformanceEvaluation("booster", 0.868 ± 0.047, 0.922 ± 0.027, 0.967 ± 0.015, 0.96 ± 0.011, 0.9873 ± 0.0027)
+ PerformanceEvaluation("booster with 2 features", 0.766 ± 0.058, 0.837 ± 0.061, 0.974 ± 0.012, 0.965 ± 0.011, 0.9909 ± 0.0019)
+ PerformanceEvaluation("booster with 4 features", 0.82 ± 0.11, 0.941 ± 0.035, 0.973 ± 0.015, 0.962 ± 0.015, 0.99 ± 0.0032)
+ PerformanceEvaluation("booster with 8 features", 0.81 ± 0.11, 0.945 ± 0.02, 0.969 ± 0.014, 0.965 ± 0.011, 0.9884 ± 0.0022)
 ````
 
 Here a vector of evaluation objects is being returned, but we can get a nice summary
@@ -1959,7 +1962,7 @@ sort!(performance_summary, :PrecisionAtFixedRecall, rev=true)
 ````
 
 ```@raw html
-<div><div style = "float: left;"><span>11×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">decision tree</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.99939±0.0008</td><td style = "text-align: right;">0.9833±0.0079</td><td style = "text-align: right;">0.9948±0.0016</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">SVM</td><td style = "text-align: right;">0.904±0.037</td><td style = "text-align: right;">0.94±0.029</td><td style = "text-align: right;">0.965±0.024</td><td style = "text-align: right;">0.947±0.014</td><td style = "text-align: right;">0.99±0.0026</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">decision tree, tuned</td><td style = "text-align: right;">0.86±0.15</td><td style = "text-align: right;">0.965±0.016</td><td style = "text-align: right;">0.9981±0.0012</td><td style = "text-align: right;">0.9863±0.0087</td><td style = "text-align: right;">0.9961±0.0019</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">gradient booster, tuned</td><td style = "text-align: right;">0.854±0.082</td><td style = "text-align: right;">0.945±0.024</td><td style = "text-align: right;">0.973±0.013</td><td style = "text-align: right;">0.956±0.013</td><td style = "text-align: right;">0.9882±0.0028</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">5</td><td style = "text-align: left;">gradient booster</td><td style = "text-align: right;">0.842±0.076</td><td style = "text-align: right;">0.938±0.02</td><td style = "text-align: right;">0.969±0.013</td><td style = "text-align: right;">0.955±0.015</td><td style = "text-align: right;">0.9884±0.0025</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">6</td><td style = "text-align: left;">linear (logistic)</td><td style = "text-align: right;">0.81±0.13</td><td style = "text-align: right;">0.956±0.015</td><td style = "text-align: right;">0.97±0.014</td><td style = "text-align: right;">0.941±0.015</td><td style = "text-align: right;">0.9889±0.0022</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">7</td><td style = "text-align: left;">KNN</td><td style = "text-align: right;">0.807±0.061</td><td style = "text-align: right;">0.887±0.048</td><td style = "text-align: right;">0.968±0.016</td><td style = "text-align: right;">0.833±0.029</td><td style = "text-align: right;">0.9749±0.0043</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">8</td><td style = "text-align: left;">SVM, balanced</td><td style = "text-align: right;">0.776±0.09</td><td style = "text-align: right;">0.917±0.038</td><td style = "text-align: right;">0.961±0.016</td><td style = "text-align: right;">0.966±0.0096</td><td style = "text-align: right;">0.9842±0.0031</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">9</td><td style = "text-align: left;">KNN, balanced</td><td style = "text-align: right;">0.67±0.1</td><td style = "text-align: right;">0.846±0.053</td><td style = "text-align: right;">0.965±0.011</td><td style = "text-align: right;">0.968±0.0092</td><td style = "text-align: right;">0.9726±0.003</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">10</td><td style = "text-align: left;">neural network</td><td style = "text-align: right;">0.52±0.13</td><td style = "text-align: right;">0.763±0.095</td><td style = "text-align: right;">0.931±0.02</td><td style = "text-align: right;">0.91±0.02</td><td style = "text-align: right;">0.981±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">11</td><td style = "text-align: left;">dummy</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.5±5.5e-17</td><td style = "text-align: right;">0.92857±0.00055</td></tr></tbody></table></div>
+<div><div style = "float: left;"><span>11×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">decision tree</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.99939±0.0008</td><td style = "text-align: right;">0.9833±0.0079</td><td style = "text-align: right;">0.9948±0.0016</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">SVM</td><td style = "text-align: right;">0.904±0.037</td><td style = "text-align: right;">0.94±0.029</td><td style = "text-align: right;">0.965±0.024</td><td style = "text-align: right;">0.947±0.016</td><td style = "text-align: right;">0.99±0.0027</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">decision tree, tuned</td><td style = "text-align: right;">0.86±0.15</td><td style = "text-align: right;">0.965±0.016</td><td style = "text-align: right;">0.9981±0.0012</td><td style = "text-align: right;">0.9863±0.0087</td><td style = "text-align: right;">0.9961±0.0019</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">gradient booster, tuned</td><td style = "text-align: right;">0.854±0.082</td><td style = "text-align: right;">0.945±0.024</td><td style = "text-align: right;">0.973±0.013</td><td style = "text-align: right;">0.956±0.013</td><td style = "text-align: right;">0.9882±0.0028</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">5</td><td style = "text-align: left;">gradient booster</td><td style = "text-align: right;">0.842±0.076</td><td style = "text-align: right;">0.938±0.02</td><td style = "text-align: right;">0.969±0.013</td><td style = "text-align: right;">0.955±0.015</td><td style = "text-align: right;">0.9884±0.0025</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">6</td><td style = "text-align: left;">linear (logistic)</td><td style = "text-align: right;">0.81±0.13</td><td style = "text-align: right;">0.956±0.015</td><td style = "text-align: right;">0.97±0.014</td><td style = "text-align: right;">0.941±0.015</td><td style = "text-align: right;">0.9889±0.0022</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">7</td><td style = "text-align: left;">KNN</td><td style = "text-align: right;">0.807±0.061</td><td style = "text-align: right;">0.887±0.048</td><td style = "text-align: right;">0.968±0.016</td><td style = "text-align: right;">0.833±0.029</td><td style = "text-align: right;">0.9749±0.0043</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">8</td><td style = "text-align: left;">SVM, balanced</td><td style = "text-align: right;">0.776±0.09</td><td style = "text-align: right;">0.917±0.038</td><td style = "text-align: right;">0.961±0.016</td><td style = "text-align: right;">0.9659±0.0096</td><td style = "text-align: right;">0.9841±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">9</td><td style = "text-align: left;">KNN, balanced</td><td style = "text-align: right;">0.67±0.1</td><td style = "text-align: right;">0.846±0.053</td><td style = "text-align: right;">0.965±0.011</td><td style = "text-align: right;">0.968±0.0092</td><td style = "text-align: right;">0.9726±0.003</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">10</td><td style = "text-align: left;">neural network</td><td style = "text-align: right;">0.52±0.13</td><td style = "text-align: right;">0.763±0.095</td><td style = "text-align: right;">0.931±0.02</td><td style = "text-align: right;">0.91±0.02</td><td style = "text-align: right;">0.981±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">11</td><td style = "text-align: left;">dummy</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.5±3.1e-16</td><td style = "text-align: right;">0.92857±0.00055</td></tr></tbody></table></div>
 ```
 
 To better visualize the confidence intervals, we plot the results for some of the
@@ -2089,11 +2092,11 @@ thresholds[[1,2,3,end-2,end-1,end]]
 ````
 6-element Vector{Float64}:
  0.9999999
- 0.9999993771128398
- 0.9999991712448318
- 9.270963412522093e-7
- 7.675114037652975e-7
- 7.391358748387589e-7
+ 0.999999876309428
+ 0.9999997391384811
+ 2.1474990111736147e-6
+ 1.8033371886883032e-6
+ 1.741604766070104e-6
 ````
 
 There is one less threshold than recall or precision, and the recalls and precisions are
@@ -2125,7 +2128,7 @@ threshold = thresholds[i - 1]
 ````
 
 ````
-0.44675043255072255
+0.400168271700999
 ````
 
 To transform our probabilistic predictor into point predictor, we use another MLJ
