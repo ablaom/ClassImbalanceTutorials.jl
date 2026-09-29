@@ -152,7 +152,7 @@
 # Edit the definition of `LOCAL` below, to point to the directory to which you would like
 # figures to be saved.
 
-LOCAL = @__DIR__               # e.g., `LOCAL = "~/my/figures/"
+LOCAL = @__DIR__               # e.g., `LOCAL = "~/my/figures/"`
 localfile(name) = joinpath(LOCAL, name);
 
 # ### Package management
