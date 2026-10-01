@@ -21,7 +21,7 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
 AbstractTrees = "0.4.5"
-CSV = "0.10.16"
+CSV = "0.10.16, 1.1"
 DataFrames = "1.8.2"
 Downloads = "1"
 EvoTrees = "0.19"
