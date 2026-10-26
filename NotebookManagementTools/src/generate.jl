@@ -116,6 +116,7 @@ function generate(
     catch ex
         success = false
         rmprocs(id)
+        @error ex
         ex isa RemoteException || rethrow(ex)
     end
     return success ? markdown_file : ""
