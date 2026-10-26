@@ -203,7 +203,7 @@ Pkg.status()
 
 import StableRNGs
 const SEED = 234
-stable_rng() = StableRNGs.StableRNG(SEED)
+stable_rng() = StableRNGs.StableRNG(SEED);
 
 # Here's a demonstration:
 
@@ -286,7 +286,7 @@ model = DecisionTreeClassifier(min_samples_split=5, rng=stable_rng())  # model i
 # [macro](https://docs.julialang.org/en/v1/manual/metaprogramming/#man-macros) such as
 # `@load`, whose name always begins with the `@` character, is a special kind of Julia
 # function we won't explain here. For the beginner, it suffices to note it is typically
-# called without parentheses, and spaces instead of commas. ♣
+# called without parentheses, and spaces instead of commas. ■
 
 # The word "model", ubiquitous in statistics and machine learning, has a specific meaning
 # in MLJ documentation and in this tutorial. A **model** is an object encapsulating a
@@ -344,7 +344,7 @@ fitted_params(mach).tree
 # restart](https://juliaai.github.io/MLJ.jl/dev/machines/#Warm-restarts) for some
 # iterative models, such as a random forest, or the gradient tree boosting model appearing
 # later in this tutorial. In model pipelines, discussed later, `fit!` only retrains
-# component models that actually need retraining. ♣
+# component models that actually need retraining. ■
 
 # Here is how we can make predictions on some other view of the bound data:
 
@@ -452,7 +452,7 @@ DataFrames.select!(data, DataFrames.Not([:TBG_measured, :TBG, :hypopituitary]));
 # [DataFrames.jl documentation](https://dataframes.juliadata.org/stable/). DataFrames.jl
 # is an essential tool in so-called exploratory data analysis (EDA), not covered here;
 # see, e.g., Storopoli et
-# al. [(2021)](https://juliadatascience.github.io/JuliaDataScience/). ♣
+# al. [(2021)](https://juliadatascience.github.io/JuliaDataScience/). ■
 
 # Here's how you can save the tidied-up data as a CSV file, including header, in your
 # current directory (`localfile` was defined [above](@ref setup)):
@@ -555,7 +555,7 @@ data = coerce(data, Textual => OrderedFactor);
 # diagram above as abstract supertypes, which get used in MLJ method
 # dispatch. `Multiclass` and `Ordered` factor columns are encoded as `CategoricalVector`s
 # from the [CategoricalArrays.jl](https://categoricalarrays.juliadata.org/stable/)
-# package, which means they are stored internally as integer arrays for efficiency. ♣
+# package, which means they are stored internally as integer arrays for efficiency. ■
 
 # Here's how we can see that "negative" diagnoses are overrepresented in our data:
 
@@ -656,7 +656,7 @@ first(data_continuous, 3)
 # **Going deeper.** MLJ provides very flexible tools for constructing composite models,
 # beyond the linear pipelines we will consider here. Refer to the [Learning
 # Networks](https://juliaai.github.io/MLJ.jl/dev/learning_networks/#Learning-Networks)
-# section of the manual for more on this advanced topic. ♣
+# section of the manual for more on this advanced topic. ■
 
 # We are ready to instantiate our K-nearest neighbor outlier detector. We additionally
 # need the `ProbabilisticDetector` wrapper for detectors, so that the detector's
@@ -694,7 +694,7 @@ proportion_accepted = nrows(data)/ntrain
 # standardization) based only on the *training* fold. This mitigates [data
 # leakage](https://en.wikipedia.org/wiki/Leakage_(machine_learning)) into our validation
 # sets. Having combined our preprocessing algorithms into a single pipeline model makes
-# this rather easy to do.  ♣
+# this rather easy to do.  ■
 
 # ## [7. Evaluating a supervised model](@id evaluate)
 
@@ -718,7 +718,7 @@ schema(X).names
 # with name *not* equal to `:detector_outcome` goes into `X`, while the last returned
 # value, discarded here, is everything remaining (in this case the `:detector_outcome`
 # column).  By default, a single column is always returned as a vector instead of a
-# table. ♣
+# table. ■
 
 # The first supervised model we will train is a [gradient tree boosting
 # model](https://en.wikipedia.org/wiki/Gradient_boosting). For tabular data where the
@@ -1096,7 +1096,7 @@ describe.(evaluations) |> DataFrames.DataFrame
 
 # Because nested resampling can be computationally expensive, it is sometimes avoided, but
 # in doing so one may run into data leakage concerns.
-# ♣
+# ■
 
 # The `TunedModel` is a powerful component of MLJ, with a host of options. For a deeper
 # dive, refer to the [documentation](https://juliaai.github.io/MLJ.jl/dev/tuning_models/).
@@ -1147,7 +1147,7 @@ proportions = StatsBase.proportionmap(y_over)
 
 # There is a variation `SMOTE` that handles categorical data, `SMOTENC`.  However, for the
 # thyroid dataset we mostly found it more effective to perform oversampling after
-# one-hot encoding and standardization, rather than before it. ♣
+# one-hot encoding and standardization, rather than before it. ■
 
 # In MLJ, an oversampler can be combined with a supervised learner using the
 # `BalancedModel` wrapper. This delivers a new supervised learning model behaving just
@@ -1355,7 +1355,7 @@ end
 plts = myplot(performance_summary)
 display(plts[1]) # to display the first plot
 
-# ♣
+# ■
 
 # ### Commentary
 
