@@ -539,7 +539,7 @@ scitype(blood_type)
 # scitypes with `schema`:
 
 #md schema(data)
-schema(data) |> DataFrames.dataframe |> println #hide
+schema(data) |> DataFrames.DataFrame |> println #hide
 
 # Based on what we understand about the real world meaning each column, we can fix
 # some specific column scitypes like this:
