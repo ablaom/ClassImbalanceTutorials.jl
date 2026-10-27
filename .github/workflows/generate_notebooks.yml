@@ -2,6 +2,7 @@ name: Test and Generate Notebooks as Needed
 env:
   ACTIONS_STEP_DEBUG: true
   NOTEBOOK_ROOT: docs/src/notebooks/
+  REPO_NAME: ablaom.github.io/ClassImbalanceTutorials.jl
 on:
   pull_request:
 
@@ -86,7 +87,7 @@ jobs:
 
           **Accept the invitation to run pending workflows.** If none are apparent, then
           close and immediately re-open this pull request. When CI finishes running, you can preview
-          the new documentation [here](https://JuliaAI.github.io/ClassImbalanceTutorials.jl/previews/PR__SPAWNED_PR_NUMBER__).
+          the new documentation [here](https://${{ env.REPO_NAME }}/previews/PR__SPAWNED_PR_NUMBER__).
 
           If happy with the preview, merge this pull request to trigger deployment of the new docs to gh-pages.
 

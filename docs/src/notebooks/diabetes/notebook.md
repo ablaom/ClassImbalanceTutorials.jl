@@ -4,6 +4,8 @@ EditURL = "notebook.jl"
 
 # Test for Diabetes
 
+This is, for now, a dummy tutorial, begin used to test tutorial deployment.
+
 ````@julia
 24
 using CategoricalArrays
