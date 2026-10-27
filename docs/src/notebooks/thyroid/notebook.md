@@ -6,6 +6,8 @@ EditURL = "notebook.jl"
 
 > Anthony D. Blaom, May 2026
 
+### Abstract
+
 This tutorial presents an end-to-end application of machine learning to the
 problem of creating an automated test for the presence of some disease. Specifically, we
 compare several tests for hypothyroidism based on machine learning models, trained using
@@ -13,8 +15,16 @@ the well studied Garavan Institute dataset (Quinlan,
 [1986](https://doi.org/10.24432/C5D010)). While our main goal is pedagogical, the models
 we propose are fully developed, and not mere toy examples.
 
-The principal software tool will be the [MLJ.jl](https://juliaml.ai) machine learning
-toolbox, written for the Julia programming language (Blaom et al.,
+The source files used to generate the this tutorial and the included code output resides
+at the GitHub repository
+[github.com/ablaom/ClassImbalanceTutorials.jl](https://github.com/ablaom/ClassImbalanceTutorials.jl).
+
+## Overview
+
+### Machine learning platform
+
+The principal software tool described here is the [MLJ.jl](https://juliaml.ai) machine
+learning toolbox, written for the Julia programming language (Blaom et al.,
 [2020](https://joss.theoj.org/papers/10.21105/joss.02704)).
 [Julia](https://julialang.org) is a newer programming language with the high performance
 of older languages like FORTRAN and C, but it looks and feels like a scripting language,
@@ -24,17 +34,15 @@ computing needs. Julia's potential in computational biology is well established 
 et al., [2023](https://doi.org/10.1038/s41592-023-01832-z)). In Pharmacometrics
 modeling, for example, [PumasAI](https://pumas.ai) software for non-linear mixed effects
 modeling, written in Julia, runs considerably faster than commonly adopted alternatives
-(Zeng et al., [2026](https://link.springer.com/article/10.1007/s00228-025-03974-9)).
+developed over many years (Zeng et al.,
+[2026](https://link.springer.com/article/10.1007/s00228-025-03974-9)).
 
-For resources on
-learning Julia, installing Julia packages, etc, the reader is referred to the [Julia
-website](https://julialang.org).
+For resources on learning Julia, installing Julia packages, etc, the reader is referred
+to the [Julia website](https://julialang.org).
 
 We assume readers are familiar with basic statistics, including the use of
 cross-validation to guard against over-fitting. Readers new to Julia will benefit from
 previous exposure to a scripting language, such as those cited above.
-
-## Overview
 
 ### Class imbalance and measures of test performance
 
@@ -260,7 +268,7 @@ rand(rng)
 
 ````@julia
 rng = stable_rng() # reset the rng
-rand(rng)          # same result as above
+rand(rng)          # same as first result as above
 ````
 
 ````
@@ -275,7 +283,7 @@ rand()
 ````
 
 ````
-0.9410828943552193
+0.7250575630837823
 ````
 
 ## 2. Models and machines
@@ -288,12 +296,7 @@ dataset](https://en.wikipedia.org/wiki/Iris_flower_data_set). It is loaded like 
 
 ````@julia
 using MLJ # load the MLJ package
-X_iris, y_iris = @load_iris
-X_iris
-````
-
-````
-(sepal_length = [5.1, 4.9, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9, 5.4, 4.8, 4.8, 4.3, 5.8, 5.7, 5.4, 5.1, 5.7, 5.1, 5.4, 5.1, 4.6, 5.1, 4.8, 5.0, 5.0, 5.2, 5.2, 4.7, 4.8, 5.4, 5.2, 5.5, 4.9, 5.0, 5.5, 4.9, 4.4, 5.1, 5.0, 4.5, 4.4, 5.0, 5.1, 4.8, 5.1, 4.6, 5.3, 5.0, 7.0, 6.4, 6.9, 5.5, 6.5, 5.7, 6.3, 4.9, 6.6, 5.2, 5.0, 5.9, 6.0, 6.1, 5.6, 6.7, 5.6, 5.8, 6.2, 5.6, 5.9, 6.1, 6.3, 6.1, 6.4, 6.6, 6.8, 6.7, 6.0, 5.7, 5.5, 5.5, 5.8, 6.0, 5.4, 6.0, 6.7, 6.3, 5.6, 5.5, 5.5, 6.1, 5.8, 5.0, 5.6, 5.7, 5.7, 6.2, 5.1, 5.7, 6.3, 5.8, 7.1, 6.3, 6.5, 7.6, 4.9, 7.3, 6.7, 7.2, 6.5, 6.4, 6.8, 5.7, 5.8, 6.4, 6.5, 7.7, 7.7, 6.0, 6.9, 5.6, 7.7, 6.3, 6.7, 7.2, 6.2, 6.1, 6.4, 7.2, 7.4, 7.9, 6.4, 6.3, 6.1, 7.7, 6.3, 6.4, 6.0, 6.9, 6.7, 6.9, 5.8, 6.8, 6.7, 6.7, 6.3, 6.5, 6.2, 5.9], sepal_width = [3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3.7, 3.4, 3.0, 3.0, 4.0, 4.4, 3.9, 3.5, 3.8, 3.8, 3.4, 3.7, 3.6, 3.3, 3.4, 3.0, 3.4, 3.5, 3.4, 3.2, 3.1, 3.4, 4.1, 4.2, 3.1, 3.2, 3.5, 3.1, 3.0, 3.4, 3.5, 2.3, 3.2, 3.5, 3.8, 3.0, 3.8, 3.2, 3.7, 3.3, 3.2, 3.2, 3.1, 2.3, 2.8, 2.8, 3.3, 2.4, 2.9, 2.7, 2.0, 3.0, 2.2, 2.9, 2.9, 3.1, 3.0, 2.7, 2.2, 2.5, 3.2, 2.8, 2.5, 2.8, 2.9, 3.0, 2.8, 3.0, 2.9, 2.6, 2.4, 2.4, 2.7, 2.7, 3.0, 3.4, 3.1, 2.3, 3.0, 2.5, 2.6, 3.0, 2.6, 2.3, 2.7, 3.0, 2.9, 2.9, 2.5, 2.8, 3.3, 2.7, 3.0, 2.9, 3.0, 3.0, 2.5, 2.9, 2.5, 3.6, 3.2, 2.7, 3.0, 2.5, 2.8, 3.2, 3.0, 3.8, 2.6, 2.2, 3.2, 2.8, 2.8, 2.7, 3.3, 3.2, 2.8, 3.0, 2.8, 3.0, 2.8, 3.8, 2.8, 2.8, 2.6, 3.0, 3.4, 3.1, 3.0, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3.0, 2.5, 3.0, 3.4, 3.0], petal_length = [1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5, 1.5, 1.6, 1.4, 1.1, 1.2, 1.5, 1.3, 1.4, 1.7, 1.5, 1.7, 1.5, 1.0, 1.7, 1.9, 1.6, 1.6, 1.5, 1.4, 1.6, 1.6, 1.5, 1.5, 1.4, 1.5, 1.2, 1.3, 1.5, 1.3, 1.5, 1.3, 1.3, 1.3, 1.6, 1.9, 1.4, 1.6, 1.4, 1.5, 1.4, 4.7, 4.5, 4.9, 4.0, 4.6, 4.5, 4.7, 3.3, 4.6, 3.9, 3.5, 4.2, 4.0, 4.7, 3.6, 4.4, 4.5, 4.1, 4.5, 3.9, 4.8, 4.0, 4.9, 4.7, 4.3, 4.4, 4.8, 5.0, 4.5, 3.5, 3.8, 3.7, 3.9, 5.1, 4.5, 4.5, 4.7, 4.4, 4.1, 4.0, 4.4, 4.6, 4.0, 3.3, 4.2, 4.2, 4.2, 4.3, 3.0, 4.1, 6.0, 5.1, 5.9, 5.6, 5.8, 6.6, 4.5, 6.3, 5.8, 6.1, 5.1, 5.3, 5.5, 5.0, 5.1, 5.3, 5.5, 6.7, 6.9, 5.0, 5.7, 4.9, 6.7, 4.9, 5.7, 6.0, 4.8, 4.9, 5.6, 5.8, 6.1, 6.4, 5.6, 5.1, 5.6, 6.1, 5.6, 5.5, 4.8, 5.4, 5.6, 5.1, 5.1, 5.9, 5.7, 5.2, 5.0, 5.2, 5.4, 5.1], petal_width = [0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1, 0.2, 0.2, 0.1, 0.1, 0.2, 0.4, 0.4, 0.3, 0.3, 0.3, 0.2, 0.4, 0.2, 0.5, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.4, 0.1, 0.2, 0.1, 0.2, 0.2, 0.1, 0.2, 0.2, 0.3, 0.3, 0.2, 0.6, 0.4, 0.3, 0.2, 0.2, 0.2, 0.2, 1.4, 1.5, 1.5, 1.3, 1.5, 1.3, 1.6, 1.0, 1.3, 1.4, 1.0, 1.5, 1.0, 1.4, 1.3, 1.4, 1.5, 1.0, 1.5, 1.1, 1.8, 1.3, 1.5, 1.2, 1.3, 1.4, 1.4, 1.7, 1.5, 1.0, 1.1, 1.0, 1.2, 1.6, 1.5, 1.6, 1.5, 1.3, 1.3, 1.3, 1.2, 1.4, 1.2, 1.0, 1.3, 1.2, 1.3, 1.3, 1.1, 1.3, 2.5, 1.9, 2.1, 1.8, 2.2, 2.1, 1.7, 1.8, 1.8, 2.5, 2.0, 1.9, 2.1, 2.0, 2.4, 2.3, 1.8, 2.2, 2.3, 1.5, 2.3, 2.0, 2.0, 1.8, 2.1, 1.8, 1.8, 1.8, 2.1, 1.6, 1.9, 2.0, 2.2, 1.5, 1.4, 2.3, 2.4, 1.8, 1.8, 2.1, 2.4, 2.3, 1.9, 2.3, 2.5, 2.3, 1.9, 2.0, 2.3, 1.8])
+X_iris, y_iris = @load_iris;
 ````
 
 Here `X_iris`, the features (specimen dimensions) is a rather basic form of Julia table,
@@ -307,12 +310,19 @@ display and is easier to manipulate:
 ````@julia
 import DataFrames
 X_iris = DataFrames.DataFrame(X_iris)
-first(X_iris, 3)  # return the first three rows of the dataframe
+first(X_iris, 3) # return the first three rows of the dataframe
 ````
 
-```@raw html
-<div><div style = "float: left;"><span>3×4 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">sepal_length</th><th style = "text-align: left;">sepal_width</th><th style = "text-align: left;">petal_length</th><th style = "text-align: left;">petal_width</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: right;">5.1</td><td style = "text-align: right;">3.5</td><td style = "text-align: right;">1.4</td><td style = "text-align: right;">0.2</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: right;">4.9</td><td style = "text-align: right;">3.0</td><td style = "text-align: right;">1.4</td><td style = "text-align: right;">0.2</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: right;">4.7</td><td style = "text-align: right;">3.2</td><td style = "text-align: right;">1.3</td><td style = "text-align: right;">0.2</td></tr></tbody></table></div>
-```
+````
+3×4 DataFrame
+ Row │ sepal_length  sepal_width  petal_length  petal_width
+     │ Float64       Float64      Float64       Float64
+─────┼──────────────────────────────────────────────────────
+   1 │          5.1          3.5           1.4          0.2
+   2 │          4.9          3.0           1.4          0.2
+   3 │          4.7          3.2           1.3          0.2
+
+````
 
 ````@julia
 first(y_iris, 3)  # or, you can do `y_iris[1:3]`
@@ -360,9 +370,9 @@ DecisionTreeClassifier(
   rng = StableRNGs.LehmerRNG(state=0x000000000000000000000000000001d5))
 ````
 
-With the exception of `min_samples_split`, we have selected default values of the
-**hyper-parameters** of the model, namely those parameters we need to specify before any
-learning begins.  Never mind about the meaning of these hyper-parameters for now.
+With the exception of `min_samples_split` and `rng`, we have selected default values of
+the **hyper-parameters** of the model, namely those parameters we need to specify before
+any learning begins.  Never mind about the meaning of these hyper-parameters for now.
 
 **Going deeper.**² To see all registered MLJ models that can be immediately applied to
 our data, do `models(matching(X, Y))`. See the [Model
@@ -404,7 +414,7 @@ over-fitting, we typically do not train on all the data!).
 
 ````@julia
 train_rows = 1:2:149  # the odd rows of the dataset
-fit!(mach, rows=train_rows);
+fit!(mach, rows=train_rows)
 ````
 
 ````
@@ -563,11 +573,12 @@ path = Downloads.download(url)
 ````
 
 ````
-"/tmp/jl_czXkMq/allhypo.data"
+"/tmp/jl_CvwgIq/allhypo.data"
 ````
 
-Entering these lines of code downloads the dataset to the temporary location on your
-computer shown above. If you have trouble with the host site, try instead
+Entering these lines of code downloads the dataset to a temporary location on your
+computer, like the one shown in the above output. If you have trouble with the host
+site, try instead
 
 ```julia
 url = "https://raw.githubusercontent.com/manavukani/thyroid-explainableai/"*
@@ -598,9 +609,20 @@ and columns:
 data[15:21, [:age, :sex, :TSH, :diagnosis]]
 ````
 
-```@raw html
-<div><div style = "float: left;"><span>7×4 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">age</th><th style = "text-align: left;">sex</th><th style = "text-align: left;">TSH</th><th style = "text-align: left;">diagnosis</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "Union{Missing, Int64}" style = "text-align: left;">Int64?</th><th title = "Union{Missing, InlineStrings.String1}" style = "text-align: left;">String1?</th><th title = "Union{Missing, Float64}" style = "text-align: left;">Float64?</th><th title = "InlineStrings.String31" style = "text-align: left;">String31</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: right;">28</td><td style = "text-align: left;">M</td><td style = "text-align: right;">3.3</td><td style = "text-align: left;">negative.|2043</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: right;">65</td><td style = "text-align: left;">F</td><td style = "text-align: right;">12.0</td><td style = "text-align: left;">compensated hypothyroid.|3169</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: right;">42</td><td style = "font-style: italic; text-align: left;">missing</td><td style = "text-align: right;">1.2</td><td style = "text-align: left;">negative.|2755</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: right;">63</td><td style = "text-align: left;">F</td><td style = "text-align: right;">1.5</td><td style = "text-align: left;">negative.|1010</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">5</td><td style = "text-align: right;">80</td><td style = "text-align: left;">F</td><td style = "text-align: right;">6.0</td><td style = "text-align: left;">negative.|803</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">6</td><td style = "text-align: right;">28</td><td style = "text-align: left;">M</td><td style = "text-align: right;">2.1</td><td style = "text-align: left;">negative.|2297</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">7</td><td style = "text-align: right;">51</td><td style = "text-align: left;">F</td><td style = "text-align: right;">0.1</td><td style = "text-align: left;">negative.|3564</td></tr></tbody></table></div>
-```
+````
+7×4 DataFrame
+ Row │ age     sex       TSH       diagnosis
+     │ Int64?  String1?  Float64?  String31
+─────┼───────────────────────────────────────────────────────────
+   1 │     28  M              3.3  negative.|2043
+   2 │     65  F             12.0  compensated hypothyroid.|3169
+   3 │     42  missing        1.2  negative.|2755
+   4 │     63  F              1.5  negative.|1010
+   5 │     80  F              6.0  negative.|803
+   6 │     28  M              2.1  negative.|2297
+   7 │     51  F              0.1  negative.|3564
+
+````
 
 There is a problem with the `diagnosis` column, which can be inspected like this:
 
@@ -659,12 +681,28 @@ whose output you should inspect. Here's an extract:
 DataFrames.describe(data)[[1, 2, 3, 4, 8, 15, 25, 26, 27, 28, 29, 30], :]
 ````
 
-```@raw html
-<div><div style = "float: left;"><span>12×7 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">variable</th><th style = "text-align: left;">mean</th><th style = "text-align: left;">min</th><th style = "text-align: left;">median</th><th style = "text-align: left;">max</th><th style = "text-align: left;">nmissing</th><th style = "text-align: left;">eltype</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "Symbol" style = "text-align: left;">Symbol</th><th title = "Union{Nothing, Float64}" style = "text-align: left;">Union…</th><th title = "Any" style = "text-align: left;">Any</th><th title = "Union{Nothing, Float64}" style = "text-align: left;">Union…</th><th title = "Any" style = "text-align: left;">Any</th><th title = "Int64" style = "text-align: left;">Int64</th><th title = "Type" style = "text-align: left;">Type</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">age</td><td style = "text-align: left;">51.8442</td><td style = "text-align: left;">1</td><td style = "text-align: left;">54.0</td><td style = "text-align: left;">455</td><td style = "text-align: right;">1</td><td style = "text-align: left;">Union{Missing, Int64}</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">sex</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">F</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">M</td><td style = "text-align: right;">110</td><td style = "text-align: left;">Union{Missing, String1}</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">on_thyroxine</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">f</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">t</td><td style = "text-align: right;">0</td><td style = "text-align: left;">String1</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">query_on_thyroxine</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">f</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">t</td><td style = "text-align: right;">0</td><td style = "text-align: left;">String1</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">5</td><td style = "text-align: left;">thyroid_surgery</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">f</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">t</td><td style = "text-align: right;">0</td><td style = "text-align: left;">String1</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">6</td><td style = "text-align: left;">hypopituitary</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">f</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">t</td><td style = "text-align: right;">0</td><td style = "text-align: left;">String1</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">7</td><td style = "text-align: left;">FTI_measured</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">f</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">t</td><td style = "text-align: right;">0</td><td style = "text-align: left;">String1</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">8</td><td style = "text-align: left;">FTI</td><td style = "text-align: left;">110.788</td><td style = "text-align: left;">2.0</td><td style = "text-align: left;">107.0</td><td style = "text-align: left;">395.0</td><td style = "text-align: right;">295</td><td style = "text-align: left;">Union{Missing, Float64}</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">9</td><td style = "text-align: left;">TBG_measured</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">f</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">f</td><td style = "text-align: right;">0</td><td style = "text-align: left;">String1</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">10</td><td style = "text-align: left;">TBG</td><td style = "font-style: italic; text-align: left;"></td><td style = "font-style: italic; text-align: left;"></td><td style = "font-style: italic; text-align: left;"></td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: right;">2800</td><td style = "text-align: left;">Missing</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">11</td><td style = "text-align: left;">referral_source</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">STMW</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">other</td><td style = "text-align: right;">0</td><td style = "text-align: left;">String7</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">12</td><td style = "text-align: left;">diagnosis</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">negative</td><td style = "font-style: italic; text-align: left;"></td><td style = "text-align: left;">positive</td><td style = "text-align: right;">0</td><td style = "text-align: left;">AbstractString</td></tr></tbody></table></div>
-```
+````
+12×7 DataFrame
+ Row │ variable            mean     min       median  max       nmissing  eltype
+     │ Symbol              Union…   Any       Union…  Any       Int64     Type
+─────┼────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ age                 51.8442  1         54.0    455              1  Union{Missing, Int64}
+   2 │ sex                          F                 M              110  Union{Missing, String1}
+   3 │ on_thyroxine                 f                 t                0  String1
+   4 │ query_on_thyroxine           f                 t                0  String1
+   5 │ thyroid_surgery              f                 t                0  String1
+   6 │ hypopituitary                f                 t                0  String1
+   7 │ FTI_measured                 f                 t                0  String1
+   8 │ FTI                 110.788  2.0       107.0   395.0          295  Union{Missing, Float64}
+   9 │ TBG_measured                 f                 f                0  String1
+  10 │ TBG                                                          2800  Missing
+  11 │ referral_source              STMW              other            0  String7
+  12 │ diagnosis                    negative          positive         0  AbstractString
+
+````
 
 Inspecting further, we learn that two of the fields are constant for all observations,
-and a third (`hypopituitary`) is constant outside of a single observation. As these
+and a third, `hypopituitary`, is constant outside of a single observation. As these
 provide no useful information, we drop them from the dataframe:
 
 ````@julia
@@ -710,10 +748,18 @@ certain conventions shared by all MLJ algorithms. By design, MLJ allows users to
 more on scientific types, and view machine types as a secondary "implementation detail".
 
 To find out what how your data will be interpreted, we use `scitype`. To correct for a
-undesirable interpretation, we use `coerce`:
+undesirable interpretation, we use `coerce`.
 
 ````@julia
-scitype(183)
+typeof(183) # machine type
+````
+
+````
+Int64
+````
+
+````@julia
+scitype(183) # scientific type
 ````
 
 ````
@@ -790,38 +836,37 @@ schema(data)
 ````
 
 ````
-┌───────────────────────────┬────────────────────────────┬──────────────────────
-│ names                     │ scitypes                   │ types               ⋯
-├───────────────────────────┼────────────────────────────┼──────────────────────
-│ age                       │ Union{Missing, Count}      │ Union{Missing, Int6 ⋯
-│ sex                       │ Union{Missing, Textual}    │ Union{Missing, Stri ⋯
-│ on_thyroxine              │ Textual                    │ String1             ⋯
-│ query_on_thyroxine        │ Textual                    │ String1             ⋯
-│ on_antithyroid_medication │ Textual                    │ String1             ⋯
-│ sick                      │ Textual                    │ String1             ⋯
-│ pregnant                  │ Textual                    │ String1             ⋯
-│ thyroid_surgery           │ Textual                    │ String1             ⋯
-│ I131_treatment            │ Textual                    │ String1             ⋯
-│ query_hypothyroid         │ Textual                    │ String1             ⋯
-│ query_hyperthyroid        │ Textual                    │ String1             ⋯
-│ lithium                   │ Textual                    │ String1             ⋯
-│ goitre                    │ Textual                    │ String1             ⋯
-│ tumor                     │ Textual                    │ String1             ⋯
-│ psych                     │ Textual                    │ String1             ⋯
-│ TSH_measured              │ Textual                    │ String1             ⋯
-│ TSH                       │ Union{Missing, Continuous} │ Union{Missing, Floa ⋯
-│ T3_measured               │ Textual                    │ String1             ⋯
-│ T3                        │ Union{Missing, Continuous} │ Union{Missing, Floa ⋯
-│ TT4_measured              │ Textual                    │ String1             ⋯
-│ TT4                       │ Union{Missing, Continuous} │ Union{Missing, Floa ⋯
-│ T4U_measured              │ Textual                    │ String1             ⋯
-│ T4U                       │ Union{Missing, Continuous} │ Union{Missing, Floa ⋯
-│ FTI_measured              │ Textual                    │ String1             ⋯
-│ FTI                       │ Union{Missing, Continuous} │ Union{Missing, Floa ⋯
-│ referral_source           │ Textual                    │ String7             ⋯
-│ diagnosis                 │ Textual                    │ AbstractString      ⋯
-└───────────────────────────┴────────────────────────────┴──────────────────────
-                                                                1 column omitted
+27×3 DataFrame
+ Row │ names                      scitypes                    types
+     │ Symbol                     Type                        Type
+─────┼────────────────────────────────────────────────────────────────────────────────
+   1 │ age                        Union{Missing, Count}       Union{Missing, Int64}
+   2 │ sex                        Union{Missing, Textual}     Union{Missing, String1}
+   3 │ on_thyroxine               Textual                     String1
+   4 │ query_on_thyroxine         Textual                     String1
+   5 │ on_antithyroid_medication  Textual                     String1
+   6 │ sick                       Textual                     String1
+   7 │ pregnant                   Textual                     String1
+   8 │ thyroid_surgery            Textual                     String1
+   9 │ I131_treatment             Textual                     String1
+  10 │ query_hypothyroid          Textual                     String1
+  11 │ query_hyperthyroid         Textual                     String1
+  12 │ lithium                    Textual                     String1
+  13 │ goitre                     Textual                     String1
+  14 │ tumor                      Textual                     String1
+  15 │ psych                      Textual                     String1
+  16 │ TSH_measured               Textual                     String1
+  17 │ TSH                        Union{Missing, Continuous}  Union{Missing, Float64}
+  18 │ T3_measured                Textual                     String1
+  19 │ T3                         Union{Missing, Continuous}  Union{Missing, Float64}
+  20 │ TT4_measured               Textual                     String1
+  21 │ TT4                        Union{Missing, Continuous}  Union{Missing, Float64}
+  22 │ T4U_measured               Textual                     String1
+  23 │ T4U                        Union{Missing, Continuous}  Union{Missing, Float64}
+  24 │ FTI_measured               Textual                     String1
+  25 │ FTI                        Union{Missing, Continuous}  Union{Missing, Float64}
+  26 │ referral_source            Textual                     String7
+  27 │ diagnosis                  Textual                     AbstractString
 
 ````
 
@@ -870,7 +915,7 @@ dispatch. `Multiclass` and `Ordered` factor columns are encoded as `CategoricalV
 from the [CategoricalArrays.jl](https://categoricalarrays.juliadata.org/stable/)
 package, which means they are stored internally as integer arrays for efficiency. ■
 
-Here's how we can see that "negative" diagnoses are overrepresented in our data:
+Here's how we can see that "negative" diagnoses are over-represented in our data:
 
 ````@julia
 import StatsBase
@@ -946,12 +991,12 @@ that, by default, `FillImputer`:
 - replaces missing values in a `Continuous` feature with the **median**.
 - replaces missing values in a `Multiclass` or `OrderedFactor` feature with the **mode**.
 
-Lets start by seeing how we would train such a model on all the training data:
+Let's start by seeing how we would train such a model on all the training data:
 
 ````@julia
 model = FillImputer()
 mach = machine(model, data);
-fit!(mach);
+fit!(mach)
 ````
 
 ````
@@ -1032,9 +1077,16 @@ data_continuous =  transform(mach, data);
 first(data_continuous, 3)
 ````
 
-```@raw html
-<div><div style = "float: left;"><span>3×30 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">age</th><th style = "text-align: left;">sex__F</th><th style = "text-align: left;">on_thyroxine__f</th><th style = "text-align: left;">query_on_thyroxine__f</th><th style = "text-align: left;">on_antithyroid_medication__f</th><th style = "text-align: left;">sick__f</th><th style = "text-align: left;">pregnant__f</th><th style = "text-align: left;">thyroid_surgery__f</th><th style = "text-align: left;">I131_treatment__f</th><th style = "text-align: left;">query_hypothyroid__f</th><th style = "text-align: left;">query_hyperthyroid__f</th><th style = "text-align: left;">lithium__f</th><th style = "text-align: left;">goitre__f</th><th style = "text-align: left;">tumor__f</th><th style = "text-align: left;">psych__f</th><th style = "text-align: left;">TSH_measured__f</th><th style = "text-align: left;">TSH</th><th style = "text-align: left;">T3_measured__f</th><th style = "text-align: left;">T3</th><th style = "text-align: left;">TT4_measured__f</th><th style = "text-align: left;">TT4</th><th style = "text-align: left;">T4U_measured__f</th><th style = "text-align: left;">T4U</th><th style = "text-align: left;">FTI_measured__f</th><th style = "text-align: left;">FTI</th><th style = "text-align: left;">referral_source__STMW</th><th style = "text-align: left;">referral_source__SVHC</th><th style = "text-align: left;">referral_source__SVHD</th><th style = "text-align: left;">referral_source__SVI</th><th style = "text-align: left;">diagnosis__negative</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: right;">-1.05864</td><td style = "text-align: right;">0.662447</td><td style = "text-align: right;">0.363629</td><td style = "text-align: right;">0.120355</td><td style = "text-align: right;">0.111312</td><td style = "text-align: right;">0.199418</td><td style = "text-align: right;">0.120355</td><td style = "text-align: right;">0.111312</td><td style = "text-align: right;">0.132831</td><td style = "text-align: right;">0.240239</td><td style = "text-align: right;">0.249597</td><td style = "text-align: right;">0.0784667</td><td style = "text-align: right;">0.0906987</td><td style = "text-align: right;">0.161755</td><td style = "text-align: right;">0.224387</td><td style = "text-align: right;">-0.328505</td><td style = "text-align: right;">-0.227419</td><td style = "text-align: right;">-0.513387</td><td style = "text-align: right;">0.809805</td><td style = "text-align: right;">-0.259815</td><td style = "text-align: right;">-0.834078</td><td style = "text-align: right;">-0.338887</td><td style = "text-align: right;">-0.857</td><td style = "text-align: right;">-0.337951</td><td style = "text-align: right;">-0.477093</td><td style = "text-align: right;">-0.183679</td><td style = "text-align: right;">2.97401</td><td style = "text-align: right;">-0.10894</td><td style = "text-align: right;">-0.6173</td><td style = "text-align: right;">0.291938</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: right;">1.00378</td><td style = "text-align: right;">0.662447</td><td style = "text-align: right;">0.363629</td><td style = "text-align: right;">0.120355</td><td style = "text-align: right;">0.111312</td><td style = "text-align: right;">0.199418</td><td style = "text-align: right;">0.120355</td><td style = "text-align: right;">0.111312</td><td style = "text-align: right;">0.132831</td><td style = "text-align: right;">0.240239</td><td style = "text-align: right;">0.249597</td><td style = "text-align: right;">0.0784667</td><td style = "text-align: right;">0.0906987</td><td style = "text-align: right;">0.161755</td><td style = "text-align: right;">0.224387</td><td style = "text-align: right;">-0.328505</td><td style = "text-align: right;">-0.233471</td><td style = "text-align: right;">-0.513387</td><td style = "text-align: right;">-1.95238</td><td style = "text-align: right;">-0.259815</td><td style = "text-align: right;">0.152653</td><td style = "text-align: right;">-0.338887</td><td style = "text-align: right;">-0.578388</td><td style = "text-align: right;">-0.337951</td><td style = "text-align: right;">0.555189</td><td style = "text-align: right;">-0.183679</td><td style = "text-align: right;">-0.336075</td><td style = "text-align: right;">-0.10894</td><td style = "text-align: right;">1.61913</td><td style = "text-align: right;">0.291938</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: right;">-0.243267</td><td style = "text-align: right;">-1.50878</td><td style = "text-align: right;">0.363629</td><td style = "text-align: right;">0.120355</td><td style = "text-align: right;">0.111312</td><td style = "text-align: right;">0.199418</td><td style = "text-align: right;">0.120355</td><td style = "text-align: right;">0.111312</td><td style = "text-align: right;">0.132831</td><td style = "text-align: right;">0.240239</td><td style = "text-align: right;">0.249597</td><td style = "text-align: right;">0.0784667</td><td style = "text-align: right;">0.0906987</td><td style = "text-align: right;">0.161755</td><td style = "text-align: right;">0.224387</td><td style = "text-align: right;">-0.328505</td><td style = "text-align: right;">0.0993808</td><td style = "text-align: right;">-0.513387</td><td style = "text-align: right;">-0.156958</td><td style = "text-align: right;">-0.259815</td><td style = "text-align: right;">-0.804177</td><td style = "text-align: right;">-0.338887</td><td style = "text-align: right;">0.0345593</td><td style = "text-align: right;">-0.337951</td><td style = "text-align: right;">-0.896458</td><td style = "text-align: right;">-0.183679</td><td style = "text-align: right;">-0.336075</td><td style = "text-align: right;">-0.10894</td><td style = "text-align: right;">1.61913</td><td style = "text-align: right;">0.291938</td></tr></tbody></table></div>
-```
+````
+3×30 DataFrame
+ Row │ age        sex__F     on_thyroxine__f  query_on_thyroxine__f  on_antithyroid_medication__f  sick__f   pregnant__f  thyroid_surgery__f  I131_treatment__f  query_hypothyroid__f  query_hyperthyroid__f  lithium__f  goitre__f  tumor__f  psych__f  TSH_measured__f  TSH         T3_measured__f  T3         TT4_measured__f  TT4        T4U_measured__f  T4U         FTI_measured__f  FTI        referral_source__STMW  referral_source__SVHC  referral_source__SVHD  referral_source__SVI  diagnosis__negative
+     │ Float64    Float64    Float64          Float64                Float64                       Float64   Float64      Float64             Float64            Float64               Float64                Float64     Float64    Float64   Float64   Float64          Float64     Float64         Float64    Float64          Float64    Float64          Float64     Float64          Float64    Float64                Float64                Float64                Float64               Float64
+─────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ -1.05864    0.662447         0.363629               0.120355                      0.111312  0.199418     0.120355            0.111312           0.132831              0.240239               0.249597   0.0784667  0.0906987  0.161755  0.224387        -0.328505  -0.227419        -0.513387   0.809805        -0.259815  -0.834078        -0.338887  -0.857            -0.337951  -0.477093              -0.183679               2.97401                -0.10894              -0.6173              0.291938
+   2 │  1.00378    0.662447         0.363629               0.120355                      0.111312  0.199418     0.120355            0.111312           0.132831              0.240239               0.249597   0.0784667  0.0906987  0.161755  0.224387        -0.328505  -0.233471        -0.513387  -1.95238         -0.259815   0.152653        -0.338887  -0.578388         -0.337951   0.555189              -0.183679              -0.336075               -0.10894               1.61913             0.291938
+   3 │ -0.243267  -1.50878          0.363629               0.120355                      0.111312  0.199418     0.120355            0.111312           0.132831              0.240239               0.249597   0.0784667  0.0906987  0.161755  0.224387        -0.328505   0.0993808       -0.513387  -0.156958        -0.259815  -0.804177        -0.338887   0.0345593        -0.337951  -0.896458              -0.183679              -0.336075               -0.10894               1.61913             0.291938
+
+````
 
 **Going deeper.** MLJ provides very flexible tools for constructing composite models,
 beyond the linear pipelines we will consider here. Refer to the [Learning
@@ -1045,7 +1097,7 @@ We are ready to instantiate our K-nearest neighbor outlier detector. We addition
 need the `ProbabilisticDetector` wrapper for detectors, so that the detector's
 predictions are probabilistic. This wrapper is provided by the package
 [OutlierDetection.jl](https://outlierdetectionjl.github.io/OutlierDetection.jl/dev/documentation/simple-usage/)
-(Muhr et al., [2020](https://doi.org/10.48550/arXiv.2211.04550)) which we must
+(Muhr et al., [2022](https://doi.org/10.48550/arXiv.2211.04550)) which we must
 explicitly import. Training and prediction proceeds following a familiar pattern:
 
 ````@julia
@@ -1105,11 +1157,37 @@ horizontally split our training data into a table of features `X`, and a vector 
 
 ````@julia
 y, X, _ = unpack(data, ==(:diagnosis), !=(:detector_outcome));
-schema(X).names
+schema(X).names |> collect
 ````
 
 ````
-(:age, :sex, :on_thyroxine, :query_on_thyroxine, :on_antithyroid_medication, :sick, :pregnant, :thyroid_surgery, :I131_treatment, :query_hypothyroid, :query_hyperthyroid, :lithium, :goitre, :tumor, :psych, :TSH_measured, :TSH, :T3_measured, :T3, :TT4_measured, :TT4, :T4U_measured, :T4U, :FTI_measured, :FTI, :referral_source)
+26-element Vector{Symbol}:
+ :age
+ :sex
+ :on_thyroxine
+ :query_on_thyroxine
+ :on_antithyroid_medication
+ :sick
+ :pregnant
+ :thyroid_surgery
+ :I131_treatment
+ :query_hypothyroid
+ :query_hyperthyroid
+ :lithium
+ :goitre
+ :tumor
+ :psych
+ :TSH_measured
+ :TSH
+ :T3_measured
+ :T3
+ :TT4_measured
+ :TT4
+ :T4U_measured
+ :T4U
+ :FTI_measured
+ :FTI
+ :referral_source
 ````
 
 Notice that we have also dropped the `detector_outcome` field, which is no longer
@@ -1231,7 +1309,7 @@ cross-validation. Here we are using all rows of our training data `(X, y)` to co
 the folds. To restrict the data used, include a `rows=...` specification.
 
 ````@julia
-evaluate(booster, X, y; resampling=StratifiedCV(nfolds=6), measure=precision_at_95, verbosity=0)
+evaluate(booster, X, y; resampling=StratifiedCV(nfolds=6), measure=precision_at_95)
 ````
 
 ````
@@ -1241,7 +1319,7 @@ PerformanceEvaluation object with these fields:
   per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-737
+Tag: ProbabilisticPipeline-335
 Extract:
 ┌────────────────────────────┬───────────┬─────────────┬─────────┐
 │ measure                    │ operation │ measurement │ 1.96*SE │
@@ -1289,7 +1367,6 @@ evaluation = evaluate(
     resampling=StratifiedCV(nfolds=6, rng=stable_rng()),
     repeats=3,
     measures=metrics,
-    verbosity=0,
 )
 ````
 
@@ -1300,7 +1377,7 @@ PerformanceEvaluation object with these fields:
   per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-115
+Tag: ProbabilisticPipeline-461
 Extract:
 ┌───┬────────────────────────────┬──────────────┬─────────────┬─────────┐
 │   │ measure                    │ operation    │ measurement │ 1.96*SE │
@@ -1325,19 +1402,6 @@ Extract:
 └───┴───────────────────────────────────────────────────────────────────────────
                                                                 1 column omitted
 Apply `describe` to this result for a named tuple summary.
-````
-
-````@julia
-evaluation.uncertainty_radius_95
-````
-
-````
-5-element Vector{Float64}:
- 0.04654515560829978
- 0.026502951149399583
- 0.01473697355773345
- 0.011270615078788593
- 0.0026552249644034246
 ````
 
 ## [8. Recursive feature elimination](@id rfe)
@@ -1453,15 +1517,15 @@ evaluations = evaluate(
     X,
     y; # this semicolon is important!
     options()...,
-)
+);
 ````
 
 ````
-4-element Vector{PerformanceEvaluation{M, Vector{StatisticalMeasuresBase.RobustMeasure}, Vector{Float64}, Vector{Float64}, Vector{Function}, Vector{Vector{Float64}}, Vector{Vector{AbstractVector}}, FittedParamsPerFold, ReportPerFold, StratifiedCV} where {M, FittedParamsPerFold, ReportPerFold}}:
- PerformanceEvaluation("booster", 0.868 ± 0.047, 0.922 ± 0.027, 0.967 ± 0.015, 0.96 ± 0.011, 0.9873 ± 0.0027)
- PerformanceEvaluation("booster with 2 features", 0.766 ± 0.058, 0.837 ± 0.061, 0.974 ± 0.012, 0.965 ± 0.011, 0.9909 ± 0.0019)
- PerformanceEvaluation("booster with 4 features", 0.82 ± 0.11, 0.941 ± 0.035, 0.973 ± 0.015, 0.962 ± 0.015, 0.99 ± 0.0032)
- PerformanceEvaluation("booster with 8 features", 0.81 ± 0.11, 0.945 ± 0.02, 0.969 ± 0.014, 0.965 ± 0.011, 0.9884 ± 0.0022)
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:02[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:02[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:02[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:02[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:02[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:01[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:01[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:01[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:01[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:01[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:01[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:01[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:00[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:00[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:00[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:02[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:10[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:08[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:07[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:06[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:05[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:05[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:04[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:03[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:02[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:06[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:05[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:04[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:04[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:03[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:03[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:05[K
+
 ````
 
 Here a vector of evaluation objects is being returned, but we can get a nice summary
@@ -1471,9 +1535,17 @@ table like this:
 describe.(evaluations) |> DataFrames.DataFrame
 ````
 
-```@raw html
-<div><div style = "float: left;"><span>4×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">booster</td><td style = "text-align: right;">0.868±0.047</td><td style = "text-align: right;">0.922±0.027</td><td style = "text-align: right;">0.967±0.015</td><td style = "text-align: right;">0.96±0.011</td><td style = "text-align: right;">0.9873±0.0027</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">booster with 2 features</td><td style = "text-align: right;">0.766±0.058</td><td style = "text-align: right;">0.837±0.061</td><td style = "text-align: right;">0.974±0.012</td><td style = "text-align: right;">0.965±0.011</td><td style = "text-align: right;">0.9909±0.0019</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">booster with 4 features</td><td style = "text-align: right;">0.82±0.11</td><td style = "text-align: right;">0.941±0.035</td><td style = "text-align: right;">0.973±0.015</td><td style = "text-align: right;">0.962±0.015</td><td style = "text-align: right;">0.99±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">booster with 8 features</td><td style = "text-align: right;">0.81±0.11</td><td style = "text-align: right;">0.945±0.02</td><td style = "text-align: right;">0.969±0.014</td><td style = "text-align: right;">0.965±0.011</td><td style = "text-align: right;">0.9884±0.0022</td></tr></tbody></table></div>
-```
+````
+4×6 DataFrame
+ Row │ tag                      PrecisionAtFixedRecall  PrecisionAtFixedRecall2  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String                   Measurement{Float64}    Measurement{Float64}     Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ booster                             0.868±0.047              0.922±0.027           0.967±0.015           0.96±0.011          0.9873±0.0027
+   2 │ booster with 2 features             0.766±0.058              0.837±0.061           0.974±0.012           0.965±0.011         0.9909±0.0019
+   3 │ booster with 4 features             0.82±0.11                0.941±0.035           0.973±0.015           0.962±0.015         0.99±0.0032
+   4 │ booster with 8 features             0.81±0.11                0.945±0.02            0.969±0.014           0.965±0.011         0.9884±0.0022
+
+````
 
 Okay, no real improvement here. Hower, we can apply the same feature selection
 ahead of training some other supervised model. The `transform` method, which is
@@ -1529,9 +1601,21 @@ evaluations_linear = evaluate(
 describe.(evaluations_linear) |> DataFrames.DataFrame
 ````
 
-```@raw html
-<div><div style = "float: left;"><span>4×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">linear, all features</td><td style = "text-align: right;">0.54±0.15</td><td style = "text-align: right;">0.81±0.12</td><td style = "text-align: right;">0.936±0.018</td><td style = "text-align: right;">0.923±0.021</td><td style = "text-align: right;">0.986±0.0028</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">linear, 2 features</td><td style = "text-align: right;">0.69±0.16</td><td style = "text-align: right;">0.948±0.022</td><td style = "text-align: right;">0.971±0.014</td><td style = "text-align: right;">0.933±0.018</td><td style = "text-align: right;">0.9878±0.0029</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">linear, 4 features</td><td style = "text-align: right;">0.8±0.13</td><td style = "text-align: right;">0.954±0.023</td><td style = "text-align: right;">0.965±0.017</td><td style = "text-align: right;">0.934±0.016</td><td style = "text-align: right;">0.9878±0.0023</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">linear, 8 features</td><td style = "text-align: right;">0.79±0.13</td><td style = "text-align: right;">0.947±0.02</td><td style = "text-align: right;">0.965±0.014</td><td style = "text-align: right;">0.941±0.014</td><td style = "text-align: right;">0.9885±0.0022</td></tr></tbody></table></div>
-```
+````
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:05[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:01[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:00[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:06[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:03[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:06[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:05[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:04[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:03[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:02[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:07[K
+4×6 DataFrame
+ Row │ tag                   PrecisionAtFixedRecall  PrecisionAtFixedRecall2  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String                Measurement{Float64}    Measurement{Float64}     Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ linear, all features               0.54±0.15              0.81±0.12             0.936±0.018           0.923±0.021         0.986±0.0028
+   2 │ linear, 2 features                 0.69±0.16              0.948±0.022           0.971±0.014           0.933±0.018         0.9878±0.0029
+   3 │ linear, 4 features                 0.8±0.13               0.954±0.023           0.965±0.017           0.934±0.016         0.9878±0.0023
+   4 │ linear, 8 features                 0.79±0.13              0.947±0.02            0.965±0.014           0.941±0.014         0.9885±0.0022
+
+````
 
 Here we see a definite benefit.
 
@@ -1587,9 +1671,17 @@ evaluations = evaluate(
 describe.(evaluations) |> DataFrames.DataFrame
 ````
 
-```@raw html
-<div><div style = "float: left;"><span>2×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">tree</td><td style = "text-align: right;">0.85±0.15</td><td style = "text-align: right;">0.9±0.11</td><td style = "text-align: right;">0.9992±0.0013</td><td style = "text-align: right;">0.988±0.0092</td><td style = "text-align: right;">0.995±0.0021</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">tree with regularization</td><td style = "text-align: right;">0.972±0.017</td><td style = "text-align: right;">0.973±0.018</td><td style = "text-align: right;">0.99954±0.00055</td><td style = "text-align: right;">0.9917±0.006</td><td style = "text-align: right;">0.9973±0.0011</td></tr></tbody></table></div>
-```
+````
+Evaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:00[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:00[K
+Evaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:00[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:00[K
+2×6 DataFrame
+ Row │ tag                       PrecisionAtFixedRecall  PrecisionAtFixedRecall2  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String                    Measurement{Float64}    Measurement{Float64}     Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ tree                                 0.85±0.15                0.9±0.11          0.9992±0.0013            0.988±0.0092         0.995±0.0021
+   2 │ tree with regularization             0.972±0.017              0.973±0.018       0.99954±0.00055          0.9917±0.006         0.9973±0.0011
+
+````
 
 To automate experimenting with hyper-parameter values, MLJ provides two methods. The
 first, which works for a single hyper-parameter, is visual.
@@ -1704,9 +1796,17 @@ evaluations = evaluate(
 describe.(evaluations) |> DataFrames.DataFrame
 ````
 
-```@raw html
-<div><div style = "float: left;"><span>2×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">tree</td><td style = "text-align: right;">0.85±0.15</td><td style = "text-align: right;">0.9±0.11</td><td style = "text-align: right;">0.9992±0.0013</td><td style = "text-align: right;">0.988±0.0092</td><td style = "text-align: right;">0.995±0.0021</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">tree with tuning</td><td style = "text-align: right;">0.933±0.027</td><td style = "text-align: right;">0.937±0.026</td><td style = "text-align: right;">0.9988±0.001</td><td style = "text-align: right;">0.9917±0.0063</td><td style = "text-align: right;">0.9953±0.0024</td></tr></tbody></table></div>
-```
+````
+Evaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:00[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:00[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:15[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:14[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:13[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:12[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:12[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:11[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:10[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:09[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:08[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:07[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:06[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:05[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:04[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:03[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:02[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:01[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:18[K
+2×6 DataFrame
+ Row │ tag               PrecisionAtFixedRecall  PrecisionAtFixedRecall2  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String            Measurement{Float64}    Measurement{Float64}     Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ tree                         0.85±0.15                0.9±0.11            0.9992±0.0013         0.988±0.0092          0.995±0.0021
+   2 │ tree with tuning             0.933±0.027              0.937±0.026         0.9988±0.001          0.9917±0.0063         0.9953±0.0024
+
+````
 
 **Going deeper.** An important reason for implementing tuning as a model wrapper, is to
 guard against [data
@@ -1748,14 +1848,14 @@ completeness, we nevertheless include some oversampled models in our later compa
 Let's see how oversampling works in an example.  We will use the `SMOTE` oversampler
 (Chawla et al., [2002](https://www.jair.org/index.php/jair/article/view/10302)) from the
 Imbalance.jl package (Wisam and Blaom,
-[2023](https://joss.theoj.org/papers/10.21105/joss.06310)). This oversampler requires
+[2024](https://joss.theoj.org/papers/10.21105/joss.06310)). This oversampler requires
 the features to be oversampled to be `Continuous`. We set the desired ratios of each
 class, relative to the majority class (here "negative"), using the `ratios`
 hyper-parameter. If `ratios` is left unspecified, the distribution for classes in the
 outputs will be a uniform one, with no oversampling of the majority class.
 
 ````@julia
-SMOTE = @load SMOTE pkg=Imbalance
+SMOTE = @load SMOTE pkg=Imbalance verbosity=0
 smote = SMOTE(rng=stable_rng(), ratios=Dict("positive"=>0.5, "negative"=>1.0))
 mach = machine(smote)                         # no data provided here, and no `fit!`
 X_over, y_over = transform(mach, X_continuous, y);
@@ -1765,8 +1865,6 @@ proportions = StatsBase.proportionmap(y_over)
 ````
 
 ````
-[ Info: For silent loading, specify `verbosity=0`. 
-import Imbalance ✔
 ┌ Info: diagnosis distribution
 │   proportions["positive"] = 0.3332047821056691
 └   proportions["negative"] = 0.6667952178943309
@@ -1957,9 +2055,35 @@ performance_summary = describe.(performance_evaluations) |> DataFrames.DataFrame
 sort!(performance_summary, :PrecisionAtFixedRecall, rev=true)
 ````
 
-```@raw html
-<div><div style = "float: left;"><span>11×6 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">tag</th><th style = "text-align: left;">PrecisionAtFixedRecall</th><th style = "text-align: left;">PrecisionAtFixedRecall2</th><th style = "text-align: left;">AveragePrecision</th><th style = "text-align: left;">BalancedAccuracy</th><th style = "text-align: left;">Accuracy</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "String" style = "text-align: left;">String</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th><th title = "Measurement{Float64}" style = "text-align: left;">Measurem…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">decision tree</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.91±0.11</td><td style = "text-align: right;">0.99939±0.0008</td><td style = "text-align: right;">0.9833±0.0079</td><td style = "text-align: right;">0.9948±0.0016</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">SVM</td><td style = "text-align: right;">0.904±0.037</td><td style = "text-align: right;">0.94±0.029</td><td style = "text-align: right;">0.965±0.024</td><td style = "text-align: right;">0.945±0.014</td><td style = "text-align: right;">0.9896±0.0025</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: left;">decision tree, tuned</td><td style = "text-align: right;">0.86±0.15</td><td style = "text-align: right;">0.965±0.016</td><td style = "text-align: right;">0.9981±0.0012</td><td style = "text-align: right;">0.9863±0.0087</td><td style = "text-align: right;">0.9961±0.0019</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: left;">gradient booster, tuned</td><td style = "text-align: right;">0.854±0.082</td><td style = "text-align: right;">0.945±0.024</td><td style = "text-align: right;">0.973±0.013</td><td style = "text-align: right;">0.956±0.013</td><td style = "text-align: right;">0.9882±0.0028</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">5</td><td style = "text-align: left;">gradient booster</td><td style = "text-align: right;">0.842±0.076</td><td style = "text-align: right;">0.938±0.02</td><td style = "text-align: right;">0.969±0.013</td><td style = "text-align: right;">0.955±0.015</td><td style = "text-align: right;">0.9884±0.0025</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">6</td><td style = "text-align: left;">linear (logistic)</td><td style = "text-align: right;">0.81±0.13</td><td style = "text-align: right;">0.956±0.015</td><td style = "text-align: right;">0.97±0.014</td><td style = "text-align: right;">0.941±0.015</td><td style = "text-align: right;">0.9889±0.0022</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">7</td><td style = "text-align: left;">KNN</td><td style = "text-align: right;">0.807±0.061</td><td style = "text-align: right;">0.887±0.048</td><td style = "text-align: right;">0.968±0.016</td><td style = "text-align: right;">0.833±0.029</td><td style = "text-align: right;">0.9749±0.0043</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">8</td><td style = "text-align: left;">SVM, balanced</td><td style = "text-align: right;">0.776±0.09</td><td style = "text-align: right;">0.917±0.038</td><td style = "text-align: right;">0.961±0.016</td><td style = "text-align: right;">0.9659±0.0095</td><td style = "text-align: right;">0.9841±0.0034</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">9</td><td style = "text-align: left;">KNN, balanced</td><td style = "text-align: right;">0.67±0.1</td><td style = "text-align: right;">0.846±0.053</td><td style = "text-align: right;">0.965±0.011</td><td style = "text-align: right;">0.968±0.0092</td><td style = "text-align: right;">0.9726±0.003</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">10</td><td style = "text-align: left;">neural network</td><td style = "text-align: right;">0.52±0.13</td><td style = "text-align: right;">0.763±0.095</td><td style = "text-align: right;">0.931±0.02</td><td style = "text-align: right;">0.91±0.02</td><td style = "text-align: right;">0.981±0.0032</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">11</td><td style = "text-align: left;">dummy</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.0±0.0</td><td style = "text-align: right;">0.5±5.5e-17</td><td style = "text-align: right;">0.92857±0.00055</td></tr></tbody></table></div>
-```
+````
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:06[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
+Evaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:00[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:00[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:04[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:04[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:04[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:04[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:03[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:03[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:03[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:02[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:02[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:01[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:04[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:02[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:02[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:02[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:01[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:01[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:01[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:01[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:01[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:01[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:01[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:01[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:01[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:00[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:00[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:00[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:02[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:30[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:25[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:22[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:20[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:20[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:17[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:16[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:14[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:13[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:11[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:09[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:08[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:06[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:05[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:03[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:02[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:27[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:06[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:06[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:05[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:03[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:03[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:02[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:07[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:07[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:07[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:07[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:06[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:06[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:05[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:05[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:04[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:04[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:03[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:03[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:02[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:08[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:05[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:06[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:03[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:02[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
+Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:30[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:28[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:26[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:24[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:23[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:21[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:19[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:17[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:15[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:13[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:11[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:09[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:07[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:06[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:04[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:02[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:33[K
+104.159970 seconds (260.98 M allocations: 31.954 GiB, 9.92% gc time)
+11×6 DataFrame
+ Row │ tag                      PrecisionAtFixedRecall  PrecisionAtFixedRecall2  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String                   Measurement{Float64}    Measurement{Float64}     Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ decision tree                       0.91±0.11                0.91±0.11          0.99939±0.0008         0.9833±0.0079       0.9948±0.0016
+   2 │ SVM                                 0.904±0.037              0.94±0.029         0.963±0.026            0.946±0.017         0.9898±0.0029
+   3 │ decision tree, tuned                0.86±0.15                0.965±0.016        0.9981±0.0012          0.9863±0.0087       0.9961±0.0019
+   4 │ gradient booster, tuned             0.854±0.082              0.945±0.024        0.973±0.013            0.956±0.013         0.9882±0.0028
+   5 │ gradient booster                    0.842±0.076              0.938±0.02         0.969±0.013            0.955±0.015         0.9884±0.0025
+   6 │ linear (logistic)                   0.81±0.13                0.956±0.015        0.97±0.014             0.941±0.015         0.9889±0.0022
+   7 │ KNN                                 0.807±0.061              0.887±0.048        0.968±0.016            0.833±0.029         0.9749±0.0043
+   8 │ SVM, balanced                       0.776±0.09               0.917±0.038        0.961±0.016            0.966±0.0095        0.9842±0.0029
+   9 │ KNN, balanced                       0.67±0.1                 0.846±0.053        0.965±0.011            0.968±0.0092        0.9726±0.003
+  10 │ neural network                      0.52±0.13                0.763±0.095        0.931±0.02             0.91±0.02           0.981±0.0032
+  11 │ dummy                               0.0±0.0                  0.0±0.0            0.0±0.0                0.5±5.5e-17         0.92857±0.00055
+
+````
 
 To better visualize the confidence intervals, we plot the results for some of the
 metrics:
@@ -2088,11 +2212,11 @@ thresholds[[1,2,3,end-2,end-1,end]]
 ````
 6-element Vector{Float64}:
  0.9999999
- 0.9999998124169786
- 0.9999997450589473
- 3.7805682595593026e-7
- 3.0861114574953774e-7
- 2.96369491281645e-7
+ 0.9999992296092061
+ 0.9999989782371592
+ 1.0251624376067525e-6
+ 8.504800464992357e-7
+ 8.193799659883538e-7
 ````
 
 There is one less threshold than recall or precision, and the recalls and precisions are
@@ -2124,7 +2248,7 @@ threshold = thresholds[i - 1]
 ````
 
 ````
-0.476778364511662
+0.434081855727499
 ````
 
 To transform our probabilistic predictor into point predictor, we use another MLJ
@@ -2196,13 +2320,13 @@ test_precision_svm = ppv(yhat, ytest)
 │    ┌─────────┼────────┬────────┤
 │    │Predicted│negative│positive│
 │    ├─────────┼────────┼────────┤
-│    │negative │  766   │   2    │
+│    │negative │  765   │   2    │
 │    ├─────────┼────────┼────────┤
-│    │positive │   8    │   64   │
+│    │positive │   9    │   64   │
 │    └─────────┴────────┴────────┘
 │    
 │   test_recall_svm = 0.9696969696969697
-└   test_precision_svm = 0.8888888888888888
+└   test_precision_svm = 0.8767123287671232
 
 ````
 
@@ -2246,6 +2370,56 @@ test_precision_tree = ppv(yhat, ytest) # precision
 Although we get better precision, this could well be an accident, because of the much
 larger uncertainty associated with the decision tree performance estimate. So, in our
 view, the support vector machine remains the better choice.
+
+## References
+
+Barnett, V. and Lewis, T. (1994). *Outliers in Statistical Data*, 3rd edition. John Wiley
+& Sons, Chichester. XVII + 582 pp. Reviewed by R. Pincus, *Biometrical Journal* 37(2), 256.
+[doi:10.1002/bimj.4710370219](https://doi.org/10.1002/bimj.4710370219)
+
+Blaom, A. D., Kiraly, F., Lienart, T., Simillides, Y., Arenas, D. and Vollmer, S. J.
+(2020). MLJ: A Julia package for composable machine learning. *Journal of Open Source
+Software* 5(55), 2704. [doi:10.21105/joss.02704](https://doi.org/10.21105/joss.02704)
+
+Chawla, N. V., Bowyer, K. W., Hall, L. O. and Kegelmeyer, W. P. (2002). SMOTE: Synthetic
+Minority Over-sampling Technique. *Journal of Artificial Intelligence Research* 16,
+321–357. [doi:10.1613/jair.953](https://doi.org/10.1613/jair.953)
+
+Dietterich, T. G. (1998). Approximate statistical tests for comparing supervised
+classification learning algorithms. *Neural Computation* 10(7), 1895–1923.
+[doi:10.1162/089976698300017197](https://doi.org/10.1162/089976698300017197)
+
+Henninger, M. and Strobl, C. (2025). Interpreting machine learning predictions with LIME
+and Shapley values: theoretical insights, challenges, and meaningful interpretations.
+*Behaviormetrika* 52(1), 45–75.
+[doi:10.1007/s41237-024-00253-2](https://doi.org/10.1007/s41237-024-00253-2)
+
+Knorr, E. M., Ng, R. T. and Tucakov, V. (2000). Distance-based outliers: algorithms and
+applications. *The VLDB Journal* 8(3–4), 237–253.
+[doi:10.1007/s007780050006](https://doi.org/10.1007/s007780050006)
+
+Muhr, D., Affenzeller, M. and Blaom, A. D. (2022). OutlierDetection.jl: A modular outlier
+detection ecosystem for the Julia programming language. arXiv:2211.04550.
+[doi:10.48550/arXiv.2211.04550](https://doi.org/10.48550/arXiv.2211.04550)
+
+Quinlan, R. (1986). *Thyroid Disease* [Dataset]. UCI Machine Learning Repository.
+[doi:10.24432/C5D010](https://doi.org/10.24432/C5D010)
+
+Roesch, E., Greener, J. G., MacLean, A. L., Nassar, H., Rackauckas, C., Holy, T. E. and
+Stumpf, M. P. H. (2023). Julia for biologists. *Nature Methods* 20(5), 655–664.
+[doi:10.1038/s41592-023-01832-z](https://doi.org/10.1038/s41592-023-01832-z)
+
+Storopoli, J., Huijzer, R. and Alonso, L. (2021). *Julia Data Science*. ISBN 9798489859165.
+[https://juliadatascience.github.io/JuliaDataScience](https://juliadatascience.github.io/JuliaDataScience/)
+
+Wisam, E. and Blaom, A. D. (2024). Imbalance: A comprehensive multi-interface Julia
+toolbox to address class imbalance. *Journal of Open Source Software* 9(95), 6310.
+[doi:10.21105/joss.06310](https://doi.org/10.21105/joss.06310)
+
+Zeng, Y., Arisa, O., Corvalan, N., Bateman, F., Schmidt, K., Peer, C. and Figg, W. D.
+(2026). A comparison of pharmacometric software programs for atezolizumab population
+pharmacokinetic simulation. *European Journal of Clinical Pharmacology* 82(2), 42.
+[doi:10.1007/s00228-025-03974-9](https://doi.org/10.1007/s00228-025-03974-9)
 
 ---
 
