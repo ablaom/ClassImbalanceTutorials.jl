@@ -1534,7 +1534,7 @@ test_precision_tree = ppv(yhat, ytest) # precision
 
 # Barnett, V. and Lewis, T. (1994). *Outliers in Statistical Data*, 3rd edition. John Wiley
 # & Sons, Chichester. XVII + 582 pp. Reviewed by R. Pincus, *Biometrical Journal* 37(2),
-# 256. [doi:10.1002/bimj.4710370219](https://doi.org/10.1002/bimj.4710370219)
+# \2\5\6. [doi:10.1002/bimj.4710370219](https://doi.org/10.1002/bimj.4710370219)
 
 # Blaom, A. D., Kiraly, F., Lienart, T., Simillides, Y., Arenas, D. and Vollmer, S. J.
 # (2020). MLJ: A Julia package for composable machine learning. *Journal of Open Source
@@ -1569,7 +1569,7 @@ test_precision_tree = ppv(yhat, ytest) # precision
 # [doi:10.1038/s41592-023-01832-z](https://doi.org/10.1038/s41592-023-01832-z)
 
 # Storopoli, J., Huijzer, R. and Alonso, L. (2021). *Julia Data Science*. ISBN
-# 9798489859165. [https://juliadatascience.github.io/JuliaDataScience](https://juliadatascience.github.io/JuliaDataScience/)
+# \9\7\9\8\4\8\9\8\5\9\1\6\5. [https://juliadatascience.github.io/JuliaDataScience](https://juliadatascience.github.io/JuliaDataScience/)
 
 # Wisam, E. and Blaom, A. D. (2024). Imbalance: A comprehensive multi-interface Julia
 # toolbox to address class imbalance. *Journal of Open Source Software* 9(95), 6310.
