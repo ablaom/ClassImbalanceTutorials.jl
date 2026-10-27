@@ -2,6 +2,8 @@
 
 # > Anthony D. Blaom, May 2026
 
+# ### Abstract
+
 # This tutorial presents an end-to-end application of machine learning to the
 # problem of creating an automated test for the presence of some disease. Specifically, we
 # compare several tests for hypothyroidism based on machine learning models, trained using
@@ -9,8 +11,16 @@
 # [1986](https://doi.org/10.24432/C5D010)). While our main goal is pedagogical, the models
 # we propose are fully developed, and not mere toy examples.
 
-# The principal software tool will be the [MLJ.jl](https://juliaml.ai) machine learning
-# toolbox, written for the Julia programming language (Blaom et al.,
+# The source files used to generate the this tutorial and the included code output resides
+# at the GitHub repository
+# [github.com/ablaom/ClassImbalanceTutorials.jl](https://github.com/ablaom/ClassImbalanceTutorials.jl).
+
+# ## Overview
+
+# ### Machine learning platform
+
+# The principal software tool described here is the [MLJ.jl](https://juliaml.ai) machine
+# learning toolbox, written for the Julia programming language (Blaom et al.,
 # [2020](https://joss.theoj.org/papers/10.21105/joss.02704)).
 # [Julia](https://julialang.org) is a newer programming language with the high performance
 # of older languages like FORTRAN and C, but it looks and feels like a scripting language,
@@ -20,18 +30,16 @@
 # et al., [2023](https://doi.org/10.1038/s41592-023-01832-z)). In Pharmacometrics
 # modeling, for example, [PumasAI](https://pumas.ai) software for non-linear mixed effects
 # modeling, written in Julia, runs considerably faster than commonly adopted alternatives
-# (Zeng et al., [2026](https://link.springer.com/article/10.1007/s00228-025-03974-9)).
+# developed over many years (Zeng et al.,
+# [2026](https://link.springer.com/article/10.1007/s00228-025-03974-9)).
 
-# For resources on
-# learning Julia, installing Julia packages, etc, the reader is referred to the [Julia
-# website](https://julialang.org).
+# For resources on learning Julia, installing Julia packages, etc, the reader is referred
+# to the [Julia website](https://julialang.org).
 
 # We assume readers are familiar with basic statistics, including the use of
 # cross-validation to guard against over-fitting. Readers new to Julia will benefit from
 # previous exposure to a scripting language, such as those cited above.
 
-
-# ## Overview
 
 # ### Class imbalance and measures of test performance
 
@@ -218,7 +226,7 @@ rand(rng)
 #-
 
 rng = stable_rng() # reset the rng
-rand(rng)          # same result as above
+rand(rng)          # same as first result as above
 
 # To use the default RNG (which has better performance) you can omit specifying any RNG,
 # as in this example:
@@ -235,8 +243,8 @@ rand()
 # dataset](https://en.wikipedia.org/wiki/Iris_flower_data_set). It is loaded like this:
 
 using MLJ # load the MLJ package
-X_iris, y_iris = @load_iris
-X_iris
+X_iris, y_iris = @load_iris;
+
 
 # Here `X_iris`, the features (specimen dimensions) is a rather basic form of Julia table,
 # namely a named tuple of vectors; `y_iris` is an ordinary vector representing the
@@ -248,8 +256,8 @@ X_iris
 
 import DataFrames
 X_iris = DataFrames.DataFrame(X_iris)
-first(X_iris, 3)  # return the first three rows of the dataframe
-
+#md first(X_iris, 3) # return the first three rows of the dataframe
+first(X_iris, 3) |> println #hide
 #-
 
 first(y_iris, 3)  # or, you can do `y_iris[1:3]`
@@ -264,9 +272,9 @@ levels(y_iris)
 DecisionTreeClassifier = @load DecisionTreeClassifier pkg=DecisionTree # model type
 model = DecisionTreeClassifier(min_samples_split=5, rng=stable_rng())  # model instance
 
-# With the exception of `min_samples_split`, we have selected default values of the
-# **hyper-parameters** of the model, namely those parameters we need to specify before any
-# learning begins.  Never mind about the meaning of these hyper-parameters for now.
+# With the exception of `min_samples_split` and `rng`, we have selected default values of
+# the **hyper-parameters** of the model, namely those parameters we need to specify before
+# any learning begins.  Never mind about the meaning of these hyper-parameters for now.
 
 # **Going deeper.**² To see all registered MLJ models that can be immediately applied to
 # our data, do `models(matching(X, Y))`. See the [Model
@@ -305,7 +313,8 @@ mach = machine(model, X_iris, y_iris);
 # over-fitting, we typically do not train on all the data!).
 
 train_rows = 1:2:149  # the odd rows of the dataset
-fit!(mach, rows=train_rows);
+fit!(mach, rows=train_rows)
+nothing #hide
 
 # The exclamation mark `!` reminds us that `mach` is begin mutated; specifically, the
 # learned parameters are being added. Having trained the model, we can inspect its learned
@@ -380,8 +389,9 @@ url = "https://archive.ics.uci.edu/ml/machine-learning-databases/"*
      "thyroid-disease/allhypo.data"
 path = Downloads.download(url)
 
-# Entering these lines of code downloads the dataset to the temporary location on your
-# computer shown above. If you have trouble with the host site, try instead
+# Entering these lines of code downloads the dataset to a temporary location on your
+# computer, like the one shown in the above output. If you have trouble with the host
+# site, try instead
 
 # ```julia
 # url = "https://raw.githubusercontent.com/manavukani/thyroid-explainableai/"*
@@ -406,7 +416,8 @@ data = CSV.read(path, DataFrames.DataFrame; header, missingstring="?");
 # This last line reads the data into a dataframe. Here's one way to view just certain rows
 # and columns:
 
-data[15:21, [:age, :sex, :TSH, :diagnosis]]
+#md data[15:21, [:age, :sex, :TSH, :diagnosis]]
+data[15:21, [:age, :sex, :TSH, :diagnosis]] |> println #hide
 
 # There is a problem with the `diagnosis` column, which can be inspected like this:
 
@@ -433,10 +444,11 @@ data.diagnosis[15:19]
 # We can get a summary of the fields in our dataframe using `DataFrames.describe(data)`,
 # whose output you should inspect. Here's an extract:
 
-DataFrames.describe(data)[[1, 2, 3, 4, 8, 15, 25, 26, 27, 28, 29, 30], :]
+#md DataFrames.describe(data)[[1, 2, 3, 4, 8, 15, 25, 26, 27, 28, 29, 30], :]
+DataFrames.describe(data)[[1, 2, 3, 4, 8, 15, 25, 26, 27, 28, 29, 30], :] |> println #hide
 
 # Inspecting further, we learn that two of the fields are constant for all observations,
-# and a third (`hypopituitary`) is constant outside of a single observation. As these
+# and a third, `hypopituitary`, is constant outside of a single observation. As these
 # provide no useful information, we drop them from the dataframe:
 
 DataFrames.select!(data, DataFrames.Not([:TBG_measured, :TBG, :hypopituitary]));
@@ -481,9 +493,13 @@ DataFrames.select!(data, DataFrames.Not([:TBG_measured, :TBG, :hypopituitary]));
 # more on scientific types, and view machine types as a secondary "implementation detail".
 
 # To find out what how your data will be interpreted, we use `scitype`. To correct for a
-# undesirable interpretation, we use `coerce`:
+# undesirable interpretation, we use `coerce`.
 
-scitype(183)
+typeof(183) # machine type
+
+#-
+
+scitype(183) # scientific type
 
 # `Count` corresponds to discrete, ordered data of an unbounded nature, such as the number
 # telephone calls received per hour, or the number of residents in a dwelling.
@@ -522,7 +538,8 @@ scitype(blood_type)
 # below. While a table also has a scitype, it is more convenient to inspect the column
 # scitypes with `schema`:
 
-schema(data)
+#md schema(data)
+schema(data) |> DataFrames.DataFrame |> println #hide
 
 # Based on what we understand about the real world meaning each column, we can fix
 # some specific column scitypes like this:
@@ -557,7 +574,7 @@ data = coerce(data, Textual => OrderedFactor);
 # from the [CategoricalArrays.jl](https://categoricalarrays.juliadata.org/stable/)
 # package, which means they are stored internally as integer arrays for efficiency. ■
 
-# Here's how we can see that "negative" diagnoses are overrepresented in our data:
+# Here's how we can see that "negative" diagnoses are over-represented in our data:
 
 import StatsBase
 d = StatsBase.countmap(data.diagnosis)
@@ -605,11 +622,12 @@ proportions_test = StatsBase.proportionmap(data_test.diagnosis)
 # - replaces missing values in a `Continuous` feature with the **median**.
 # - replaces missing values in a `Multiclass` or `OrderedFactor` feature with the **mode**.
 
-# Lets start by seeing how we would train such a model on all the training data:
+# Let's start by seeing how we would train such a model on all the training data:
 
 model = FillImputer()
 mach = machine(model, data);
-fit!(mach);
+fit!(mach)
+nothing #hide
 
 # Now, as `FillImputer` is a "transformer" rather than a supervised learner, we use
 # `transform` instead of `predict` to get the imputed output:
@@ -651,7 +669,8 @@ preprocess.one_hot_encoder.drop_last
 mach = machine(preprocess, data)
 fit!(mach, verbosity=0)
 data_continuous =  transform(mach, data);
-first(data_continuous, 3)
+#md first(data_continuous, 3)
+first(data_continuous, 3) |> println #hide
 
 # **Going deeper.** MLJ provides very flexible tools for constructing composite models,
 # beyond the linear pipelines we will consider here. Refer to the [Learning
@@ -662,7 +681,7 @@ first(data_continuous, 3)
 # need the `ProbabilisticDetector` wrapper for detectors, so that the detector's
 # predictions are probabilistic. This wrapper is provided by the package
 # [OutlierDetection.jl](https://outlierdetectionjl.github.io/OutlierDetection.jl/dev/documentation/simple-usage/)
-# (Muhr et al., [2020](https://doi.org/10.48550/arXiv.2211.04550)) which we must
+# (Muhr et al., [2022](https://doi.org/10.48550/arXiv.2211.04550)) which we must
 # explicitly import. Training and prediction proceeds following a familiar pattern:
 
 import OutlierDetection
@@ -706,7 +725,7 @@ proportion_accepted = nrows(data)/ntrain
 # `y`, the diagnosis we want to predict, given new features.
 
 y, X, _ = unpack(data, ==(:diagnosis), !=(:detector_outcome));
-schema(X).names
+schema(X).names |> collect 
 
 # Notice that we have also dropped the `detector_outcome` field, which is no longer
 # relevant.
@@ -798,7 +817,7 @@ precision_at_95(yhat, y[validation])
 # cross-validation. Here we are using all rows of our training data `(X, y)` to construct
 # the folds. To restrict the data used, include a `rows=...` specification.
 
-evaluate(booster, X, y; resampling=StratifiedCV(nfolds=6), measure=precision_at_95, verbosity=0)
+evaluate(booster, X, y; resampling=StratifiedCV(nfolds=6), measure=precision_at_95)
 
 # The bottom box shows the individual cross-validation scores, while their aggregate (in
 # this case, mean) is reported under "measurement" in the top box. The number under
@@ -831,12 +850,7 @@ evaluation = evaluate(
     resampling=StratifiedCV(nfolds=6, rng=stable_rng()),
     repeats=3,
     measures=metrics,
-    verbosity=0,
 )
-
-#-
-
-evaluation.uncertainty_radius_95
 
 
 # ## [8. Recursive feature elimination](@id rfe)
@@ -907,12 +921,13 @@ evaluations = evaluate(
     X,
     y; # this semicolon is important!
     options()...,
-)
+);
 
 # Here a vector of evaluation objects is being returned, but we can get a nice summary
 # table like this:
 
-describe.(evaluations) |> DataFrames.DataFrame
+#md describe.(evaluations) |> DataFrames.DataFrame
+describe.(evaluations) |> DataFrames.DataFrame |> println #hide
 
 # Okay, no real improvement here. Hower, we can apply the same feature selection
 # ahead of training some other supervised model. The `transform` method, which is
@@ -948,7 +963,8 @@ evaluations_linear = evaluate(
     y;
     options()...,
 )
-describe.(evaluations_linear) |> DataFrames.DataFrame
+#md describe.(evaluations_linear) |> DataFrames.DataFrame
+describe.(evaluations_linear) |> DataFrames.DataFrame |> println #hide
 
 # Here we see a definite benefit.
 
@@ -984,7 +1000,8 @@ evaluations = evaluate(
     y;
     options()...,
 )
-describe.(evaluations) |> DataFrames.DataFrame
+#md describe.(evaluations) |> DataFrames.DataFrame
+describe.(evaluations) |> DataFrames.DataFrame |> println #hide
 
 # To automate experimenting with hyper-parameter values, MLJ provides two methods. The
 # first, which works for a single hyper-parameter, is visual.
@@ -1079,7 +1096,8 @@ evaluations = evaluate(
     y;
     options()...,
 )
-describe.(evaluations) |> DataFrames.DataFrame
+#md describe.(evaluations) |> DataFrames.DataFrame
+describe.(evaluations) |> DataFrames.DataFrame |> println #hide
 
 # **Going deeper.** An important reason for implementing tuning as a model wrapper, is to
 # guard against [data
@@ -1122,13 +1140,13 @@ describe.(evaluations) |> DataFrames.DataFrame
 # Let's see how oversampling works in an example.  We will use the `SMOTE` oversampler
 # (Chawla et al., [2002](https://www.jair.org/index.php/jair/article/view/10302)) from the
 # Imbalance.jl package (Wisam and Blaom,
-# [2023](https://joss.theoj.org/papers/10.21105/joss.06310)). This oversampler requires
+# [2024](https://joss.theoj.org/papers/10.21105/joss.06310)). This oversampler requires
 # the features to be oversampled to be `Continuous`. We set the desired ratios of each
 # class, relative to the majority class (here "negative"), using the `ratios`
 # hyper-parameter. If `ratios` is left unspecified, the distribution for classes in the
 # outputs will be a uniform one, with no oversampling of the majority class.
 
-SMOTE = @load SMOTE pkg=Imbalance
+SMOTE = @load SMOTE pkg=Imbalance verbosity=0
 smote = SMOTE(rng=stable_rng(), ratios=Dict("positive"=>0.5, "negative"=>1.0))
 mach = machine(smote)                         # no data provided here, and no `fit!`
 X_over, y_over = transform(mach, X_continuous, y);
@@ -1300,7 +1318,8 @@ named_models = [
 
 @time performance_evaluations = evaluate(named_models, X, y; options()...)
 performance_summary = describe.(performance_evaluations) |> DataFrames.DataFrame
-sort!(performance_summary, :PrecisionAtFixedRecall, rev=true)
+#md sort!(performance_summary, :PrecisionAtFixedRecall, rev=true)
+sort!(performance_summary, :PrecisionAtFixedRecall, rev=true) |> println #hide
 
 # To better visualize the confidence intervals, we plot the results for some of the
 # metrics:
@@ -1509,6 +1528,58 @@ test_precision_tree = ppv(yhat, ytest) # precision
 # Although we get better precision, this could well be an accident, because of the much
 # larger uncertainty associated with the decision tree performance estimate. So, in our
 # view, the support vector machine remains the better choice.
+
+
+# ## References
+
+# Barnett, V. and Lewis, T. (1994). *Outliers in Statistical Data*, 3rd edition. John Wiley
+# & Sons, Chichester. XVII + 582 pp. Reviewed by R. Pincus, *Biometrical Journal* 37(2), 256.
+# [doi:10.1002/bimj.4710370219](https://doi.org/10.1002/bimj.4710370219)
+
+# Blaom, A. D., Kiraly, F., Lienart, T., Simillides, Y., Arenas, D. and Vollmer, S. J.
+# (2020). MLJ: A Julia package for composable machine learning. *Journal of Open Source
+# Software* 5(55), 2704. [doi:10.21105/joss.02704](https://doi.org/10.21105/joss.02704)
+
+# Chawla, N. V., Bowyer, K. W., Hall, L. O. and Kegelmeyer, W. P. (2002). SMOTE: Synthetic
+# Minority Over-sampling Technique. *Journal of Artificial Intelligence Research* 16,
+# 321–357. [doi:10.1613/jair.953](https://doi.org/10.1613/jair.953)
+
+# Dietterich, T. G. (1998). Approximate statistical tests for comparing supervised
+# classification learning algorithms. *Neural Computation* 10(7), 1895–1923.
+# [doi:10.1162/089976698300017197](https://doi.org/10.1162/089976698300017197)
+
+# Henninger, M. and Strobl, C. (2025). Interpreting machine learning predictions with LIME
+# and Shapley values: theoretical insights, challenges, and meaningful interpretations.
+# *Behaviormetrika* 52(1), 45–75.
+# [doi:10.1007/s41237-024-00253-2](https://doi.org/10.1007/s41237-024-00253-2)
+
+# Knorr, E. M., Ng, R. T. and Tucakov, V. (2000). Distance-based outliers: algorithms and
+# applications. *The VLDB Journal* 8(3–4), 237–253.
+# [doi:10.1007/s007780050006](https://doi.org/10.1007/s007780050006)
+
+# Muhr, D., Affenzeller, M. and Blaom, A. D. (2022). OutlierDetection.jl: A modular outlier
+# detection ecosystem for the Julia programming language. arXiv:2211.04550.
+# [doi:10.48550/arXiv.2211.04550](https://doi.org/10.48550/arXiv.2211.04550)
+
+# Quinlan, R. (1986). *Thyroid Disease* [Dataset]. UCI Machine Learning Repository.
+# [doi:10.24432/C5D010](https://doi.org/10.24432/C5D010)
+
+# Roesch, E., Greener, J. G., MacLean, A. L., Nassar, H., Rackauckas, C., Holy, T. E. and
+# Stumpf, M. P. H. (2023). Julia for biologists. *Nature Methods* 20(5), 655–664.
+# [doi:10.1038/s41592-023-01832-z](https://doi.org/10.1038/s41592-023-01832-z)
+
+# Storopoli, J., Huijzer, R. and Alonso, L. (2021). *Julia Data Science*. ISBN 9798489859165.
+# [https://juliadatascience.github.io/JuliaDataScience](https://juliadatascience.github.io/JuliaDataScience/)
+
+# Wisam, E. and Blaom, A. D. (2024). Imbalance: A comprehensive multi-interface Julia
+# toolbox to address class imbalance. *Journal of Open Source Software* 9(95), 6310.
+# [doi:10.21105/joss.06310](https://doi.org/10.21105/joss.06310)
+
+# Zeng, Y., Arisa, O., Corvalan, N., Bateman, F., Schmidt, K., Peer, C. and Figg, W. D.
+# (2026). A comparison of pharmacometric software programs for atezolizumab population
+# pharmacokinetic simulation. *European Journal of Clinical Pharmacology* 82(2), 42.
+# [doi:10.1007/s00228-025-03974-9](https://doi.org/10.1007/s00228-025-03974-9)
+
 
 # ---
 
