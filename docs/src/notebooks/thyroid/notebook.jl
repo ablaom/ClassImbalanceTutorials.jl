@@ -201,6 +201,7 @@ Pkg.status()
 
 # If you need to start over in a new Julia session, you will need to begin with `using
 # Pkg` and the appropriate `Pkg.activate(...)` command you used before.
+
 # ### Making our workflows reproducible
 
 # As many algorithms depend on pseudo-random number generators (RNG's), and as the
