@@ -670,8 +670,8 @@ preprocess.one_hot_encoder.drop_last
 mach = machine(preprocess, data)
 fit!(mach, verbosity=0)
 data_continuous =  transform(mach, data);
-#md first(data_continuous, 3)
-first(data_continuous, 3) |> println #hide
+#md data_continuous[1:3,1:5]
+data_continuous[1:3, 1:5] |> println #hide
 
 # **Going deeper.** MLJ provides very flexible tools for constructing composite models,
 # beyond the linear pipelines we will consider here. Refer to the [Learning
@@ -726,10 +726,9 @@ proportion_accepted = nrows(data)/ntrain
 # `y`, the diagnosis we want to predict, given new features.
 
 y, X, _ = unpack(data, ==(:diagnosis), !=(:detector_outcome));
-schema(X).names |> collect 
+first(schema(X).names, 5)
 
-# Notice that we have also dropped the `detector_outcome` field, which is no longer
-# relevant.
+# We have dropped the `detector_outcome` field, which is no longer relevant.
 
 # **Going deeper.** To interpret this application of `unpack`, note that `==(:diagnosis)`
 # defines a function such that `==(:diagnosis)(x)` is `true` if `x == :diagnosis`, and
@@ -911,6 +910,7 @@ options() = (
     resampling=StratifiedCV(nfolds=6, rng=stable_rng()),
     measures=metrics,
     repeats=3,
+    verbosity=0,
 )
 evaluations = evaluate(
     [
