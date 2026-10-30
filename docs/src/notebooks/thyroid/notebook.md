@@ -164,8 +164,8 @@ VSCode or emacs, or using notebook-style interfaces such as
 not discussed here.
 
 Enter both lines of code below in the REPL, after editing the definition of `LOCAL` to
-point to the directory to which you would like figures to be saved. Code after Julia's
-`#` character is ignored.
+point to the directory to which you would like figures to be saved. Code after Julia's comment
+character `#` is ignored.
 
 ````@julia
 LOCAL = @__DIR__               # e.g., `LOCAL = "~/my/figures/"`
@@ -288,7 +288,7 @@ rand()
 ````
 
 ````
-0.07826186637616661
+0.12788076230079382
 ````
 
 ## 2. Models and machines
@@ -309,10 +309,10 @@ namely a named tuple of vectors; `y_iris` is an ordinary vector representing the
 target variable, in this case the species of iris.
 
 Although MLJ is not too fussy about table types (it supports [most
-formats](https://github.com/JuliaData/Tables.jl/blob/main/INTEGRATIONS.md) buying into a
-standard set out by the Tables.jl package) we'll convert `X_iris` to a **dataframe**,
-Julia's de facto standard for in-memory tabular data, which has a nicer display and is
-easier to manipulate:
+formats](https://github.com/JuliaData/Tables.jl/blob/main/INTEGRATIONS.md) meeting a
+specification set out by the Tables.jl package) we'll convert `X_iris` to a
+**dataframe**, Julia's de facto standard for in-memory tabular data, which has a nicer
+display and is easier to manipulate:
 
 ````@julia
 import DataFrames
@@ -581,7 +581,7 @@ path = Downloads.download(url)
 ````
 
 ````
-"/tmp/jl_FjOlRg/allhypo.data"
+"/tmp/jl_Pd0SJM/allhypo.data"
 ````
 
 Entering these lines of code downloads the dataset to a temporary location on your
@@ -595,7 +595,7 @@ url = "https://raw.githubusercontent.com/manavukani/thyroid-explainableai/"*
 
 This particular dataset file is comma-separated, but has no header. The header can be
 gleaned from
-[https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names](https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names),
+[https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names](archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names),
 which has further information about the dataset. We manually provide the header as
 follows:
 
@@ -1305,7 +1305,7 @@ PerformanceEvaluation object with these fields:
   per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-829
+Tag: ProbabilisticPipeline-436
 Extract:
 ┌────────────────────────────┬───────────┬─────────────┬─────────┐
 │ measure                    │ operation │ measurement │ 1.96*SE │
@@ -1362,7 +1362,7 @@ PerformanceEvaluation object with these fields:
   per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-309
+Tag: ProbabilisticPipeline-590
 Extract:
 ┌───┬────────────────────────────┬──────────────┬─────────────┬─────────┐
 │   │ measure                    │ operation    │ measurement │ 1.96*SE │
@@ -1689,7 +1689,7 @@ Note that `localfile` was defined [above](@ref setup).
 
 For a more principled approach to tuning, and for dealing with more than one
 hyper-parameter, MLJ implements tuning as a model wrapper. For illustration, we add a
-second regularization parameter, `max_depth` to the search space:
+second regularization parameter, `max_depth`, to the search space:
 
 ````@julia
 r2 = range(tree, :(decision_tree_classifier.max_depth), values=[-1, 1, 2, 3])
@@ -2026,22 +2026,22 @@ sort!(performance_summary, :PrecisionAtFixedRecall, rev=true)
 ````
 
 ````
- 84.756986 seconds (259.56 M allocations: 31.857 GiB, 11.91% gc time)
+129.465591 seconds (259.56 M allocations: 31.857 GiB, 12.51% gc time)
 11×5 DataFrame
  Row │ tag                      PrecisionAtFixedRecall  AveragePrecision      BalancedAccuracy      Accuracy
      │ String                   Measurement{Float64}    Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
 ─────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
    1 │ decision tree                       0.91±0.11          0.99939±0.0008         0.9833±0.0079       0.9948±0.0016
-   2 │ SVM                                 0.904±0.037        0.965±0.024            0.946±0.015         0.9896±0.0027
+   2 │ SVM                                 0.904±0.037        0.965±0.024            0.945±0.017         0.9896±0.0028
    3 │ decision tree, tuned                0.86±0.15          0.9981±0.0012          0.9863±0.0087       0.9961±0.0019
    4 │ gradient booster, tuned             0.854±0.082        0.973±0.013            0.956±0.013         0.9882±0.0028
    5 │ gradient booster                    0.842±0.076        0.969±0.013            0.955±0.015         0.9884±0.0025
    6 │ linear (logistic)                   0.81±0.13          0.97±0.014             0.941±0.015         0.9889±0.0022
    7 │ KNN                                 0.807±0.061        0.968±0.016            0.833±0.029         0.9749±0.0043
-   8 │ SVM, balanced                       0.776±0.09         0.961±0.016            0.9659±0.0095       0.9841±0.0031
+   8 │ SVM, balanced                       0.776±0.09         0.961±0.016            0.9659±0.0094       0.9841±0.003
    9 │ KNN, balanced                       0.67±0.1           0.965±0.011            0.968±0.0092        0.9726±0.003
   10 │ neural network                      0.52±0.13          0.931±0.02             0.91±0.02           0.981±0.0032
-  11 │ dummy                               0.0±0.0            0.0±0.0                0.5±3.1e-16         0.92857±0.00055
+  11 │ dummy                               0.0±0.0            0.0±0.0                0.5±5.5e-17         0.92857±0.00055
 
 ````
 
@@ -2174,11 +2174,11 @@ thresholds[[1,2,3,end-2,end-1,end]]
 ````
 6-element Vector{Float64}:
  0.9999999
- 0.9999993127948779
- 0.9999990871390917
- 9.84900421996393e-7
- 8.162335923822539e-7
- 7.862236000022449e-7
+ 0.9999998638338637
+ 0.9999997143934349
+ 2.411777169086804e-6
+ 2.0278551412511447e-6
+ 1.9589368164263377e-6
 ````
 
 There is one less threshold than recall or precision, and the recalls and precisions are
@@ -2210,7 +2210,7 @@ threshold = thresholds[i - 1]
 ````
 
 ````
-0.44265922919659073
+0.40579923758201664
 ````
 
 To transform our probabilistic predictor into point predictor, we use another MLJ
