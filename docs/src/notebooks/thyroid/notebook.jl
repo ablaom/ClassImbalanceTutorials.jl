@@ -34,7 +34,9 @@
 # [2026](https://link.springer.com/article/10.1007/s00228-025-03974-9)).
 
 # For resources on learning Julia, installing Julia packages, etc, the reader is referred
-# to the [Julia website](https://julialang.org).
+# to the [Julia website](https://julialang.org). For a rapid introduction to Julia syntax,
+# we recommend [Learn X in Y minutes](https://learnxinyminutes.com/julia/) at
+# learnxinyminutes.com/julia.
 
 # We assume readers are familiar with basic statistics, including the use of
 # cross-validation to guard against over-fitting. Readers new to Julia will benefit from
@@ -49,11 +51,11 @@
 # proportion of correct predictions, are inappropriate; we should turn to more
 # nuanced metrics.
 
-# Crucially, among subjects with hypothyroidism, we seek to reduce the number for
-# which our test fails to return a positive result. Equivalently, we want a high
-# [recall](https://en.wikipedia.org/wiki/Precision_and_recall). On the other hand, we must
-# account for the tendency that higher recall means more false alarms, or a lower
-# [precision](https://en.wikipedia.org/wiki/Precision_and_recall), where we have
+# Crucially, among subjects with hypothyroidism, we seek to reduce the number for which
+# our test fails to return a positive result. Equivalently, we want a high
+# [**recall**](https://en.wikipedia.org/wiki/Precision_and_recall). On the other hand, we
+# must account for the tendency that higher recall means more false alarms, or a lower
+# [**precision**](https://en.wikipedia.org/wiki/Precision_and_recall), where we have
 # proportionally more positive test results for which a follow up investigation is
 # required, despite the subject not having the disease.
 
@@ -80,7 +82,8 @@
 
 # ![](svm_precision_recall_curve.svg)
 
-# > Precision-recall curve for a hypothyroidism test based on a support vector machine
+# > Figure 1. Precision-recall curve for a hypothyroidism test based on a support vector
+# > machine
 
 # The reader is warned that she can find many analyses of the thyroid data set which
 # quote model performance estimates that are not relevant to the high recall objective
@@ -141,7 +144,7 @@
 
 # ## [1. Julia setup](@id setup)
 
-# > Launch Julia and activate an appropriate set of third-party packages.
+# > On launching Julia and activating an appropriate set of third-party packages
 
 # We suppose the user is interacting with Julia using the commandline interface known as
 # the **REPL**. This is typically launched by running the `julia` command from a terminal
@@ -157,8 +160,9 @@
 # [Jupyter](https://ijulia.org/stable/) (python-driven) or [Pluto](https://plutojl.org),
 # not discussed here.
 
-# Edit the definition of `LOCAL` below, to point to the directory to which you would like
-# figures to be saved.
+# Enter both lines of code below in the REPL, after editing the definition of `LOCAL` to
+# point to the directory to which you would like figures to be saved. Code after Julia's
+# `#` character is ignored.
 
 LOCAL = @__DIR__               # e.g., `LOCAL = "~/my/figures/"`
 localfile(name) = joinpath(LOCAL, name);
@@ -201,6 +205,7 @@ Pkg.status()
 
 # If you need to start over in a new Julia session, you will need to begin with `using
 # Pkg` and the appropriate `Pkg.activate(...)` command you used before.
+
 # ### Making our workflows reproducible
 
 # As many algorithms depend on pseudo-random number generators (RNG's), and as the
@@ -226,7 +231,7 @@ rand(rng)
 #-
 
 rng = stable_rng() # reset the rng
-rand(rng)          # same as first result as above
+rand(rng)          # same as first result above
 
 # To use the default RNG (which has better performance) you can omit specifying any RNG,
 # as in this example:
@@ -236,7 +241,7 @@ rand()
 
 # ## 2. Models and machines
 
-# > Learn about the principal actors in MLJ workflows
+# > Learning about the principal actors in MLJ workflows
 
 # Before considering hypothyroidism, we quickly build a predictive MLJ model using a
 # dataset that requires no special preprocessing, the Fisher [iris
@@ -250,9 +255,11 @@ X_iris, y_iris = @load_iris;
 # namely a named tuple of vectors; `y_iris` is an ordinary vector representing the
 # target variable, in this case the species of iris.
 
-# Although MLJ is not too fussy about table types, we'll convert `X_iris` to a
-# **dataframe**, Julia's de facto standard for in-memory tabular data, which has a nicer
-# display and is easier to manipulate:
+# Although MLJ is not too fussy about table types (it supports [most
+# formats](https://github.com/JuliaData/Tables.jl/blob/main/INTEGRATIONS.md) buying into a
+# standard set out by the Tables.jl package) we'll convert `X_iris` to a **dataframe**,
+# Julia's de facto standard for in-memory tabular data, which has a nicer display and is
+# easier to manipulate:
 
 import DataFrames
 X_iris = DataFrames.DataFrame(X_iris)
@@ -304,12 +311,12 @@ model = DecisionTreeClassifier(min_samples_split=5, rng=stable_rng())  # model i
 # (such as the coefficients of the polynomial) but in MLJ these are external to the model.
 
 # Next, we bind the model together with the available data in what's
-# called a *machine*:
+# called a **machine**:
 
 mach = machine(model, X_iris, y_iris);
 
-# A machine starts life as model plus data, but it additionally stores *learned
-# parameters* (the tree) once it is trained on some view of the data. (To guard against
+# A machine starts life as model plus data, but it additionally stores **learned
+# parameters** (the tree) once it is trained on some view of the data. (To guard against
 # over-fitting, we typically do not train on all the data!).
 
 train_rows = 1:2:149  # the odd rows of the dataset
@@ -330,8 +337,9 @@ keys(theta)
 
 theta.tree
 
-# So, for example, if `petal_width ≥ 1.65` and `sepal_length < 5.95`, then this decision
-# tree model predicts virginica as the species, with probability of 3/4 = 75%.
+# So, for example, if `petal_length ≥ 2.45`, `petal_width ≥ 1.65`, and `sepal_length <
+# 5.95`, then this decision tree model predicts virginica as the species, with probability
+# of 3/4 = 75%.
 
 # There is also a `report` function for machines, which returns any byproducts of training
 # that are not fitted parameters, in this case nothing noteworthy:
@@ -378,7 +386,7 @@ pdf.(yhat, "virginica")
 
 # ## 3. Downloading a dataset
 
-# > Grab a dataset from the Internet and manifest it as an in-memory table
+# > How to grab a dataset from the Internet and manifest it as an in-memory table
 
 # We now return to the thyroid disease dataset.
 
@@ -398,7 +406,8 @@ path = Downloads.download(url)
 #    "refs/heads/main/dataset/allhypo.data"
 # ```
 
-# The dataset file is comma-separated, but has no header. The header can be gleaned from
+# This particular dataset file is comma-separated, but has no header. The header can be
+# gleaned from
 # [https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names](https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names),
 # which has further information about the dataset. We manually provide the header as
 # follows:
@@ -421,7 +430,7 @@ data[15:21, [:age, :sex, :TSH, :diagnosis]] |> println #hide
 
 # There is a problem with the `diagnosis` column, which can be inspected like this:
 
-data.diagnosis[15:19] # rows 15 through 19
+data.diagnosis[15:17] # rows 15 through 19
 
 # Each entry has a trailing string which corresponds to a patient identifier we won't
 # need. We introduce a function to to trim such an entry, and at the same time collapse
@@ -439,7 +448,10 @@ fix("compensated hypothyroid.|3169") # demo
 # Applying it to every entry in the `diagnosis` column:
 
 data.diagnosis = fix.(data.diagnosis);
-data.diagnosis[15:19]
+data.diagnosis[15:17]
+
+# Julia's "broadcasting" syntax `fix.(data.diagnosis)` applies the function `fix`
+# element-wise to the vector `data.diagnosis`; the parentheses are essential here.
 
 # We can get a summary of the fields in our dataframe using `DataFrames.describe(data)`,
 # whose output you should inspect. Here's an extract:
@@ -462,7 +474,7 @@ DataFrames.select!(data, DataFrames.Not([:TBG_measured, :TBG, :hypopituitary]));
 # **Going deeper.** The DataFrames.jl features we have demonstrated so far will suffice
 # for the remainder of this tutorial. For more on manipulating dataframes, see the
 # [DataFrames.jl documentation](https://dataframes.juliadata.org/stable/). DataFrames.jl
-# is an essential tool in so-called exploratory data analysis (EDA), not covered here;
+# is an essential tool in exploratory data analysis (EDA), not covered here;
 # see, e.g., Storopoli et
 # al. [(2021)](https://juliadatascience.github.io/JuliaDataScience/). ■
 
@@ -478,7 +490,7 @@ DataFrames.select!(data, DataFrames.Not([:TBG_measured, :TBG, :hypopituitary]));
 
 # ## [4. Type coercion](@id scitype)
 
-# > Encode data so that it is correctly interpreted by MLJ algorithms
+# > Encoding data so that it is correctly interpreted by MLJ algorithms
 
 # A physical variable, such as height, can be represented in different ways on a
 # computer. For example, a person's height in centimeters, although a "continuous"
@@ -492,7 +504,7 @@ DataFrames.select!(data, DataFrames.Not([:TBG_measured, :TBG, :hypopituitary]));
 # certain conventions shared by all MLJ algorithms. By design, MLJ allows users to focus
 # more on scientific types, and view machine types as a secondary "implementation detail".
 
-# To find out what how your data will be interpreted, we use `scitype`. To correct for a
+# To find out how your data will be interpreted, we use `scitype`. To correct for a
 # undesirable interpretation, we use `coerce`.
 
 typeof(183) # machine type
@@ -532,7 +544,9 @@ scitype(blood_type)
 # less frequently in quantitative medicine. The principal "scalar" scientific types
 # (called **scitypes**) are summarized in the graphic below.
 
-# ![](scitypes_small.svg)
+# ![](scitypes_small.png)
+
+# > Figure 2. "Scalar" scientific types
 
 # For an explanation of `Finite` and `Infinite` see the next "Going deeper" section
 # below. While a table also has a scitype, it is more convenient to inspect the column
@@ -541,7 +555,7 @@ scitype(blood_type)
 #md schema(data)
 schema(data) |> DataFrames.DataFrame |> println #hide
 
-# Based on what we understand about the real world meaning each column, we can fix
+# Based on what we understand about the real world meaning of each column, we can fix
 # some specific column scitypes like this:
 
 data = coerce(
@@ -596,11 +610,9 @@ data, data_test = partition(
     stratify=data.diagnosis,
     rng=stable_rng(),
 );
-
 ntrain = nrows(data)
 ntest = nrows(data_test)
 @info "size of datasets" ntrain ntest
-
 proportions_train = StatsBase.proportionmap(data_test.diagnosis)
 proportions_test = StatsBase.proportionmap(data_test.diagnosis)
 @info "diagnosis distribution" proportions_train["positive"] proportions_test["positive"]
@@ -608,7 +620,7 @@ proportions_test = StatsBase.proportionmap(data_test.diagnosis)
 
 # ## [5. Missing value imputation](@id missing)
 
-# > Clean a dataset by finding reasonable proxies for missing values
+# > Cleaning a dataset by finding reasonable proxies for missing values
 
 # To remove missing values, we will use an imputation algorithm called `FillImputer`.  To
 # search for available models related to imputation, you can run
@@ -639,8 +651,8 @@ data_clean = transform(mach, data);
 
 # ## [6. Outlier removal and other data preprocessing](@id pipeline)
 
-# > Remove outliers and combine this and other common preprocessing steps in a model
-# > pipeline.
+# > Removing outliers and combining this and other common preprocessing steps in a model
+# > pipeline
 
 # The dangers of automated outlier removal notwithstanding (Barnett and Lewis,
 # [1994](https://onlinelibrary.wiley.com/doi/10.1002/bimj.4710370219)), we employ a
@@ -669,8 +681,8 @@ preprocess.one_hot_encoder.drop_last
 mach = machine(preprocess, data)
 fit!(mach, verbosity=0)
 data_continuous =  transform(mach, data);
-#md first(data_continuous, 3)
-first(data_continuous, 3) |> println #hide
+#md data_continuous[1:3,1:5]
+data_continuous[1:3, 1:5] |> println #hide
 
 # **Going deeper.** MLJ provides very flexible tools for constructing composite models,
 # beyond the linear pipelines we will consider here. Refer to the [Learning
@@ -717,18 +729,17 @@ proportion_accepted = nrows(data)/ntrain
 
 # ## [7. Evaluating a supervised model](@id evaluate)
 
-# > Learn how to estimate the expected performance of a supervised learner, using a
-# > simple holdout set, and using more sophisticated cross-validation tools.
+# > How to estimate the expected performance of a supervised learner, using: (i) A
+# > simple holdout set; and (ii) Sophisticated cross-validation tools
 
 # We are almost ready to train our first supervised predictive model. In preparation, we
 # horizontally split our training data into a table of features `X`, and a vector target
 # `y`, the diagnosis we want to predict, given new features.
 
 y, X, _ = unpack(data, ==(:diagnosis), !=(:detector_outcome));
-schema(X).names |> collect 
+first(schema(X).names, 5)
 
-# Notice that we have also dropped the `detector_outcome` field, which is no longer
-# relevant.
+# We have dropped the `detector_outcome` field, which is no longer relevant.
 
 # **Going deeper.** To interpret this application of `unpack`, note that `==(:diagnosis)`
 # defines a function such that `==(:diagnosis)(x)` is `true` if `x == :diagnosis`, and
@@ -838,7 +849,6 @@ evaluate(booster, X, y; resampling=StratifiedCV(nfolds=6), measure=precision_at_
 precision_at_90 = PrecisionAtFixedRecall(0.9)
 metrics = [
     precision_at_95,
-    precision_at_90,
     average_precision,
     balanced_accuracy,
     accuracy,
@@ -855,13 +865,13 @@ evaluation = evaluate(
 
 # ## [8. Recursive feature elimination](@id rfe)
 
-# > Identify and remove uninformative features using a supervised model that can rank
-# > features, and include the corresponding feature selection in other model pipelines.
+# > Identifying and removing uninformative features using a supervised model that can rank
+# > features, and including the corresponding feature selection in other model pipelines
 
 # By working with a reduced feature set, we can avoid the [curse of
 # dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality), which avails us
-# of more computationally intensive models, such as support vector machines, and to
-# simplify interpretation. Some models also appear to perform better when less
+# of more computationally intensive models, such as support vector machines, and
+# simplifies interpretation. Some models also appear to perform better when less
 # informative features are eliminated.
 
 # Here's a demonstration of extracting feature importances using the gradient tree booster
@@ -910,13 +920,14 @@ options() = (
     resampling=StratifiedCV(nfolds=6, rng=stable_rng()),
     measures=metrics,
     repeats=3,
+    verbosity=0,
 )
 evaluations = evaluate(
     [
         "booster" => preprocess |> bare_booster,
-        "booster with 2 features" => preprocess |> bare_booster_with_rfe(2),
-        "booster with 4 features" => preprocess |> bare_booster_with_rfe(4),
-        "booster with 8 features" => preprocess |> bare_booster_with_rfe(8),
+        "booster (2 features)" => preprocess |> bare_booster_with_rfe(2),
+        "booster (4 features)" => preprocess |> bare_booster_with_rfe(4),
+        "booster (8 features)" => preprocess |> bare_booster_with_rfe(8),
     ],
     X,
     y; # this semicolon is important!
@@ -954,10 +965,10 @@ bare_linear = LogisticClassifier()
 
 evaluations_linear = evaluate(
     [
-        "linear, all features" => preprocess |> bare_linear,
-        "linear, 2 features" => preprocess |> reducer(2) |> bare_linear,
-        "linear, 4 features" => preprocess |> reducer(4) |> bare_linear,
-        "linear, 8 features" => preprocess |> reducer(8) |> bare_linear,
+        "linear" => preprocess |> bare_linear,
+        "linear (2 features)" => preprocess |> reducer(2) |> bare_linear,
+        "linear (4 features)" => preprocess |> reducer(4) |> bare_linear,
+        "linear (8 features)" => preprocess |> reducer(8) |> bare_linear,
     ],
     X,
     y;
@@ -970,8 +981,8 @@ describe.(evaluations_linear) |> DataFrames.DataFrame |> println #hide
 
 # ## [9. Hyper-parameter tuning](@id tuning)
 
-# > Optimize hyper-parameters with a visual plot, or with a model wrapper that creates
-# > self-tuning models.
+# > Optimizing hyper-parameters with a visual plot, or with a model wrapper that creates
+# > self-tuning models
 
 # Let us build a new supervised model we can train on the data `(X, y)` by combining a
 # simple decision tree classifier (as applied earlier to the iris dataset) with our
@@ -989,13 +1000,11 @@ tree = preprocess |> bare_tree;
 # regularization. Let's increase the value and see if that has any impact on performance.
 
 tree_regularized = deepcopy(tree)
-
 ## mutate nested hyper-parameter:
 tree_regularized.decision_tree_classifier.min_samples_split = 5
-
 ## compare performance using previous `evaluate` options:
 evaluations = evaluate(
-    ["tree" => tree, "tree with regularization" => tree_regularized],
+    ["tree" => tree, "tree (regularized)" => tree_regularized],
     X,
     y;
     options()...,
@@ -1022,7 +1031,6 @@ _, _, splits, precisions = learning_curve(
     measure=precision_at_95,
     verbosity=0,
 )
-
 using Plots
 fig = scatter(splits, precisions, legend=false)
 xlabel!(fig, "min_samples_split")
@@ -1034,11 +1042,14 @@ savefig(fig, localfile("tree_learning_curve.svg"));
 
 # ![](tree_learning_curve.svg)
 
+# > Figure 3. A learning curve for visualizing impact on performance of the
+# > `min_samples_split` hyper-parameter.
+
 # ### Tuning as model wrapper
 
 # For a more principled approach to tuning, and for dealing with more than one
 # hyper-parameter, MLJ implements tuning as a model wrapper. For illustration, we add a
-# second regularization parameter to the mix, `max_depth`:
+# second regularization parameter, `max_depth` to the search space:
 
 r2 = range(tree, :(decision_tree_classifier.max_depth), values=[-1, 1, 2, 3])
 tuned_tree = TunedModel(
@@ -1082,10 +1093,12 @@ savefig(fig, localfile("tuned_tree.svg"));
 
 # ![](tuned_tree.svg)
 
+# > Figure 4. Plot for visualizing the impact on performance of multiple hyper-parameters.
+
 # The larger the circles in the bottom left plot, the larger the precision at 0.95 recall.
 
 # Because we need out-of-sample estimates in the optimization process, there is less data
-# available for training in each estimation of performance. For that reason, tuning is no
+# available for training in each estimate of performance. For that reason, tuning is no
 # guarantee of better performance, especially when the number of subjects is small.
 
 # Here is a comparison of our tree and its self-tuning counterpart:
@@ -1116,14 +1129,14 @@ describe.(evaluations) |> DataFrames.DataFrame |> println #hide
 # in doing so one may run into data leakage concerns.
 # ■
 
-# The `TunedModel` is a powerful component of MLJ, with a host of options. For a deeper
-# dive, refer to the [documentation](https://juliaai.github.io/MLJ.jl/dev/tuning_models/).
+# The `TunedModel` wrapper is a feature-rich component of MLJ. For a deeper dive, refer to
+# the [documentation](https://juliaai.github.io/MLJ.jl/dev/tuning_models/).
 
 
 # ## [10. Correcting for class imbalance](@id imbalance)
 
-# > Synthesize new subjects to correct for the imbalance in positive and negative
-# > outcomes.
+# > Synthesizing new subjects to correct for the imbalance in positive and negative
+# > outcomes
 
 # The most naive way to correct for our excess of negative diagnoses in the training data,
 # is to randomly duplicate subjects with positive outcomes, and add these to the
@@ -1133,9 +1146,10 @@ describe.(evaluations) |> DataFrames.DataFrame |> println #hide
 # course, we always check the performance of models trained with oversampled data using
 # using data that is *not* oversampled.
 
-# For the current dataset, and for several supervised models tested, we observed, at
-# best, modest benefits to oversampling, with respect to our target metric. For
-# completeness, we nevertheless include some oversampled models in our later comparisons.
+# For the current dataset, and for several supervised models we experimented with, we
+# observed, at best, modest benefits to oversampling, with respect to our target
+# metric. To show the benefit for other metrics, we nevertheless include some oversampled
+# models in our later comparisons.
 
 # Let's see how oversampling works in an example.  We will use the `SMOTE` oversampler
 # (Chawla et al., [2002](https://www.jair.org/index.php/jair/article/view/10302)) from the
@@ -1182,7 +1196,7 @@ predict(mach, rows=1:3)
 
 # ## [11. Model comparisons](@id compare)
 
-# > Compare several supervised models wrapped in complete machine learning workflows
+# > Comparing several supervised models wrapped in complete machine learning workflows
 
 # All the supervised models we will consider are probabilistic predictors. To the models
 # we have already seen, we add:
@@ -1298,7 +1312,7 @@ balanced_knn = preprocess |> reducer(5) |> BalancedModel(
 
 # ### Results
 
-# Below are the model comparisons. The computation takes less than 5 minute on a
+# Below are the model comparisons. The computation takes less than 5 minutes on a
 # laptop. We re-order the results so that models with the highest precision at 0.95 recall
 # appear first.
 
@@ -1325,13 +1339,16 @@ sort!(performance_summary, :PrecisionAtFixedRecall, rev=true) |> println #hide
 # metrics:
 
 # ![](PrecisionAtFixedRecall_estimates.svg)
-# > Model comparisons for **precision at 0.95 recall**
+
+# > Figure 5. Model comparisons for **precision at 0.95 recall**
 
 # ![](AveragePrecision_estimates.svg)
-# > Model comparisons for **average precision**
+
+# > Figure 6. Model comparisons for **average precision**
 
 # ![](BalancedAccuracy_estimates.svg)
-# > Model comparisons for **balanced accuracy**
+
+# > Figure 7. Model comparisons for **balanced accuracy**
 
 # **Going deeper.** Below is the code generating plots for each metric, and saving them to
 # disk:
@@ -1339,7 +1356,6 @@ sort!(performance_summary, :PrecisionAtFixedRecall, rev=true) |> println #hide
 ## The tags here need to match the auto-generated column names of `performance_summary`:
 named_measures = [
     :PrecisionAtFixedRecall => precision_at_95,
-    :PrecisionAtFixedRecall2 => precision_at_90,
     :AveragePrecision => average_precision,
     :BalancedAccuracy => balanced_accuracy,
     :Accuracy => accuracy,
@@ -1411,8 +1427,8 @@ display(plts[1]) # to display the first plot
 
 # ## [12. Probability thresholding](@id threshold)
 
-# > Estimate the probability threshold needed for a desired recall, and create a model
-# > predicting either "positive" or "negative" based on that threshold.
+# > Estimating the probability threshold needed for a desired recall, and creating a model
+# > predicting either "positive" or "negative" based on that threshold
 
 # Recall that all our models predict *probabilities* of the "positive" and "negative"
 # class, not an actual class. To estimate a probability threshold giving us a recall of
@@ -1484,7 +1500,7 @@ tree_after_thresholding = BinaryThresholdPredictor(tree; threshold);
 
 # ## [13. Final testing](@id test)
 
-# > Evaluate the performance of our final hypothyroidism tests on the test subjects.
+# > Evaluating the performance of our final hypothyroidism tests on the test subjects
 
 # Before evaluating on the test data, we need to split it into target and features, as we
 # did for the training data:
