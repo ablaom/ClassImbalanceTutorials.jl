@@ -161,8 +161,8 @@
 # not discussed here.
 
 # Enter both lines of code below in the REPL, after editing the definition of `LOCAL` to
-# point to the directory to which you would like figures to be saved. Code after Julia's
-# `#` character is ignored.
+# point to the directory to which you would like figures to be saved. Code after Julia's comment
+# character `#` is ignored.
 
 LOCAL = @__DIR__               # e.g., `LOCAL = "~/my/figures/"`
 localfile(name) = joinpath(LOCAL, name);
