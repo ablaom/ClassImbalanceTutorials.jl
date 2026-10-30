@@ -256,10 +256,10 @@ X_iris, y_iris = @load_iris;
 # target variable, in this case the species of iris.
 
 # Although MLJ is not too fussy about table types (it supports [most
-# formats](https://github.com/JuliaData/Tables.jl/blob/main/INTEGRATIONS.md) buying into a
-# standard set out by the Tables.jl package) we'll convert `X_iris` to a **dataframe**,
-# Julia's de facto standard for in-memory tabular data, which has a nicer display and is
-# easier to manipulate:
+# formats](https://github.com/JuliaData/Tables.jl/blob/main/INTEGRATIONS.md) meeting a
+# specification set out by the Tables.jl package) we'll convert `X_iris` to a
+# **dataframe**, Julia's de facto standard for in-memory tabular data, which has a nicer
+# display and is easier to manipulate:
 
 import DataFrames
 X_iris = DataFrames.DataFrame(X_iris)
@@ -408,7 +408,7 @@ path = Downloads.download(url)
 
 # This particular dataset file is comma-separated, but has no header. The header can be
 # gleaned from
-# [https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names](https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names),
+# [https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names](archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names),
 # which has further information about the dataset. We manually provide the header as
 # follows:
 
@@ -1049,7 +1049,7 @@ savefig(fig, localfile("tree_learning_curve.svg"));
 
 # For a more principled approach to tuning, and for dealing with more than one
 # hyper-parameter, MLJ implements tuning as a model wrapper. For illustration, we add a
-# second regularization parameter, `max_depth` to the search space:
+# second regularization parameter, `max_depth`, to the search space:
 
 r2 = range(tree, :(decision_tree_classifier.max_depth), values=[-1, 1, 2, 3])
 tuned_tree = TunedModel(
