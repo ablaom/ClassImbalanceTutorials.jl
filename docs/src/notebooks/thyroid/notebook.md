@@ -38,7 +38,9 @@ developed over many years (Zeng et al.,
 [2026](https://link.springer.com/article/10.1007/s00228-025-03974-9)).
 
 For resources on learning Julia, installing Julia packages, etc, the reader is referred
-to the [Julia website](https://julialang.org).
+to the [Julia website](https://julialang.org). For a rapid introduction to Julia syntax,
+we recommend [Learn X in Y minutes](https://learnxinyminutes.com/julia/) at
+learnxinyminutes.com/julia.
 
 We assume readers are familiar with basic statistics, including the use of
 cross-validation to guard against over-fitting. Readers new to Julia will benefit from
@@ -52,11 +54,11 @@ than positive ones. Additionally, naive measures of task success, such as the
 proportion of correct predictions, are inappropriate; we should turn to more
 nuanced metrics.
 
-Crucially, among subjects with hypothyroidism, we seek to reduce the number for
-which our test fails to return a positive result. Equivalently, we want a high
-[recall](https://en.wikipedia.org/wiki/Precision_and_recall). On the other hand, we must
-account for the tendency that higher recall means more false alarms, or a lower
-[precision](https://en.wikipedia.org/wiki/Precision_and_recall), where we have
+Crucially, among subjects with hypothyroidism, we seek to reduce the number for which
+our test fails to return a positive result. Equivalently, we want a high
+[**recall**](https://en.wikipedia.org/wiki/Precision_and_recall). On the other hand, we
+must account for the tendency that higher recall means more false alarms, or a lower
+[**precision**](https://en.wikipedia.org/wiki/Precision_and_recall), where we have
 proportionally more positive test results for which a follow up investigation is
 required, despite the subject not having the disease.
 
@@ -83,7 +85,8 @@ without dropping the precision dramatically.
 
 ![](svm_precision_recall_curve.svg)
 
-> Precision-recall curve for a hypothyroidism test based on a support vector machine
+> Figure 1. Precision-recall curve for a hypothyroidism test based on a support vector
+> machine
 
 The reader is warned that she can find many analyses of the thyroid data set which
 quote model performance estimates that are not relevant to the high recall objective
@@ -144,7 +147,7 @@ tutorial:
 
 ## [1. Julia setup](@id setup)
 
-> Launch Julia and activate an appropriate set of third-party packages.
+> On launching Julia and activating an appropriate set of third-party packages
 
 We suppose the user is interacting with Julia using the commandline interface known as
 the **REPL**. This is typically launched by running the `julia` command from a terminal
@@ -160,8 +163,9 @@ VSCode or emacs, or using notebook-style interfaces such as
 [Jupyter](https://ijulia.org/stable/) (python-driven) or [Pluto](https://plutojl.org),
 not discussed here.
 
-Edit the definition of `LOCAL` below, to point to the directory to which you would like
-figures to be saved.
+Enter both lines of code below in the REPL, after editing the definition of `LOCAL` to
+point to the directory to which you would like figures to be saved. Code after Julia's
+`#` character is ignored.
 
 ````@julia
 LOCAL = @__DIR__               # e.g., `LOCAL = "~/my/figures/"`
@@ -233,6 +237,7 @@ For example, to add MLJ v0.23.2, do `Pkg.add("MLJ@0.23.2")`.¹
 
 If you need to start over in a new Julia session, you will need to begin with `using
 Pkg` and the appropriate `Pkg.activate(...)` command you used before.
+
 ### Making our workflows reproducible
 
 As many algorithms depend on pseudo-random number generators (RNG's), and as the
@@ -268,7 +273,7 @@ rand(rng)
 
 ````@julia
 rng = stable_rng() # reset the rng
-rand(rng)          # same as first result as above
+rand(rng)          # same as first result above
 ````
 
 ````
@@ -283,12 +288,12 @@ rand()
 ````
 
 ````
-0.7250575630837823
+0.07826186637616661
 ````
 
 ## 2. Models and machines
 
-> Learn about the principal actors in MLJ workflows
+> Learning about the principal actors in MLJ workflows
 
 Before considering hypothyroidism, we quickly build a predictive MLJ model using a
 dataset that requires no special preprocessing, the Fisher [iris
@@ -303,9 +308,11 @@ Here `X_iris`, the features (specimen dimensions) is a rather basic form of Juli
 namely a named tuple of vectors; `y_iris` is an ordinary vector representing the
 target variable, in this case the species of iris.
 
-Although MLJ is not too fussy about table types, we'll convert `X_iris` to a
-**dataframe**, Julia's de facto standard for in-memory tabular data, which has a nicer
-display and is easier to manipulate:
+Although MLJ is not too fussy about table types (it supports [most
+formats](https://github.com/JuliaData/Tables.jl/blob/main/INTEGRATIONS.md) buying into a
+standard set out by the Tables.jl package) we'll convert `X_iris` to a **dataframe**,
+Julia's de facto standard for in-memory tabular data, which has a nicer display and is
+easier to manipulate:
 
 ````@julia
 import DataFrames
@@ -402,14 +409,14 @@ the polynomial). In statistics a "model" generally includes the *learned paramet
 (such as the coefficients of the polynomial) but in MLJ these are external to the model.
 
 Next, we bind the model together with the available data in what's
-called a *machine*:
+called a **machine**:
 
 ````@julia
 mach = machine(model, X_iris, y_iris);
 ````
 
-A machine starts life as model plus data, but it additionally stores *learned
-parameters* (the tree) once it is trained on some view of the data. (To guard against
+A machine starts life as model plus data, but it additionally stores **learned
+parameters** (the tree) once it is trained on some view of the data. (To guard against
 over-fitting, we typically do not train on all the data!).
 
 ````@julia
@@ -465,8 +472,9 @@ petal_length < 2.45
 
 ````
 
-So, for example, if `petal_width ≥ 1.65` and `sepal_length < 5.95`, then this decision
-tree model predicts virginica as the species, with probability of 3/4 = 75%.
+So, for example, if `petal_length ≥ 2.45`, `petal_width ≥ 1.65`, and `sepal_length <
+5.95`, then this decision tree model predicts virginica as the species, with probability
+of 3/4 = 75%.
 
 There is also a `report` function for machines, which returns any byproducts of training
 that are not fitted parameters, in this case nothing noteworthy:
@@ -559,7 +567,7 @@ pdf.(yhat, "virginica")
 
 ## 3. Downloading a dataset
 
-> Grab a dataset from the Internet and manifest it as an in-memory table
+> How to grab a dataset from the Internet and manifest it as an in-memory table
 
 We now return to the thyroid disease dataset.
 
@@ -573,7 +581,7 @@ path = Downloads.download(url)
 ````
 
 ````
-"/tmp/jl_CvwgIq/allhypo.data"
+"/tmp/jl_FjOlRg/allhypo.data"
 ````
 
 Entering these lines of code downloads the dataset to a temporary location on your
@@ -585,7 +593,8 @@ url = "https://raw.githubusercontent.com/manavukani/thyroid-explainableai/"*
    "refs/heads/main/dataset/allhypo.data"
 ```
 
-The dataset file is comma-separated, but has no header. The header can be gleaned from
+This particular dataset file is comma-separated, but has no header. The header can be
+gleaned from
 [https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names](https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names),
 which has further information about the dataset. We manually provide the header as
 follows:
@@ -627,16 +636,14 @@ data[15:21, [:age, :sex, :TSH, :diagnosis]]
 There is a problem with the `diagnosis` column, which can be inspected like this:
 
 ````@julia
-data.diagnosis[15:19] # rows 15 through 19
+data.diagnosis[15:17] # rows 15 through 19
 ````
 
 ````
-5-element Vector{InlineStrings.String31}:
+3-element Vector{InlineStrings.String31}:
  "negative.|2043"
  "compensated hypothyroid.|3169"
  "negative.|2755"
- "negative.|1010"
- "negative.|803"
 ````
 
 Each entry has a trailing string which corresponds to a patient identifier we won't
@@ -662,17 +669,18 @@ Applying it to every entry in the `diagnosis` column:
 
 ````@julia
 data.diagnosis = fix.(data.diagnosis);
-data.diagnosis[15:19]
+data.diagnosis[15:17]
 ````
 
 ````
-5-element Vector{AbstractString}:
+3-element Vector{AbstractString}:
  "negative"
  "positive"
  "negative"
- "negative"
- "negative"
 ````
+
+Julia's "broadcasting" syntax `fix.(data.diagnosis)` applies the function `fix`
+element-wise to the vector `data.diagnosis`; the parentheses are essential here.
 
 We can get a summary of the fields in our dataframe using `DataFrames.describe(data)`,
 whose output you should inspect. Here's an extract:
@@ -718,7 +726,7 @@ enter `?DataFrames.describe` in the REPL.
 **Going deeper.** The DataFrames.jl features we have demonstrated so far will suffice
 for the remainder of this tutorial. For more on manipulating dataframes, see the
 [DataFrames.jl documentation](https://dataframes.juliadata.org/stable/). DataFrames.jl
-is an essential tool in so-called exploratory data analysis (EDA), not covered here;
+is an essential tool in exploratory data analysis (EDA), not covered here;
 see, e.g., Storopoli et
 al. [(2021)](https://juliadatascience.github.io/JuliaDataScience/). ■
 
@@ -733,7 +741,7 @@ Load it again with `data = CSV.read(localfile("allhypo.csv"), DataFrames.DataFra
 
 ## [4. Type coercion](@id scitype)
 
-> Encode data so that it is correctly interpreted by MLJ algorithms
+> Encoding data so that it is correctly interpreted by MLJ algorithms
 
 A physical variable, such as height, can be represented in different ways on a
 computer. For example, a person's height in centimeters, although a "continuous"
@@ -747,7 +755,7 @@ representation of data, and the *scientific* interpretation of that data, as lai
 certain conventions shared by all MLJ algorithms. By design, MLJ allows users to focus
 more on scientific types, and view machine types as a secondary "implementation detail".
 
-To find out what how your data will be interpreted, we use `scitype`. To correct for a
+To find out how your data will be interpreted, we use `scitype`. To correct for a
 undesirable interpretation, we use `coerce`.
 
 ````@julia
@@ -825,7 +833,9 @@ natural language; this comes up in sentiment analysis (e.g., spam email detectio
 less frequently in quantitative medicine. The principal "scalar" scientific types
 (called **scitypes**) are summarized in the graphic below.
 
-![](scitypes_small.svg)
+![](scitypes_small.png)
+
+> Figure 2. "Scalar" scientific types
 
 For an explanation of `Finite` and `Infinite` see the next "Going deeper" section
 below. While a table also has a scitype, it is more convenient to inspect the column
@@ -870,7 +880,7 @@ schema(data)
 
 ````
 
-Based on what we understand about the real world meaning each column, we can fix
+Based on what we understand about the real world meaning of each column, we can fix
 some specific column scitypes like this:
 
 ````@julia
@@ -955,11 +965,9 @@ data, data_test = partition(
     stratify=data.diagnosis,
     rng=stable_rng(),
 );
-
 ntrain = nrows(data)
 ntest = nrows(data_test)
 @info "size of datasets" ntrain ntest
-
 proportions_train = StatsBase.proportionmap(data_test.diagnosis)
 proportions_test = StatsBase.proportionmap(data_test.diagnosis)
 @info "diagnosis distribution" proportions_train["positive"] proportions_test["positive"]
@@ -977,7 +985,7 @@ proportions_test = StatsBase.proportionmap(data_test.diagnosis)
 
 ## [5. Missing value imputation](@id missing)
 
-> Clean a dataset by finding reasonable proxies for missing values
+> Cleaning a dataset by finding reasonable proxies for missing values
 
 To remove missing values, we will use an imputation algorithm called `FillImputer`.  To
 search for available models related to imputation, you can run
@@ -1015,8 +1023,8 @@ Missing values are now gone, which you can check by doing `schema(data_clean)`.
 
 ## [6. Outlier removal and other data preprocessing](@id pipeline)
 
-> Remove outliers and combine this and other common preprocessing steps in a model
-> pipeline.
+> Removing outliers and combining this and other common preprocessing steps in a model
+> pipeline
 
 The dangers of automated outlier removal notwithstanding (Barnett and Lewis,
 [1994](https://onlinelibrary.wiley.com/doi/10.1002/bimj.4710370219)), we employ a
@@ -1074,17 +1082,17 @@ Let's apply this complete pipeline to get our sought-after continuous features:
 mach = machine(preprocess, data)
 fit!(mach, verbosity=0)
 data_continuous =  transform(mach, data);
-first(data_continuous, 3)
+data_continuous[1:3,1:5]
 ````
 
 ````
-3×30 DataFrame
- Row │ age        sex__F     on_thyroxine__f  query_on_thyroxine__f  on_antithyroid_medication__f  sick__f   pregnant__f  thyroid_surgery__f  I131_treatment__f  query_hypothyroid__f  query_hyperthyroid__f  lithium__f  goitre__f  tumor__f  psych__f  TSH_measured__f  TSH         T3_measured__f  T3         TT4_measured__f  TT4        T4U_measured__f  T4U         FTI_measured__f  FTI        referral_source__STMW  referral_source__SVHC  referral_source__SVHD  referral_source__SVI  diagnosis__negative
-     │ Float64    Float64    Float64          Float64                Float64                       Float64   Float64      Float64             Float64            Float64               Float64                Float64     Float64    Float64   Float64   Float64          Float64     Float64         Float64    Float64          Float64    Float64          Float64     Float64          Float64    Float64                Float64                Float64                Float64               Float64
-─────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-   1 │ -1.05864    0.662447         0.363629               0.120355                      0.111312  0.199418     0.120355            0.111312           0.132831              0.240239               0.249597   0.0784667  0.0906987  0.161755  0.224387        -0.328505  -0.227419        -0.513387   0.809805        -0.259815  -0.834078        -0.338887  -0.857            -0.337951  -0.477093              -0.183679               2.97401                -0.10894              -0.6173              0.291938
-   2 │  1.00378    0.662447         0.363629               0.120355                      0.111312  0.199418     0.120355            0.111312           0.132831              0.240239               0.249597   0.0784667  0.0906987  0.161755  0.224387        -0.328505  -0.233471        -0.513387  -1.95238         -0.259815   0.152653        -0.338887  -0.578388         -0.337951   0.555189              -0.183679              -0.336075               -0.10894               1.61913             0.291938
-   3 │ -0.243267  -1.50878          0.363629               0.120355                      0.111312  0.199418     0.120355            0.111312           0.132831              0.240239               0.249597   0.0784667  0.0906987  0.161755  0.224387        -0.328505   0.0993808       -0.513387  -0.156958        -0.259815  -0.804177        -0.338887   0.0345593        -0.337951  -0.896458              -0.183679              -0.336075               -0.10894               1.61913             0.291938
+3×5 DataFrame
+ Row │ age        sex__F     on_thyroxine__f  query_on_thyroxine__f  on_antithyroid_medication__f
+     │ Float64    Float64    Float64          Float64                Float64
+─────┼────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ -1.05864    0.662447         0.363629               0.120355                      0.111312
+   2 │  1.00378    0.662447         0.363629               0.120355                      0.111312
+   3 │ -0.243267  -1.50878          0.363629               0.120355                      0.111312
 
 ````
 
@@ -1148,8 +1156,8 @@ this rather easy to do.  ■
 
 ## [7. Evaluating a supervised model](@id evaluate)
 
-> Learn how to estimate the expected performance of a supervised learner, using a
-> simple holdout set, and using more sophisticated cross-validation tools.
+> How to estimate the expected performance of a supervised learner, using: (i) A
+> simple holdout set; and (ii) Sophisticated cross-validation tools
 
 We are almost ready to train our first supervised predictive model. In preparation, we
 horizontally split our training data into a table of features `X`, and a vector target
@@ -1157,41 +1165,19 @@ horizontally split our training data into a table of features `X`, and a vector 
 
 ````@julia
 y, X, _ = unpack(data, ==(:diagnosis), !=(:detector_outcome));
-schema(X).names |> collect
+first(schema(X).names, 5)
 ````
 
 ````
-26-element Vector{Symbol}:
+5-element Vector{Symbol}:
  :age
  :sex
  :on_thyroxine
  :query_on_thyroxine
  :on_antithyroid_medication
- :sick
- :pregnant
- :thyroid_surgery
- :I131_treatment
- :query_hypothyroid
- :query_hyperthyroid
- :lithium
- :goitre
- :tumor
- :psych
- :TSH_measured
- :TSH
- :T3_measured
- :T3
- :TT4_measured
- :TT4
- :T4U_measured
- :T4U
- :FTI_measured
- :FTI
- :referral_source
 ````
 
-Notice that we have also dropped the `detector_outcome` field, which is no longer
-relevant.
+We have dropped the `detector_outcome` field, which is no longer relevant.
 
 **Going deeper.** To interpret this application of `unpack`, note that `==(:diagnosis)`
 defines a function such that `==(:diagnosis)(x)` is `true` if `x == :diagnosis`, and
@@ -1319,7 +1305,7 @@ PerformanceEvaluation object with these fields:
   per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-335
+Tag: ProbabilisticPipeline-829
 Extract:
 ┌────────────────────────────┬───────────┬─────────────┬─────────┐
 │ measure                    │ operation │ measurement │ 1.96*SE │
@@ -1355,7 +1341,6 @@ comparison:
 precision_at_90 = PrecisionAtFixedRecall(0.9)
 metrics = [
     precision_at_95,
-    precision_at_90,
     average_precision,
     balanced_accuracy,
     accuracy,
@@ -1377,28 +1362,25 @@ PerformanceEvaluation object with these fields:
   per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-461
+Tag: ProbabilisticPipeline-309
 Extract:
 ┌───┬────────────────────────────┬──────────────┬─────────────┬─────────┐
 │   │ measure                    │ operation    │ measurement │ 1.96*SE │
 ├───┼────────────────────────────┼──────────────┼─────────────┼─────────┤
 │ A │ PrecisionAtFixedRecall(    │ predict      │ 0.868       │ 0.047   │
 │   │   recall_threshold = 0.95) │              │             │         │
-│ B │ PrecisionAtFixedRecall(    │ predict      │ 0.922       │ 0.027   │
-│   │   recall_threshold = 0.9)  │              │             │         │
-│ C │ AveragePrecision()         │ predict      │ 0.967       │ 0.015   │
-│ D │ BalancedAccuracy(          │ predict_mode │ 0.96        │ 0.011   │
+│ B │ AveragePrecision()         │ predict      │ 0.967       │ 0.015   │
+│ C │ BalancedAccuracy(          │ predict_mode │ 0.96        │ 0.011   │
 │   │   adjusted = false)        │              │             │         │
-│ E │ Accuracy()                 │ predict_mode │ 0.9873      │ 0.0027  │
+│ D │ Accuracy()                 │ predict_mode │ 0.9873      │ 0.0027  │
 └───┴────────────────────────────┴──────────────┴─────────────┴─────────┘
 ┌───┬───────────────────────────────────────────────────────────────────────────
 │   │ per_fold                                                                 ⋯
 ├───┼───────────────────────────────────────────────────────────────────────────
 │ A │ [0.913, 0.957, 0.956, 0.824, 0.858, 0.875, 0.913, 0.937, 0.917, 0.75, 0. ⋯
-│ B │ [0.909, 0.955, 1.0, 0.851, 0.889, 0.933, 0.931, 0.955, 1.0, 0.786, 0.933 ⋯
-│ C │ [0.912, 0.985, 0.996, 0.961, 0.887, 0.988, 0.982, 0.98, 0.993, 0.936, 0. ⋯
-│ D │ [0.993, 0.955, 0.974, 0.904, 0.97, 0.953, 0.951, 0.975, 0.977, 0.925, 0. ⋯
-│ E │ [0.987, 0.99, 0.99, 0.977, 0.984, 0.99, 0.987, 0.99, 0.997, 0.977, 0.987 ⋯
+│ B │ [0.912, 0.985, 0.996, 0.961, 0.887, 0.988, 0.982, 0.98, 0.993, 0.936, 0. ⋯
+│ C │ [0.993, 0.955, 0.974, 0.904, 0.97, 0.953, 0.951, 0.975, 0.977, 0.925, 0. ⋯
+│ D │ [0.987, 0.99, 0.99, 0.977, 0.984, 0.99, 0.987, 0.99, 0.997, 0.977, 0.987 ⋯
 └───┴───────────────────────────────────────────────────────────────────────────
                                                                 1 column omitted
 Apply `describe` to this result for a named tuple summary.
@@ -1406,13 +1388,13 @@ Apply `describe` to this result for a named tuple summary.
 
 ## [8. Recursive feature elimination](@id rfe)
 
-> Identify and remove uninformative features using a supervised model that can rank
-> features, and include the corresponding feature selection in other model pipelines.
+> Identifying and removing uninformative features using a supervised model that can rank
+> features, and including the corresponding feature selection in other model pipelines
 
 By working with a reduced feature set, we can avoid the [curse of
 dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality), which avails us
-of more computationally intensive models, such as support vector machines, and to
-simplify interpretation. Some models also appear to perform better when less
+of more computationally intensive models, such as support vector machines, and
+simplifies interpretation. Some models also appear to perform better when less
 informative features are eliminated.
 
 Here's a demonstration of extracting feature importances using the gradient tree booster
@@ -1506,26 +1488,19 @@ options() = (
     resampling=StratifiedCV(nfolds=6, rng=stable_rng()),
     measures=metrics,
     repeats=3,
+    verbosity=0,
 )
 evaluations = evaluate(
     [
         "booster" => preprocess |> bare_booster,
-        "booster with 2 features" => preprocess |> bare_booster_with_rfe(2),
-        "booster with 4 features" => preprocess |> bare_booster_with_rfe(4),
-        "booster with 8 features" => preprocess |> bare_booster_with_rfe(8),
+        "booster (2 features)" => preprocess |> bare_booster_with_rfe(2),
+        "booster (4 features)" => preprocess |> bare_booster_with_rfe(4),
+        "booster (8 features)" => preprocess |> bare_booster_with_rfe(8),
     ],
     X,
     y; # this semicolon is important!
     options()...,
 );
-````
-
-````
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:02[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:02[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:02[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:02[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:02[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:01[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:01[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:01[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:01[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:01[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:01[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:01[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:00[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:00[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:00[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:02[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:10[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:08[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:07[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:06[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:05[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:05[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:04[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:03[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:02[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:06[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:05[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:04[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:04[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:03[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:03[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:05[K
-
 ````
 
 Here a vector of evaluation objects is being returned, but we can get a nice summary
@@ -1536,14 +1511,14 @@ describe.(evaluations) |> DataFrames.DataFrame
 ````
 
 ````
-4×6 DataFrame
- Row │ tag                      PrecisionAtFixedRecall  PrecisionAtFixedRecall2  AveragePrecision      BalancedAccuracy      Accuracy
-     │ String                   Measurement{Float64}    Measurement{Float64}     Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
-─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-   1 │ booster                             0.868±0.047              0.922±0.027           0.967±0.015           0.96±0.011          0.9873±0.0027
-   2 │ booster with 2 features             0.766±0.058              0.837±0.061           0.974±0.012           0.965±0.011         0.9909±0.0019
-   3 │ booster with 4 features             0.82±0.11                0.941±0.035           0.973±0.015           0.962±0.015         0.99±0.0032
-   4 │ booster with 8 features             0.81±0.11                0.945±0.02            0.969±0.014           0.965±0.011         0.9884±0.0022
+4×5 DataFrame
+ Row │ tag                   PrecisionAtFixedRecall  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String                Measurement{Float64}    Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ booster                          0.868±0.047           0.967±0.015           0.96±0.011          0.9873±0.0027
+   2 │ booster (2 features)             0.766±0.058           0.974±0.012           0.965±0.011         0.9909±0.0019
+   3 │ booster (4 features)             0.82±0.11             0.973±0.015           0.962±0.015         0.99±0.0032
+   4 │ booster (8 features)             0.81±0.11             0.969±0.014           0.965±0.011         0.9884±0.0022
 
 ````
 
@@ -1589,10 +1564,10 @@ bare_linear = LogisticClassifier()
 
 evaluations_linear = evaluate(
     [
-        "linear, all features" => preprocess |> bare_linear,
-        "linear, 2 features" => preprocess |> reducer(2) |> bare_linear,
-        "linear, 4 features" => preprocess |> reducer(4) |> bare_linear,
-        "linear, 8 features" => preprocess |> reducer(8) |> bare_linear,
+        "linear" => preprocess |> bare_linear,
+        "linear (2 features)" => preprocess |> reducer(2) |> bare_linear,
+        "linear (4 features)" => preprocess |> reducer(4) |> bare_linear,
+        "linear (8 features)" => preprocess |> reducer(8) |> bare_linear,
     ],
     X,
     y;
@@ -1602,18 +1577,14 @@ describe.(evaluations_linear) |> DataFrames.DataFrame
 ````
 
 ````
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:05[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:01[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:00[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:06[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:03[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:06[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:05[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:04[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:03[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:02[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:07[K
-4×6 DataFrame
- Row │ tag                   PrecisionAtFixedRecall  PrecisionAtFixedRecall2  AveragePrecision      BalancedAccuracy      Accuracy
-     │ String                Measurement{Float64}    Measurement{Float64}     Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
-─────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-   1 │ linear, all features               0.54±0.15              0.81±0.12             0.936±0.018           0.923±0.021         0.986±0.0028
-   2 │ linear, 2 features                 0.69±0.16              0.948±0.022           0.971±0.014           0.933±0.018         0.9878±0.0029
-   3 │ linear, 4 features                 0.8±0.13               0.954±0.023           0.965±0.017           0.934±0.016         0.9878±0.0023
-   4 │ linear, 8 features                 0.79±0.13              0.947±0.02            0.965±0.014           0.941±0.014         0.9885±0.0022
+4×5 DataFrame
+ Row │ tag                  PrecisionAtFixedRecall  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String               Measurement{Float64}    Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ linear                            0.54±0.15           0.936±0.018           0.923±0.021         0.986±0.0028
+   2 │ linear (2 features)               0.69±0.16           0.971±0.014           0.933±0.018         0.9878±0.0029
+   3 │ linear (4 features)               0.8±0.13            0.965±0.017           0.934±0.016         0.9878±0.0023
+   4 │ linear (8 features)               0.79±0.13           0.965±0.014           0.941±0.014         0.9885±0.0022
 
 ````
 
@@ -1621,8 +1592,8 @@ Here we see a definite benefit.
 
 ## [9. Hyper-parameter tuning](@id tuning)
 
-> Optimize hyper-parameters with a visual plot, or with a model wrapper that creates
-> self-tuning models.
+> Optimizing hyper-parameters with a visual plot, or with a model wrapper that creates
+> self-tuning models
 
 Let us build a new supervised model we can train on the data `(X, y)` by combining a
 simple decision tree classifier (as applied earlier to the iris dataset) with our
@@ -1657,13 +1628,11 @@ regularization. Let's increase the value and see if that has any impact on perfo
 
 ````@julia
 tree_regularized = deepcopy(tree)
-
 # mutate nested hyper-parameter:
 tree_regularized.decision_tree_classifier.min_samples_split = 5
-
 # compare performance using previous `evaluate` options:
 evaluations = evaluate(
-    ["tree" => tree, "tree with regularization" => tree_regularized],
+    ["tree" => tree, "tree (regularized)" => tree_regularized],
     X,
     y;
     options()...,
@@ -1672,14 +1641,12 @@ describe.(evaluations) |> DataFrames.DataFrame
 ````
 
 ````
-Evaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:00[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:00[K
-Evaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:00[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:00[K
-2×6 DataFrame
- Row │ tag                       PrecisionAtFixedRecall  PrecisionAtFixedRecall2  AveragePrecision      BalancedAccuracy      Accuracy
-     │ String                    Measurement{Float64}    Measurement{Float64}     Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
-─────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-   1 │ tree                                 0.85±0.15                0.9±0.11          0.9992±0.0013            0.988±0.0092         0.995±0.0021
-   2 │ tree with regularization             0.972±0.017              0.973±0.018       0.99954±0.00055          0.9917±0.006         0.9973±0.0011
+2×5 DataFrame
+ Row │ tag                 PrecisionAtFixedRecall  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String              Measurement{Float64}    Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ tree                           0.85±0.15         0.9992±0.0013            0.988±0.0092         0.995±0.0021
+   2 │ tree (regularized)             0.972±0.017       0.99954±0.00055          0.9917±0.006         0.9973±0.0011
 
 ````
 
@@ -1703,7 +1670,6 @@ _, _, splits, precisions = learning_curve(
     measure=precision_at_95,
     verbosity=0,
 )
-
 using Plots
 fig = scatter(splits, precisions, legend=false)
 xlabel!(fig, "min_samples_split")
@@ -1716,11 +1682,14 @@ Note that `localfile` was defined [above](@ref setup).
 
 ![](tree_learning_curve.svg)
 
+> Figure 3. A learning curve for visualizing impact on performance of the
+> `min_samples_split` hyper-parameter.
+
 ### Tuning as model wrapper
 
 For a more principled approach to tuning, and for dealing with more than one
 hyper-parameter, MLJ implements tuning as a model wrapper. For illustration, we add a
-second regularization parameter to the mix, `max_depth`:
+second regularization parameter, `max_depth` to the search space:
 
 ````@julia
 r2 = range(tree, :(decision_tree_classifier.max_depth), values=[-1, 1, 2, 3])
@@ -1778,10 +1747,12 @@ savefig(fig, localfile("tuned_tree.svg"));
 
 ![](tuned_tree.svg)
 
+> Figure 4. Plot for visualizing the impact on performance of multiple hyper-parameters.
+
 The larger the circles in the bottom left plot, the larger the precision at 0.95 recall.
 
 Because we need out-of-sample estimates in the optimization process, there is less data
-available for training in each estimation of performance. For that reason, tuning is no
+available for training in each estimate of performance. For that reason, tuning is no
 guarantee of better performance, especially when the number of subjects is small.
 
 Here is a comparison of our tree and its self-tuning counterpart:
@@ -1797,14 +1768,12 @@ describe.(evaluations) |> DataFrames.DataFrame
 ````
 
 ````
-Evaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:00[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:00[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:15[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:14[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:13[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:12[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:12[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:11[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:10[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:09[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:08[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:07[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:06[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:05[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:04[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:03[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:02[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:01[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:18[K
-2×6 DataFrame
- Row │ tag               PrecisionAtFixedRecall  PrecisionAtFixedRecall2  AveragePrecision      BalancedAccuracy      Accuracy
-     │ String            Measurement{Float64}    Measurement{Float64}     Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
-─────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-   1 │ tree                         0.85±0.15                0.9±0.11            0.9992±0.0013         0.988±0.0092          0.995±0.0021
-   2 │ tree with tuning             0.933±0.027              0.937±0.026         0.9988±0.001          0.9917±0.0063         0.9953±0.0024
+2×5 DataFrame
+ Row │ tag               PrecisionAtFixedRecall  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String            Measurement{Float64}    Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ tree                         0.85±0.15           0.9992±0.0013         0.988±0.0092          0.995±0.0021
+   2 │ tree with tuning             0.933±0.027         0.9988±0.001          0.9917±0.0063         0.9953±0.0024
 
 ````
 
@@ -1825,13 +1794,13 @@ Because nested resampling can be computationally expensive, it is sometimes avoi
 in doing so one may run into data leakage concerns.
 ■
 
-The `TunedModel` is a powerful component of MLJ, with a host of options. For a deeper
-dive, refer to the [documentation](https://juliaai.github.io/MLJ.jl/dev/tuning_models/).
+The `TunedModel` wrapper is a feature-rich component of MLJ. For a deeper dive, refer to
+the [documentation](https://juliaai.github.io/MLJ.jl/dev/tuning_models/).
 
 ## [10. Correcting for class imbalance](@id imbalance)
 
-> Synthesize new subjects to correct for the imbalance in positive and negative
-> outcomes.
+> Synthesizing new subjects to correct for the imbalance in positive and negative
+> outcomes
 
 The most naive way to correct for our excess of negative diagnoses in the training data,
 is to randomly duplicate subjects with positive outcomes, and add these to the
@@ -1841,9 +1810,10 @@ are not literal copies of existing examples, but are close to them in some sense
 course, we always check the performance of models trained with oversampled data using
 using data that is *not* oversampled.
 
-For the current dataset, and for several supervised models tested, we observed, at
-best, modest benefits to oversampling, with respect to our target metric. For
-completeness, we nevertheless include some oversampled models in our later comparisons.
+For the current dataset, and for several supervised models we experimented with, we
+observed, at best, modest benefits to oversampling, with respect to our target
+metric. To show the benefit for other metrics, we nevertheless include some oversampled
+models in our later comparisons.
 
 Let's see how oversampling works in an example.  We will use the `SMOTE` oversampler
 (Chawla et al., [2002](https://www.jair.org/index.php/jair/article/view/10302)) from the
@@ -1911,7 +1881,7 @@ oversampling.
 
 ## [11. Model comparisons](@id compare)
 
-> Compare several supervised models wrapped in complete machine learning workflows
+> Comparing several supervised models wrapped in complete machine learning workflows
 
 All the supervised models we will consider are probabilistic predictors. To the models
 we have already seen, we add:
@@ -2031,7 +2001,7 @@ balanced_knn = preprocess |> reducer(5) |> BalancedModel(
 
 ### Results
 
-Below are the model comparisons. The computation takes less than 5 minute on a
+Below are the model comparisons. The computation takes less than 5 minutes on a
 laptop. We re-order the results so that models with the highest precision at 0.95 recall
 appear first.
 
@@ -2056,32 +2026,22 @@ sort!(performance_summary, :PrecisionAtFixedRecall, rev=true)
 ````
 
 ````
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:06[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
-Evaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:00[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:00[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:04[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:04[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:04[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:04[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:03[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:03[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:03[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:02[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:02[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:01[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:04[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:02[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:02[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:02[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:01[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:01[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:01[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:01[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:01[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:01[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:01[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:01[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:01[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:00[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:00[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:00[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:02[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:30[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:25[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:22[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:20[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:20[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:17[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:16[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:14[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:13[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:11[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:09[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:08[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:06[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:05[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:03[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:02[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:27[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:06[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:06[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:05[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:03[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:03[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:02[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:07[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:07[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:07[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:07[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:06[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:06[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:05[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:05[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:04[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:04[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:03[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:03[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:02[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:08[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:05[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:02[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:01[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:06[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:05[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:05[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:05[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:04[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:04[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:04[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:03[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:03[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:03[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:02[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:02[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:02[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:01[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:01[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:00[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:06[K
-Evaluating over 18 folds:  11%[==>                      ]  ETA: 0:00:30[KEvaluating over 18 folds:  17%[====>                    ]  ETA: 0:00:28[KEvaluating over 18 folds:  22%[=====>                   ]  ETA: 0:00:26[KEvaluating over 18 folds:  28%[======>                  ]  ETA: 0:00:24[KEvaluating over 18 folds:  33%[========>                ]  ETA: 0:00:23[KEvaluating over 18 folds:  39%[=========>               ]  ETA: 0:00:21[KEvaluating over 18 folds:  44%[===========>             ]  ETA: 0:00:19[KEvaluating over 18 folds:  50%[============>            ]  ETA: 0:00:17[KEvaluating over 18 folds:  56%[=============>           ]  ETA: 0:00:15[KEvaluating over 18 folds:  61%[===============>         ]  ETA: 0:00:13[KEvaluating over 18 folds:  67%[================>        ]  ETA: 0:00:11[KEvaluating over 18 folds:  72%[==================>      ]  ETA: 0:00:09[KEvaluating over 18 folds:  78%[===================>     ]  ETA: 0:00:07[KEvaluating over 18 folds:  83%[====================>    ]  ETA: 0:00:06[KEvaluating over 18 folds:  89%[======================>  ]  ETA: 0:00:04[KEvaluating over 18 folds:  94%[=======================> ]  ETA: 0:00:02[KEvaluating over 18 folds: 100%[=========================] Time: 0:00:33[K
-104.159970 seconds (260.98 M allocations: 31.954 GiB, 9.92% gc time)
-11×6 DataFrame
- Row │ tag                      PrecisionAtFixedRecall  PrecisionAtFixedRecall2  AveragePrecision      BalancedAccuracy      Accuracy
-     │ String                   Measurement{Float64}    Measurement{Float64}     Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
-─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-   1 │ decision tree                       0.91±0.11                0.91±0.11          0.99939±0.0008         0.9833±0.0079       0.9948±0.0016
-   2 │ SVM                                 0.904±0.037              0.94±0.029         0.963±0.026            0.946±0.017         0.9898±0.0029
-   3 │ decision tree, tuned                0.86±0.15                0.965±0.016        0.9981±0.0012          0.9863±0.0087       0.9961±0.0019
-   4 │ gradient booster, tuned             0.854±0.082              0.945±0.024        0.973±0.013            0.956±0.013         0.9882±0.0028
-   5 │ gradient booster                    0.842±0.076              0.938±0.02         0.969±0.013            0.955±0.015         0.9884±0.0025
-   6 │ linear (logistic)                   0.81±0.13                0.956±0.015        0.97±0.014             0.941±0.015         0.9889±0.0022
-   7 │ KNN                                 0.807±0.061              0.887±0.048        0.968±0.016            0.833±0.029         0.9749±0.0043
-   8 │ SVM, balanced                       0.776±0.09               0.917±0.038        0.961±0.016            0.966±0.0095        0.9842±0.0029
-   9 │ KNN, balanced                       0.67±0.1                 0.846±0.053        0.965±0.011            0.968±0.0092        0.9726±0.003
-  10 │ neural network                      0.52±0.13                0.763±0.095        0.931±0.02             0.91±0.02           0.981±0.0032
-  11 │ dummy                               0.0±0.0                  0.0±0.0            0.0±0.0                0.5±5.5e-17         0.92857±0.00055
+ 84.756986 seconds (259.56 M allocations: 31.857 GiB, 11.91% gc time)
+11×5 DataFrame
+ Row │ tag                      PrecisionAtFixedRecall  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String                   Measurement{Float64}    Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ decision tree                       0.91±0.11          0.99939±0.0008         0.9833±0.0079       0.9948±0.0016
+   2 │ SVM                                 0.904±0.037        0.965±0.024            0.946±0.015         0.9896±0.0027
+   3 │ decision tree, tuned                0.86±0.15          0.9981±0.0012          0.9863±0.0087       0.9961±0.0019
+   4 │ gradient booster, tuned             0.854±0.082        0.973±0.013            0.956±0.013         0.9882±0.0028
+   5 │ gradient booster                    0.842±0.076        0.969±0.013            0.955±0.015         0.9884±0.0025
+   6 │ linear (logistic)                   0.81±0.13          0.97±0.014             0.941±0.015         0.9889±0.0022
+   7 │ KNN                                 0.807±0.061        0.968±0.016            0.833±0.029         0.9749±0.0043
+   8 │ SVM, balanced                       0.776±0.09         0.961±0.016            0.9659±0.0095       0.9841±0.0031
+   9 │ KNN, balanced                       0.67±0.1           0.965±0.011            0.968±0.0092        0.9726±0.003
+  10 │ neural network                      0.52±0.13          0.931±0.02             0.91±0.02           0.981±0.0032
+  11 │ dummy                               0.0±0.0            0.0±0.0                0.5±3.1e-16         0.92857±0.00055
 
 ````
 
@@ -2089,13 +2049,16 @@ To better visualize the confidence intervals, we plot the results for some of th
 metrics:
 
 ![](PrecisionAtFixedRecall_estimates.svg)
-> Model comparisons for **precision at 0.95 recall**
+
+> Figure 5. Model comparisons for **precision at 0.95 recall**
 
 ![](AveragePrecision_estimates.svg)
-> Model comparisons for **average precision**
+
+> Figure 6. Model comparisons for **average precision**
 
 ![](BalancedAccuracy_estimates.svg)
-> Model comparisons for **balanced accuracy**
+
+> Figure 7. Model comparisons for **balanced accuracy**
 
 **Going deeper.** Below is the code generating plots for each metric, and saving them to
 disk:
@@ -2104,7 +2067,6 @@ disk:
 # The tags here need to match the auto-generated column names of `performance_summary`:
 named_measures = [
     :PrecisionAtFixedRecall => precision_at_95,
-    :PrecisionAtFixedRecall2 => precision_at_90,
     :AveragePrecision => average_precision,
     :BalancedAccuracy => balanced_accuracy,
     :Accuracy => accuracy,
@@ -2176,8 +2138,8 @@ significantly effect the expected value.
 
 ## [12. Probability thresholding](@id threshold)
 
-> Estimate the probability threshold needed for a desired recall, and create a model
-> predicting either "positive" or "negative" based on that threshold.
+> Estimating the probability threshold needed for a desired recall, and creating a model
+> predicting either "positive" or "negative" based on that threshold
 
 Recall that all our models predict *probabilities* of the "positive" and "negative"
 class, not an actual class. To estimate a probability threshold giving us a recall of
@@ -2212,11 +2174,11 @@ thresholds[[1,2,3,end-2,end-1,end]]
 ````
 6-element Vector{Float64}:
  0.9999999
- 0.9999992296092061
- 0.9999989782371592
- 1.0251624376067525e-6
- 8.504800464992357e-7
- 8.193799659883538e-7
+ 0.9999993127948779
+ 0.9999990871390917
+ 9.84900421996393e-7
+ 8.162335923822539e-7
+ 7.862236000022449e-7
 ````
 
 There is one less threshold than recall or precision, and the recalls and precisions are
@@ -2248,7 +2210,7 @@ threshold = thresholds[i - 1]
 ````
 
 ````
-0.434081855727499
+0.44265922919659073
 ````
 
 To transform our probabilistic predictor into point predictor, we use another MLJ
@@ -2285,7 +2247,7 @@ tree_after_thresholding = BinaryThresholdPredictor(tree; threshold);
 
 ## [13. Final testing](@id test)
 
-> Evaluate the performance of our final hypothyroidism tests on the test subjects.
+> Evaluating the performance of our final hypothyroidism tests on the test subjects
 
 Before evaluating on the test data, we need to split it into target and features, as we
 did for the training data:
