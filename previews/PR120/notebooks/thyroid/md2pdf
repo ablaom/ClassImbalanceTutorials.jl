@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+#
+# Render a Julia-notebook markdown file to PDF with xelatex.
+#
+# Usage: ./md2pdf [input.md [output.pdf]]
+#        defaults: notebook.md -> notebook.pdf
+#
+# The markdown carries raw terminal output from Julia progress bars: ANSI
+# escapes, carriage returns and other control characters that xelatex rejects
+# ("Text line contains an invalid character"), and opens with a Documenter
+# ```@meta``` block meant for the website build, not for print. We strip both
+# into a temporary copy, along with Pkg's housekeeping notices, collapsing
+# each progress bar to its final frame, and render that. The source markdown is
+# left untouched.
+
+set -euo pipefail
+
+in=${1:-notebook.md}
+out=${2:-${in%.md}.pdf}
+
+[[ -f $in ]] || { echo "md2pdf: no such file: $in" >&2; exit 1; }
+for prog in perl pandoc xelatex rsvg-convert; do
+    command -v "$prog" >/dev/null || {
+        echo "md2pdf: required program not found: $prog" >&2; exit 1; }
+done
+
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+# -CSD keeps perl in UTF-8 mode; without it the file's non-ASCII is mangled.
+# -0777 slurps the whole file so the leading ```@meta``` block can be matched.
+perl -CSD -0777 -pe '
+    s/\A```\@meta\b.*?^```[ \t]*\n+//ms;  # Documenter metadata block
+    s/\e\[[0-9;?]*[ -\/]*[@-~]//g;         # CSI sequences, e.g. ESC[K
+    s/\e[@-Z\\-_]//g;                      # other escape sequences
+    s/^.*\r//mg;                           # keep only the last progress-bar frame
+    s/[^\P{C}\t\n]//g;                     # any remaining control characters
+    s/^Warning The project dependencies.*\n//mg;  # stale-manifest Pkg warning
+    s/^Info Packages marked with.*\n//mg;         # held-back-packages notice
+' "$in" > "$tmp/clean.md"
+
+# Latin Modern Roman has no U+25A0, the end-of-section marker in the prose.
+cat > "$tmp/header.tex" <<'EOF'
+\usepackage{amssymb}
+\usepackage{newunicodechar}
+\newunicodechar{■}{\ensuremath{\blacksquare}}
+EOF
+
+# Menlo, unlike Latin Modern Mono, has the box-drawing characters in Julia's
+# table output; 0.8 keeps wide code output inside the line.
+pandoc "$tmp/clean.md" -o "$out" \
+    --pdf-engine=xelatex \
+    --resource-path="$(dirname "$in")" \
+    -V monofont="Menlo" \
+    -V monofontoptions="Scale=0.8" \
+    -V geometry:margin=1in \
+    -H "$tmp/header.tex"
+
+echo "md2pdf: wrote $out"
