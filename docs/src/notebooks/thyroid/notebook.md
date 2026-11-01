@@ -211,9 +211,9 @@ Pkg.status()
 ````
 Status `~/work/ClassImbalanceTutorials.jl/ClassImbalanceTutorials.jl/docs/src/notebooks/thyroid/Project.toml`
   [1520ce14] AbstractTrees v0.4.5
-⌅ [336ed68f] CSV v0.10.17
+⌃ [336ed68f] CSV v0.10.17
   [a93c6f00] DataFrames v1.8.2
-  [f6006082] EvoTrees v0.19.0
+⌅ [f6006082] EvoTrees v0.19.0
   [c709b415] Imbalance v0.2.1
   [add582a8] MLJ v0.23.3
   [c6f25543] MLJDecisionTreeInterface v0.5.0
@@ -229,7 +229,7 @@ Status `~/work/ClassImbalanceTutorials.jl/ClassImbalanceTutorials.jl/docs/src/no
   [a19d573c] StatisticalMeasures v0.3.7
   [2913bbd2] StatsBase v0.34.13
   [f43a241f] Downloads v1.7.0
-Info Packages marked with ⌅ have new versions available but compatibility constraints restrict them from upgrading. To see why use `status --outdated`
+Info Packages marked with ⌃ and ⌅ have new versions available. Those with ⌃ may be upgradable, but those with ⌅ are restricted by compatibility constraints from upgrading. To see why use `status --outdated`
 
 ````
 
@@ -288,7 +288,7 @@ rand()
 ````
 
 ````
-0.12788076230079382
+0.3804873418289533
 ````
 
 ## 2. Models and machines
@@ -581,7 +581,7 @@ path = Downloads.download(url)
 ````
 
 ````
-"/tmp/jl_Pd0SJM/allhypo.data"
+"/tmp/jl_PT8MUj/allhypo.data"
 ````
 
 Entering these lines of code downloads the dataset to a temporary location on your
@@ -1305,7 +1305,7 @@ PerformanceEvaluation object with these fields:
   per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-436
+Tag: ProbabilisticPipeline-203
 Extract:
 ┌────────────────────────────┬───────────┬─────────────┬─────────┐
 │ measure                    │ operation │ measurement │ 1.96*SE │
@@ -1362,7 +1362,7 @@ PerformanceEvaluation object with these fields:
   per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-590
+Tag: ProbabilisticPipeline-931
 Extract:
 ┌───┬────────────────────────────┬──────────────┬─────────────┬─────────┐
 │   │ measure                    │ operation    │ measurement │ 1.96*SE │
@@ -2026,19 +2026,19 @@ sort!(performance_summary, :PrecisionAtFixedRecall, rev=true)
 ````
 
 ````
-129.465591 seconds (259.56 M allocations: 31.857 GiB, 12.51% gc time)
+ 92.908439 seconds (259.56 M allocations: 31.857 GiB, 9.32% gc time)
 11×5 DataFrame
  Row │ tag                      PrecisionAtFixedRecall  AveragePrecision      BalancedAccuracy      Accuracy
      │ String                   Measurement{Float64}    Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
 ─────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
    1 │ decision tree                       0.91±0.11          0.99939±0.0008         0.9833±0.0079       0.9948±0.0016
-   2 │ SVM                                 0.904±0.037        0.965±0.024            0.945±0.017         0.9896±0.0028
+   2 │ SVM                                 0.904±0.037        0.965±0.024            0.947±0.016         0.99±0.0027
    3 │ decision tree, tuned                0.86±0.15          0.9981±0.0012          0.9863±0.0087       0.9961±0.0019
    4 │ gradient booster, tuned             0.854±0.082        0.973±0.013            0.956±0.013         0.9882±0.0028
    5 │ gradient booster                    0.842±0.076        0.969±0.013            0.955±0.015         0.9884±0.0025
    6 │ linear (logistic)                   0.81±0.13          0.97±0.014             0.941±0.015         0.9889±0.0022
    7 │ KNN                                 0.807±0.061        0.968±0.016            0.833±0.029         0.9749±0.0043
-   8 │ SVM, balanced                       0.776±0.09         0.961±0.016            0.9659±0.0094       0.9841±0.003
+   8 │ SVM, balanced                       0.776±0.09         0.961±0.016            0.9658±0.0096       0.9839±0.0034
    9 │ KNN, balanced                       0.67±0.1           0.965±0.011            0.968±0.0092        0.9726±0.003
   10 │ neural network                      0.52±0.13          0.931±0.02             0.91±0.02           0.981±0.0032
   11 │ dummy                               0.0±0.0            0.0±0.0                0.5±5.5e-17         0.92857±0.00055
@@ -2174,11 +2174,11 @@ thresholds[[1,2,3,end-2,end-1,end]]
 ````
 6-element Vector{Float64}:
  0.9999999
- 0.9999998638338637
- 0.9999997143934349
- 2.411777169086804e-6
- 2.0278551412511447e-6
- 1.9589368164263377e-6
+ 0.9999998703842574
+ 0.9999987758991733
+ 1.3147164558136026e-6
+ 1.0959125733567276e-6
+ 1.0568428077117886e-6
 ````
 
 There is one less threshold than recall or precision, and the recalls and precisions are
@@ -2210,7 +2210,7 @@ threshold = thresholds[i - 1]
 ````
 
 ````
-0.40579923758201664
+0.4104901132436459
 ````
 
 To transform our probabilistic predictor into point predictor, we use another MLJ
