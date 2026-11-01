@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Test for Hypothyroidism · ClassImbalanceTutorials.jl</title><meta name="title" content="Test for Hypothyroidism · ClassImbalanceTutorials.jl"/><meta property="og:title" content="Test for Hypothyroidism · ClassImbalanceTutorials.jl"/><meta property="twitter:title" content="Test for Hypothyroidism · ClassImbalanceTutorials.jl"/><meta name="description" content="Documentation for ClassImbalanceTutorials.jl."/><meta property="og:description" content="Documentation for ClassImbalanceTutorials.jl."/><meta property="twitter:description" content="Documentation for ClassImbalanceTutorials.jl."/><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.63.2/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../search_index.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script><link href="../../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;family=Montserrat:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../../">ClassImbalanceTutorials.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../../">Home</a></li><li class="is-active"><a class="tocitem" href>Test for Hypothyroidism</a><ul class="internal"><li><a class="tocitem" href="#Overview"><span>Overview</span></a></li><li><a class="tocitem" href="#setup"><span>1. Julia setup</span></a></li><li><a class="tocitem" href="#2.-Models-and-machines"><span>2. Models and machines</span></a></li><li><a class="tocitem" href="#3.-Downloading-a-dataset"><span>3. Downloading a dataset</span></a></li><li><a class="tocitem" href="#scitype"><span>4. Type coercion</span></a></li><li><a class="tocitem" href="#missing"><span>5. Missing value imputation</span></a></li><li><a class="tocitem" href="#pipeline"><span>6. Outlier removal and other data preprocessing</span></a></li><li><a class="tocitem" href="#evaluate"><span>7. Evaluating a supervised model</span></a></li><li><a class="tocitem" href="#rfe"><span>8. Recursive feature elimination</span></a></li><li><a class="tocitem" href="#tuning"><span>9. Hyper-parameter tuning</span></a></li><li><a class="tocitem" href="#imbalance"><span>10. Correcting for class imbalance</span></a></li><li><a class="tocitem" href="#compare"><span>11. Model comparisons</span></a></li><li><a class="tocitem" href="#threshold"><span>12. Probability thresholding</span></a></li><li><a class="tocitem" href="#test"><span>13. Final testing</span></a></li><li><a class="tocitem" href="#References"><span>References</span></a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Test for Hypothyroidism</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Test for Hypothyroidism</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/ablaom/ClassImbalanceTutorials.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/ablaom/ClassImbalanceTutorials.jl/blob/master/docs/src/notebooks/thyroid/notebook.jl" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="An-Introduction-to-Machine-Learning-in-Quantitative-Medicine-using-Julia"><a class="docs-heading-anchor" href="#An-Introduction-to-Machine-Learning-in-Quantitative-Medicine-using-Julia">An Introduction to Machine Learning in Quantitative Medicine using Julia</a><a id="An-Introduction-to-Machine-Learning-in-Quantitative-Medicine-using-Julia-1"></a><a class="docs-heading-anchor-permalink" href="#An-Introduction-to-Machine-Learning-in-Quantitative-Medicine-using-Julia" title="Permalink"></a></h1><blockquote><p>Anthony D. Blaom, May 2026</p></blockquote><h3 id="Abstract"><a class="docs-heading-anchor" href="#Abstract">Abstract</a><a id="Abstract-1"></a><a class="docs-heading-anchor-permalink" href="#Abstract" title="Permalink"></a></h3><p>This tutorial presents an end-to-end application of machine learning to the problem of creating an automated test for the presence of some disease. Specifically, we compare several tests for hypothyroidism based on machine learning models, trained using the well studied Garavan Institute dataset (Quinlan, <a href="https://doi.org/10.24432/C5D010">1986</a>). While our main goal is pedagogical, the models we propose are fully developed, and not mere toy examples.</p><p>The source files used to generate the this tutorial and the included code output resides at the GitHub repository <a href="https://github.com/ablaom/ClassImbalanceTutorials.jl">github.com/ablaom/ClassImbalanceTutorials.jl</a>.</p><h2 id="Overview"><a class="docs-heading-anchor" href="#Overview">Overview</a><a id="Overview-1"></a><a class="docs-heading-anchor-permalink" href="#Overview" title="Permalink"></a></h2><h3 id="Machine-learning-platform"><a class="docs-heading-anchor" href="#Machine-learning-platform">Machine learning platform</a><a id="Machine-learning-platform-1"></a><a class="docs-heading-anchor-permalink" href="#Machine-learning-platform" title="Permalink"></a></h3><p>The principal software tool described here is the <a href="https://juliaml.ai">MLJ.jl</a> machine learning toolbox, written for the Julia programming language (Blaom et al., <a href="https://joss.theoj.org/papers/10.21105/joss.02704">2020</a>). <a href="https://julialang.org">Julia</a> is a newer programming language with the high performance of older languages like FORTRAN and C, but it looks and feels like a scripting language, such as Python, R, and MATLAB. Julia empowers scientific domain experts, without particular programming expertise, to rapidly prototype cutting edge solutions to their computing needs. Julia&#39;s potential in computational biology is well established (Roesch et al., <a href="https://doi.org/10.1038/s41592-023-01832-z">2023</a>). In Pharmacometrics modeling, for example, <a href="https://pumas.ai">PumasAI</a> software for non-linear mixed effects modeling, written in Julia, runs considerably faster than commonly adopted alternatives developed over many years (Zeng et al., <a href="https://link.springer.com/article/10.1007/s00228-025-03974-9">2026</a>).</p><p>For resources on learning Julia, installing Julia packages, etc, the reader is referred to the <a href="https://julialang.org">Julia website</a>. For a rapid introduction to Julia syntax, we recommend <a href="https://learnxinyminutes.com/julia/">Learn X in Y minutes</a> at learnxinyminutes.com/julia.</p><p>We assume readers are familiar with basic statistics, including the use of cross-validation to guard against over-fitting. Readers new to Julia will benefit from previous exposure to a scripting language, such as those cited above.</p><h3 id="Class-imbalance-and-measures-of-test-performance"><a class="docs-heading-anchor" href="#Class-imbalance-and-measures-of-test-performance">Class imbalance and measures of test performance</a><a id="Class-imbalance-and-measures-of-test-performance-1"></a><a class="docs-heading-anchor-permalink" href="#Class-imbalance-and-measures-of-test-performance" title="Permalink"></a></h3><p>In medical binary classification tasks, such as disease screening and toxicity detection, the training data is typically unbalanced, with many more negative outcomes than positive ones. Additionally, naive measures of task success, such as the proportion of correct predictions, are inappropriate; we should turn to more nuanced metrics.</p><p>Crucially, among subjects with hypothyroidism, we seek to reduce the number for which our test fails to return a positive result. Equivalently, we want a high <a href="https://en.wikipedia.org/wiki/Precision_and_recall"><strong>recall</strong></a>. On the other hand, we must account for the tendency that higher recall means more false alarms, or a lower <a href="https://en.wikipedia.org/wiki/Precision_and_recall"><strong>precision</strong></a>, where we have proportionally more positive test results for which a follow up investigation is required, despite the subject not having the disease.</p><p>The approach we take here is to fix a target recall, say 0.95, and seek the test that will maximize the corresponding precision. Other metrics commonly used for imbalanced data will be reported alongside this main one, the <strong>precision at 0.95 recall.</strong></p><h3 id="best"><a class="docs-heading-anchor" href="#best">Performance of the best model</a><a id="best-1"></a><a class="docs-heading-anchor-permalink" href="#best" title="Permalink"></a></h3><p>In this tutorial, we estimate the 95% confidence interval (CI) for the expected precision at 0.95 recall of assorted machine learning models, using 70% of the Garavan Institute dataset to do so. Promising models are then evaluated on the remaining 30% holdout test set. For our most promising model, a probability-predicting <a href="https://en.wikipedia.org/wiki/Support_vector_machine">support vector machine</a>, the CI is 0.904 ± 0.037. This estimated CI is approximate. Generally, it is challenging to obtain reliable uncertainty estimates in machine learning.</p><p>As we detail later, using a probability threshold determined from the training data delivers a model which, on the 30% holdout set, has a <strong>recall of about 97%</strong> (i.e., 2% of subjects with the disease tested negative) and <strong>precision of about 88%</strong> (13% of patients testing positive did not have the disease). We can also see, from the following empirical precision-recall curve, that we may be able to increase the recall further, without dropping the precision dramatically.</p><p><img src="../svm_precision_recall_curve.svg" alt/></p><blockquote><p>Figure 1. Precision-recall curve for a hypothyroidism test based on a support vector machine</p></blockquote><p>The reader is warned that she can find many analyses of the thyroid data set which quote model performance estimates that are not relevant to the high recall objective outlined above, or which appear without any estimate of uncertainty, or both.</p><h3 id="The-model-building-workflow"><a class="docs-heading-anchor" href="#The-model-building-workflow">The model building workflow</a><a id="The-model-building-workflow-1"></a><a class="docs-heading-anchor-permalink" href="#The-model-building-workflow" title="Permalink"></a></h3><p>The Garavan Institute dataset is actually several datasets, with varying amounts of preprocessing. We work directly with the full &quot;allhypo&quot; dataset, which is unprocessed and includes missing values and likely outliers. By <strong>features</strong> (a.k.a. covariates or inputs) we will mean potential predictors of disease, like gender or blood test results, that are recorded in the training dataset, and available for applying our test to new subjects. The core algorithm that learns how to distinguish between &quot;positive&quot; and &quot;negative&quot; test outcomes, the <strong>target</strong> variable, is known as a <a href="https://en.wikipedia.org/wiki/Supervised_learning"><strong>supervised learner</strong></a>. Examples you may have encountered before are logistic regression and decision trees. However, for a complete solution, we must wrap our learner in several other workflows to be detailed in this tutorial:</p><ul><li><p><a href="#missing"><strong>missing value imputation</strong></a></p></li><li><p><a href="#pipeline"><strong>outlier detection</strong></a> and removal</p></li><li><p><a href="#scitype"><strong>coercion</strong></a> of feature data types, to ensure &quot;scientifically correct&quot; interpretation by MLJ models</p></li><li><p><a href="#pipeline"><strong>one-hot encoding</strong></a>, which transforms categorical features (such as the source of a referral) to continuous ones (needed in training many models)</p></li><li><p><a href="#pipeline"><strong>feature standardization</strong></a> (normalization)</p></li><li><p>constructing model <a href="#pipeline"><strong>pipelines</strong></a>, which combine data pre-processing with a supervised learner, to streamline workflows and mitigate <a href="https://en.wikipedia.org/wiki/Leakage_(machine_learning)"><strong>data leakage</strong></a></p></li><li><p>training of supervised models that report <strong>feature importances</strong>, with a view to applying <a href="#rfe"><strong>recursive feature elimination</strong></a>, which can address the &quot;curse of dimensionality&quot; and reduce noise</p></li><li><p>constructing approximate confidence intervals for the expected <a href="#evaluate"><strong>predictive performance</strong></a> of model pipelines</p></li><li><p><a href="#tuning"><strong>tuning</strong></a> (optimization) of user-defined hyperparameters to further boost performance</p></li><li><p><a href="#imbalance"><strong>oversampling</strong></a> training data, to correct for class imbalance</p></li><li><p><a href="#compare"><strong>comparison</strong></a> of several supervised learning models (<strong>model selection</strong>)</p></li><li><p>computing <a href="#threshold"><strong>precision-recall curves</strong></a> for additional insight</p></li><li><p><a href="#threshold"><strong>thresholding:</strong></a> transforming a probabilistic predictor into a predictor of point &quot;positive&quot;/&quot;negative&quot; outcomes, by determining an appropriate threshold for the &quot;positive&quot; class probability.</p></li><li><p><a href="#test"><strong>testing</strong></a> the final model on a holdout test set</p></li></ul><h2 id="setup"><a class="docs-heading-anchor" href="#setup">1. Julia setup</a><a id="setup-1"></a><a class="docs-heading-anchor-permalink" href="#setup" title="Permalink"></a></h2><blockquote><p>On launching Julia and activating an appropriate set of third-party packages</p></blockquote><p>We suppose the user is interacting with Julia using the commandline interface known as the <strong>REPL</strong>. This is typically launched by running the <code>julia</code> command from a terminal (console) window, which delivers a <code>julia&gt;</code> prompt, after which you can enter all the commands in this tutorial.  Before doing so, <strong>ensure version 1.12</strong> or higher is used by running <code>juliaup default 1.12</code> or similar from the terminal.</p><p>Check the Julia version by entering <code>versioninfo()</code> at the <code>julia&gt;</code> prompt. Quit the REPL by entering <code>exit()</code> or Ctrl-D.</p><p>You can also interact with Julia using a interactive development environment such as VSCode or emacs, or using notebook-style interfaces such as <a href="https://ijulia.org/stable/">Jupyter</a> (python-driven) or <a href="https://plutojl.org">Pluto</a>, not discussed here.</p><p>Enter both lines of code below in the REPL, after editing the definition of <code>LOCAL</code> to point to the directory to which you would like figures to be saved. Code after Julia&#39;s comment character <code>#</code> is ignored.</p><pre><code class="language- hljs">LOCAL = @__DIR__               # e.g., `LOCAL = &quot;~/my/figures/&quot;`
+localfile(name) = joinpath(LOCAL, name);</code></pre><h3 id="Package-management"><a class="docs-heading-anchor" href="#Package-management">Package management</a><a id="Package-management-1"></a><a class="docs-heading-anchor-permalink" href="#Package-management" title="Permalink"></a></h3><p>A <strong>package environment</strong> is a set of specific third party packages known to be compatible with each other and the version of Julia you are using. Typically, each project you work on will have it&#39;s own environment, which you will want to share with coworkers to ensure workflow reproducibility. Although you can start to learn Julia without worrying too much about <a href="https://pkgdocs.julialang.org/v1/">package management</a>, it is worth investing time understanding this powerful Julia feature before carrying out serious work.</p><p>To create a package environment compatible with the code in this tutorial, you can:</p><ol><li><p>Clone the GitHub repository at <a href="https://github.com/ablaom/ClassImbalanceTutorials.jl">https://github.com/ablaom/ClassImbalanceTutorials.jl</a>.</p></li><li><p>In a fresh REPL session, edit the right-hand side of following definition to point to the root directory of your clone: <code>path_to_clone = &quot;path/to/ClassImbalanceTutorials.jl/&quot;</code>.</p></li><li><p>Still in the REPL, enter the lines of code below (with a carriage return after each line):</p></li></ol><pre><code class="language-julia hljs">using Pkg
+Pkg.activate(path_to_clone)  # activate a set of packages
+Pkg.resolve()                # determine mutually compatible versions
+Pkg.instantiate()            # download packages to your computer</code></pre><p>You should expect this last step to take some time, as all the software for the tutorial is pre-compiled.</p><p>If you encounter issues, you can try manually installing the packages you need in a new environment, created with <code>Pkg.activate(&quot;my_env&quot;)</code>, based on the output printed below:</p><pre><code class="language- hljs">import Pkg
+Pkg.status()</code></pre><pre><code class="nohighlight hljs">Status `~/work/ClassImbalanceTutorials.jl/ClassImbalanceTutorials.jl/docs/src/notebooks/thyroid/Project.toml`
+  [1520ce14] AbstractTrees v0.4.5
+⌅ [336ed68f] CSV v0.10.17
+  [a93c6f00] DataFrames v1.8.2
+  [f6006082] EvoTrees v0.19.0
+  [c709b415] Imbalance v0.2.1
+  [add582a8] MLJ v0.23.3
+  [c6f25543] MLJDecisionTreeInterface v0.5.0
+  [094fc8d1] MLJFlux v0.6.8
+  [61c7150f] MLJLIBSVMInterface v0.2.2
+  [6ee0df7b] MLJLinearModels v0.10.4
+  [eff96d63] Measurements v2.14.1
+  [636a865e] NearestNeighborModels v0.2.3
+  [262411bb] OutlierDetection v0.4.2
+  [51249a0a] OutlierDetectionNeighbors v0.1.5
+  [91a5bcdd] Plots v1.41.7
+  [860ef19b] StableRNGs v1.1.0
+  [a19d573c] StatisticalMeasures v0.3.7
+  [2913bbd2] StatsBase v0.34.13
+  [f43a241f] Downloads v1.7.0
+Info Packages marked with ⌅ have new versions available but compatibility constraints restrict them from upgrading. To see why use `status --outdated`
+</code></pre><p>For example, to add MLJ v0.23.2, do <code>Pkg.add(&quot;MLJ@0.23.2&quot;)</code>.¹</p><p>If you need to start over in a new Julia session, you will need to begin with <code>using Pkg</code> and the appropriate <code>Pkg.activate(...)</code> command you used before.</p><h3 id="Making-our-workflows-reproducible"><a class="docs-heading-anchor" href="#Making-our-workflows-reproducible">Making our workflows reproducible</a><a id="Making-our-workflows-reproducible-1"></a><a class="docs-heading-anchor-permalink" href="#Making-our-workflows-reproducible" title="Permalink"></a></h3><p>As many algorithms depend on pseudo-random number generators (RNG&#39;s), and as the behavior of the default RNG can depend on the Julia version, we take some special steps in the tutorial so we can generate an identical RNG, stable across Julia versions, whenever needed.</p><pre><code class="language- hljs">import StableRNGs
+const SEED = 234
+stable_rng() = StableRNGs.StableRNG(SEED);</code></pre><p>Here&#39;s a demonstration:</p><pre><code class="language- hljs">rng = stable_rng()
+# generate a random number between 0 and 1:
+rand(rng) # this call mutates `rng` state</code></pre><pre><code class="nohighlight hljs">0.48542906587478507</code></pre><pre><code class="language- hljs">rand(rng)</code></pre><pre><code class="nohighlight hljs">0.09049710430456415</code></pre><pre><code class="language- hljs">rng = stable_rng() # reset the rng
+rand(rng)          # same as first result above</code></pre><pre><code class="nohighlight hljs">0.48542906587478507</code></pre><p>To use the default RNG (which has better performance) you can omit specifying any RNG, as in this example:</p><pre><code class="language- hljs">rand()</code></pre><pre><code class="nohighlight hljs">0.12788076230079382</code></pre><h2 id="2.-Models-and-machines"><a class="docs-heading-anchor" href="#2.-Models-and-machines">2. Models and machines</a><a id="2.-Models-and-machines-1"></a><a class="docs-heading-anchor-permalink" href="#2.-Models-and-machines" title="Permalink"></a></h2><blockquote><p>Learning about the principal actors in MLJ workflows</p></blockquote><p>Before considering hypothyroidism, we quickly build a predictive MLJ model using a dataset that requires no special preprocessing, the Fisher <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">iris dataset</a>. It is loaded like this:</p><pre><code class="language- hljs">using MLJ # load the MLJ package
+X_iris, y_iris = @load_iris;</code></pre><p>Here <code>X_iris</code>, the features (specimen dimensions) is a rather basic form of Julia table, namely a named tuple of vectors; <code>y_iris</code> is an ordinary vector representing the target variable, in this case the species of iris.</p><p>Although MLJ is not too fussy about table types (it supports <a href="https://github.com/JuliaData/Tables.jl/blob/main/INTEGRATIONS.md">most formats</a> meeting a specification set out by the Tables.jl package) we&#39;ll convert <code>X_iris</code> to a <strong>dataframe</strong>, Julia&#39;s de facto standard for in-memory tabular data, which has a nicer display and is easier to manipulate:</p><pre><code class="language- hljs">import DataFrames
+X_iris = DataFrames.DataFrame(X_iris)
+first(X_iris, 3) # return the first three rows of the dataframe</code></pre><pre><code class="nohighlight hljs">3×4 DataFrame
+ Row │ sepal_length  sepal_width  petal_length  petal_width
+     │ Float64       Float64      Float64       Float64
+─────┼──────────────────────────────────────────────────────
+   1 │          5.1          3.5           1.4          0.2
+   2 │          4.9          3.0           1.4          0.2
+   3 │          4.7          3.2           1.3          0.2
+</code></pre><pre><code class="language- hljs">first(y_iris, 3)  # or, you can do `y_iris[1:3]`</code></pre><pre><code class="nohighlight hljs">3-element CategoricalArrays.CategoricalArray{String,1,UInt32}:
+ &quot;setosa&quot;
+ &quot;setosa&quot;
+ &quot;setosa&quot;</code></pre><p>There are three species of iris in Fisher&#39;s dataset:</p><pre><code class="language- hljs">levels(y_iris)</code></pre><pre><code class="nohighlight hljs">3-element CategoricalArrays.CategoricalArray{String,1,UInt32}:
+ &quot;setosa&quot;
+ &quot;versicolor&quot;
+ &quot;virginica&quot;</code></pre><p>Here&#39;s how to &quot;instantiate&quot; a decision tree model to predict the target based on new iris features, after importing the code needed for that model:</p><pre><code class="language- hljs">DecisionTreeClassifier = @load DecisionTreeClassifier pkg=DecisionTree # model type
+model = DecisionTreeClassifier(min_samples_split=5, rng=stable_rng())  # model instance</code></pre><pre><code class="nohighlight hljs">DecisionTreeClassifier(
+  max_depth = -1, 
+  min_samples_leaf = 1, 
+  min_samples_split = 5, 
+  min_purity_increase = 0.0, 
+  n_subfeatures = 0, 
+  post_prune = false, 
+  merge_purity_threshold = 1.0, 
+  display_depth = 5, 
+  feature_importance = :impurity, 
+  rng = StableRNGs.LehmerRNG(state=0x000000000000000000000000000001d5))</code></pre><p>With the exception of <code>min_samples_split</code> and <code>rng</code>, we have selected default values of the <strong>hyper-parameters</strong> of the model, namely those parameters we need to specify before any learning begins.  Never mind about the meaning of these hyper-parameters for now.</p><p><strong>Going deeper.</strong>² To see all registered MLJ models that can be immediately applied to our data, do <code>models(matching(X, Y))</code>. See the <a href="https://juliaai.github.io/MLJ.jl/dev/model_search/">Model Search</a> section of the MLJ documentation for more options.</p><p>So far, we have seen three different ways to load package code. When we run <code>import DataFrames</code> we load the DataFrames.jl package but must qualify the name of any function we use from there, as in <code>DataFrames.DataFrame(X_iris)</code>. By contrast, running <code>using MLJ</code> loads the MLJ.jl package but brings many MLJ functions directly into the namespace (an example is <code>models</code> - we don&#39;t need to call it as <code>MLJ.models</code>). Finally, the <code>@load</code> macro is an MLJ-specific tool for loading the type and related code for a specific machine learning model in the MLJ Model Registry, which is searchable using the <code>models</code> method.</p><p>Incidentally, a <a href="https://docs.julialang.org/en/v1/manual/metaprogramming/#man-macros">macro</a> such as <code>@load</code>, whose name always begins with the <code>@</code> character, is a special kind of Julia function we won&#39;t explain here. For the beginner, it suffices to note it is typically called without parentheses, and spaces instead of commas. ■</p><p>The word &quot;model&quot;, ubiquitous in statistics and machine learning, has a specific meaning in MLJ documentation and in this tutorial. A <strong>model</strong> is an object encapsulating a machine learning algorithm, such as least-squares fitting of a polynomial, a decision tree, or logistic regression, together with the hyper-parameters (such as the degree of the polynomial). In statistics a &quot;model&quot; generally includes the <em>learned parameters</em> (such as the coefficients of the polynomial) but in MLJ these are external to the model.</p><p>Next, we bind the model together with the available data in what&#39;s called a <strong>machine</strong>:</p><pre><code class="language- hljs">mach = machine(model, X_iris, y_iris);</code></pre><p>A machine starts life as model plus data, but it additionally stores <strong>learned parameters</strong> (the tree) once it is trained on some view of the data. (To guard against over-fitting, we typically do not train on all the data!).</p><pre><code class="language- hljs">train_rows = 1:2:149  # the odd rows of the dataset
+fit!(mach, rows=train_rows)</code></pre><pre><code class="nohighlight hljs">[ Info: Training machine(DecisionTreeClassifier(max_depth = -1, …), …).
+</code></pre><p>The exclamation mark <code>!</code> reminds us that <code>mach</code> is begin mutated; specifically, the learned parameters are being added. Having trained the model, we can inspect its learned parameters like this:</p><pre><code class="language- hljs">theta = fitted_params(mach)</code></pre><pre><code class="nohighlight hljs">(tree = DecisionTree.InfoNode{Float64, UInt32}(Decision Tree
+Leaves: 5
+Depth:  3, nchildren=2), raw_tree = Decision Tree
+Leaves: 5
+Depth:  3, encoding = Dict{UInt32, CategoricalArrays.CategoricalValue{String, UInt32}}(0x00000002 =&gt; CategoricalValue(CategoricalArrays.CategoricalPool{String, UInt32}([&quot;setosa&quot;, &quot;versicolor&quot;, &quot;virginica&quot;]), 2), 0x00000003 =&gt; CategoricalValue(CategoricalArrays.CategoricalPool{String, UInt32}([&quot;setosa&quot;, &quot;versicolor&quot;, &quot;virginica&quot;]), 3), 0x00000001 =&gt; CategoricalValue(CategoricalArrays.CategoricalPool{String, UInt32}([&quot;setosa&quot;, &quot;versicolor&quot;, &quot;virginica&quot;]), 1)), features = [:sepal_length, :sepal_width, :petal_length, :petal_width])</code></pre><p>Here&#39;s how we can get a detailed representation of the decision tree itself:</p><pre><code class="language- hljs">keys(theta)</code></pre><pre><code class="nohighlight hljs">(:tree, :raw_tree, :encoding, :features)</code></pre><pre><code class="language- hljs">theta.tree</code></pre><pre><code class="nohighlight hljs">petal_length &lt; 2.45
+├─ setosa (25/25)
+└─ petal_width &lt; 1.65
+   ├─ petal_length &lt; 5.25
+   │  ├─ versicolor (24/24)
+   │  └─ virginica (1/1)
+   └─ sepal_length &lt; 5.95
+      ├─ virginica (3/4)
+      └─ virginica (21/21)
+</code></pre><p>So, for example, if <code>petal_length ≥ 2.45</code>, <code>petal_width ≥ 1.65</code>, and <code>sepal_length &lt; 5.95</code>, then this decision tree model predicts virginica as the species, with probability of 3/4 = 75%.</p><p>There is also a <code>report</code> function for machines, which returns any byproducts of training that are not fitted parameters, in this case nothing noteworthy:</p><pre><code class="language- hljs">rprt = report(mach)
+keys(rprt)</code></pre><pre><code class="nohighlight hljs">(:classes_seen, :print_tree, :features)</code></pre><pre><code class="language- hljs">rprt.classes_seen</code></pre><pre><code class="nohighlight hljs">3-element CategoricalArrays.CategoricalArray{String,1,UInt32}:
+ &quot;setosa&quot;
+ &quot;versicolor&quot;
+ &quot;virginica&quot;</code></pre><p>You are allowed to access and mutate the <code>model</code> hyper-parameters:</p><pre><code class="language- hljs">model.max_depth = 1
+fit!(mach, rows=train_rows) # re-train with new hyper-parameters
+fitted_params(mach).tree</code></pre><pre><code class="nohighlight hljs">petal_length &lt; 2.45
+├─ setosa (25/25)
+└─ versicolor (25/50)
+</code></pre><p><strong>Going deeper.</strong> A machine stores some other information enabling <a href="https://juliaai.github.io/MLJ.jl/dev/machines/#Warm-restarts">warm restart</a> for some iterative models, such as a random forest, or the gradient tree boosting model appearing later in this tutorial. In model pipelines, discussed later, <code>fit!</code> only retrains component models that actually need retraining. ■</p><p>Here is how we can make predictions on some other view of the bound data:</p><pre><code class="language- hljs">predict(mach, rows=[2, 52, 102])</code></pre><pre><code class="nohighlight hljs">3-element CategoricalDistributions.UnivariateFiniteVector{Multiclass{3}, String, UInt32, Float64}:
+ UnivariateFinite{Multiclass{3}}(setosa=&gt;1.0, versicolor=&gt;0.0, virginica=&gt;0.0)
+ UnivariateFinite{Multiclass{3}}(setosa=&gt;0.0, versicolor=&gt;0.5, virginica=&gt;0.5)
+ UnivariateFinite{Multiclass{3}}(setosa=&gt;0.0, versicolor=&gt;0.5, virginica=&gt;0.5)</code></pre><p>We can also supply new data. The form of new data can be most kinds of Julia table, not just a dataframe. For example, this named tuple of vectors will work:</p><pre><code class="language- hljs">Xnew = (sepal_length = [5.1, 6.3],
+        sepal_width = [3.0, 2.5],
+        petal_length = [1.4, 4.9],
+        petal_width = [0.3, 1.5])
+yhat = predict(mach, Xnew)</code></pre><pre><code class="nohighlight hljs">2-element CategoricalDistributions.UnivariateFiniteVector{Multiclass{3}, String, UInt32, Float64}:
+ UnivariateFinite{Multiclass{3}}(setosa=&gt;1.0, versicolor=&gt;0.0, virginica=&gt;0.0)
+ UnivariateFinite{Multiclass{3}}(setosa=&gt;0.0, versicolor=&gt;0.5, virginica=&gt;0.5)</code></pre><p>These are <em>probabilistic</em> predictions which can be manipulated using a widely adopted interface defined in the <a href="https://juliastats.org/Distributions.jl/stable/">Distributions.jl</a> package. For example, we can get raw probabilities like this:</p><pre><code class="language- hljs">pdf.(yhat, &quot;virginica&quot;)</code></pre><pre><code class="nohighlight hljs">2-element Vector{Float64}:
+ 0.0
+ 0.5</code></pre><h2 id="3.-Downloading-a-dataset"><a class="docs-heading-anchor" href="#3.-Downloading-a-dataset">3. Downloading a dataset</a><a id="3.-Downloading-a-dataset-1"></a><a class="docs-heading-anchor-permalink" href="#3.-Downloading-a-dataset" title="Permalink"></a></h2><blockquote><p>How to grab a dataset from the Internet and manifest it as an in-memory table</p></blockquote><p>We now return to the thyroid disease dataset.</p><pre><code class="language- hljs">import Downloads
+import CSV        # for parsing CSV files
+
+url = &quot;https://archive.ics.uci.edu/ml/machine-learning-databases/&quot;*
+     &quot;thyroid-disease/allhypo.data&quot;
+path = Downloads.download(url)</code></pre><pre><code class="nohighlight hljs">&quot;/tmp/jl_Pd0SJM/allhypo.data&quot;</code></pre><p>Entering these lines of code downloads the dataset to a temporary location on your computer, like the one shown in the above output. If you have trouble with the host site, try instead</p><pre><code class="language-julia hljs">url = &quot;https://raw.githubusercontent.com/manavukani/thyroid-explainableai/&quot;*
+   &quot;refs/heads/main/dataset/allhypo.data&quot;</code></pre><p>This particular dataset file is comma-separated, but has no header. The header can be gleaned from <a href="archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names">https://archive.ics.uci.edu/ml/machine-learning-databases/thyroid-disease/allhypo.names</a>, which has further information about the dataset. We manually provide the header as follows:</p><pre><code class="language- hljs">header = [
+    &quot;age&quot;, &quot;sex&quot;, &quot;on_thyroxine&quot;, &quot;query_on_thyroxine&quot;, &quot;on_antithyroid_medication&quot;,
+    &quot;sick&quot;, &quot;pregnant&quot;, &quot;thyroid_surgery&quot;, &quot;I131_treatment&quot;, &quot;query_hypothyroid&quot;,
+    &quot;query_hyperthyroid&quot;, &quot;lithium&quot;, &quot;goitre&quot;, &quot;tumor&quot;, &quot;hypopituitary&quot;, &quot;psych&quot;,
+    &quot;TSH_measured&quot;, &quot;TSH&quot;, &quot;T3_measured&quot;, &quot;T3&quot;, &quot;TT4_measured&quot;, &quot;TT4&quot;,
+    &quot;T4U_measured&quot;, &quot;T4U&quot;, &quot;FTI_measured&quot;, &quot;FTI&quot;, &quot;TBG_measured&quot;, &quot;TBG&quot;,
+    &quot;referral_source&quot;, &quot;diagnosis&quot;,
+]
+data = CSV.read(path, DataFrames.DataFrame; header, missingstring=&quot;?&quot;);</code></pre><p>This last line reads the data into a dataframe. Here&#39;s one way to view just certain rows and columns:</p><pre><code class="language- hljs">data[15:21, [:age, :sex, :TSH, :diagnosis]]</code></pre><pre><code class="nohighlight hljs">7×4 DataFrame
+ Row │ age     sex       TSH       diagnosis
+     │ Int64?  String1?  Float64?  String31
+─────┼───────────────────────────────────────────────────────────
+   1 │     28  M              3.3  negative.|2043
+   2 │     65  F             12.0  compensated hypothyroid.|3169
+   3 │     42  missing        1.2  negative.|2755
+   4 │     63  F              1.5  negative.|1010
+   5 │     80  F              6.0  negative.|803
+   6 │     28  M              2.1  negative.|2297
+   7 │     51  F              0.1  negative.|3564
+</code></pre><p>There is a problem with the <code>diagnosis</code> column, which can be inspected like this:</p><pre><code class="language- hljs">data.diagnosis[15:17] # rows 15 through 19</code></pre><pre><code class="nohighlight hljs">3-element Vector{InlineStrings.String31}:
+ &quot;negative.|2043&quot;
+ &quot;compensated hypothyroid.|3169&quot;
+ &quot;negative.|2755&quot;</code></pre><p>Each entry has a trailing string which corresponds to a patient identifier we won&#39;t need. We introduce a function to to trim such an entry, and at the same time collapse all hypothyroidism variants into a single <code>&quot;positive&quot;</code> class:</p><pre><code class="language- hljs">function fix(class)
+    trimmed = first(split(class, &quot;.|&quot;))
+    if trimmed == &quot;negative&quot;
+        return trimmed
+    end
+    return &quot;positive&quot;
+end
+fix(&quot;compensated hypothyroid.|3169&quot;) # demo</code></pre><pre><code class="nohighlight hljs">&quot;positive&quot;</code></pre><p>Applying it to every entry in the <code>diagnosis</code> column:</p><pre><code class="language- hljs">data.diagnosis = fix.(data.diagnosis);
+data.diagnosis[15:17]</code></pre><pre><code class="nohighlight hljs">3-element Vector{AbstractString}:
+ &quot;negative&quot;
+ &quot;positive&quot;
+ &quot;negative&quot;</code></pre><p>Julia&#39;s &quot;broadcasting&quot; syntax <code>fix.(data.diagnosis)</code> applies the function <code>fix</code> element-wise to the vector <code>data.diagnosis</code>; the parentheses are essential here.</p><p>We can get a summary of the fields in our dataframe using <code>DataFrames.describe(data)</code>, whose output you should inspect. Here&#39;s an extract:</p><pre><code class="language- hljs">DataFrames.describe(data)[[1, 2, 3, 4, 8, 15, 25, 26, 27, 28, 29, 30], :]</code></pre><pre><code class="nohighlight hljs">12×7 DataFrame
+ Row │ variable            mean     min       median  max       nmissing  eltype
+     │ Symbol              Union…   Any       Union…  Any       Int64     Type
+─────┼────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ age                 51.8442  1         54.0    455              1  Union{Missing, Int64}
+   2 │ sex                          F                 M              110  Union{Missing, String1}
+   3 │ on_thyroxine                 f                 t                0  String1
+   4 │ query_on_thyroxine           f                 t                0  String1
+   5 │ thyroid_surgery              f                 t                0  String1
+   6 │ hypopituitary                f                 t                0  String1
+   7 │ FTI_measured                 f                 t                0  String1
+   8 │ FTI                 110.788  2.0       107.0   395.0          295  Union{Missing, Float64}
+   9 │ TBG_measured                 f                 f                0  String1
+  10 │ TBG                                                          2800  Missing
+  11 │ referral_source              STMW              other            0  String7
+  12 │ diagnosis                    negative          positive         0  AbstractString
+</code></pre><p>Inspecting further, we learn that two of the fields are constant for all observations, and a third, <code>hypopituitary</code>, is constant outside of a single observation. As these provide no useful information, we drop them from the dataframe:</p><pre><code class="language- hljs">DataFrames.select!(data, DataFrames.Not([:TBG_measured, :TBG, :hypopituitary]));</code></pre><p>The exclamation mark <code>!</code> in <code>select!</code> indicates that the function is mutating it&#39;s argument, <code>data</code>, in-place.</p><p>Incidentally, to view the documentation for the <code>DataFrames.describe</code> function, you can enter <code>?DataFrames.describe</code> in the REPL.</p><p><strong>Going deeper.</strong> The DataFrames.jl features we have demonstrated so far will suffice for the remainder of this tutorial. For more on manipulating dataframes, see the <a href="https://dataframes.juliadata.org/stable/">DataFrames.jl documentation</a>. DataFrames.jl is an essential tool in exploratory data analysis (EDA), not covered here; see, e.g., Storopoli et al. <a href="https://juliadatascience.github.io/JuliaDataScience/">(2021)</a>. ■</p><p>Here&#39;s how you can save the tidied-up data as a CSV file, including header, in your current directory (<code>localfile</code> was defined <a href="#setup">above</a>):</p><pre><code class="language-julia hljs">CSV.write(localfile(&quot;allhypo.csv&quot;), data)</code></pre><p>Load it again with <code>data = CSV.read(localfile(&quot;allhypo.csv&quot;), DataFrames.DataFrame)</code>.</p><h2 id="scitype"><a class="docs-heading-anchor" href="#scitype">4. Type coercion</a><a id="scitype-1"></a><a class="docs-heading-anchor-permalink" href="#scitype" title="Permalink"></a></h2><blockquote><p>Encoding data so that it is correctly interpreted by MLJ algorithms</p></blockquote><p>A physical variable, such as height, can be represented in different ways on a computer. For example, a person&#39;s height in centimeters, although a &quot;continuous&quot; variable, might be represented as a 64-bit integer. On the other hand, an unordered factor (&quot;multiclass&quot;) variable, like ethnicity, might also have an integer encoding. This can lead to ambiguity, from the point of view of machine learning algorithms that may treat integer data differently from, say, float data.</p><p>For the above reason, MLJ makes a formal distinction between the <em>machine</em> representation of data, and the <em>scientific</em> interpretation of that data, as laid out by certain conventions shared by all MLJ algorithms. By design, MLJ allows users to focus more on scientific types, and view machine types as a secondary &quot;implementation detail&quot;.</p><p>To find out how your data will be interpreted, we use <code>scitype</code>. To correct for a undesirable interpretation, we use <code>coerce</code>.</p><pre><code class="language- hljs">typeof(183) # machine type</code></pre><pre><code class="nohighlight hljs">Int64</code></pre><pre><code class="language- hljs">scitype(183) # scientific type</code></pre><pre><code class="nohighlight hljs">Count</code></pre><p><code>Count</code> corresponds to discrete, ordered data of an unbounded nature, such as the number telephone calls received per hour, or the number of residents in a dwelling.</p><pre><code class="language- hljs">height = [183, 201, 162, 108]
+scitype(height)</code></pre><pre><code class="nohighlight hljs">AbstractVector{Count} (alias for AbstractArray{Count, 1})</code></pre><pre><code class="language- hljs">height = coerce(height, Continuous)</code></pre><pre><code class="nohighlight hljs">4-element Vector{Float64}:
+ 183.0
+ 201.0
+ 162.0
+ 108.0</code></pre><pre><code class="language- hljs">scitype(height)</code></pre><pre><code class="nohighlight hljs">AbstractVector{Continuous} (alias for AbstractArray{Continuous, 1})</code></pre><p>Here&#39;s another example:</p><pre><code class="language- hljs">blood_type = [&quot;A&quot;, &quot;B&quot;, &quot;A&quot;, &quot;AB&quot;, &quot;O&quot;, &quot;B&quot;]
+scitype(blood_type)</code></pre><pre><code class="nohighlight hljs">AbstractVector{Textual} (alias for AbstractArray{Textual, 1})</code></pre><pre><code class="language- hljs">blood_type = coerce(blood_type, Multiclass)
+scitype(blood_type)</code></pre><pre><code class="nohighlight hljs">AbstractVector{Multiclass{4}} (alias for AbstractArray{Multiclass{4}, 1})</code></pre><p>Note here that the number of factors, 4, appears as a type parameter.</p><p><code>Textual</code> is reserved for data with actual semantic meaning, in the sense of some natural language; this comes up in sentiment analysis (e.g., spam email detection) but less frequently in quantitative medicine. The principal &quot;scalar&quot; scientific types (called <strong>scitypes</strong>) are summarized in the graphic below.</p><p><img src="../scitypes_small.png" alt/></p><blockquote><p>Figure 2. &quot;Scalar&quot; scientific types</p></blockquote><p>For an explanation of <code>Finite</code> and <code>Infinite</code> see the next &quot;Going deeper&quot; section below. While a table also has a scitype, it is more convenient to inspect the column scitypes with <code>schema</code>:</p><pre><code class="language- hljs">schema(data)</code></pre><pre><code class="nohighlight hljs">27×3 DataFrame
+ Row │ names                      scitypes                    types
+     │ Symbol                     Type                        Type
+─────┼────────────────────────────────────────────────────────────────────────────────
+   1 │ age                        Union{Missing, Count}       Union{Missing, Int64}
+   2 │ sex                        Union{Missing, Textual}     Union{Missing, String1}
+   3 │ on_thyroxine               Textual                     String1
+   4 │ query_on_thyroxine         Textual                     String1
+   5 │ on_antithyroid_medication  Textual                     String1
+   6 │ sick                       Textual                     String1
+   7 │ pregnant                   Textual                     String1
+   8 │ thyroid_surgery            Textual                     String1
+   9 │ I131_treatment             Textual                     String1
+  10 │ query_hypothyroid          Textual                     String1
+  11 │ query_hyperthyroid         Textual                     String1
+  12 │ lithium                    Textual                     String1
+  13 │ goitre                     Textual                     String1
+  14 │ tumor                      Textual                     String1
+  15 │ psych                      Textual                     String1
+  16 │ TSH_measured               Textual                     String1
+  17 │ TSH                        Union{Missing, Continuous}  Union{Missing, Float64}
+  18 │ T3_measured                Textual                     String1
+  19 │ T3                         Union{Missing, Continuous}  Union{Missing, Float64}
+  20 │ TT4_measured               Textual                     String1
+  21 │ TT4                        Union{Missing, Continuous}  Union{Missing, Float64}
+  22 │ T4U_measured               Textual                     String1
+  23 │ T4U                        Union{Missing, Continuous}  Union{Missing, Float64}
+  24 │ FTI_measured               Textual                     String1
+  25 │ FTI                        Union{Missing, Continuous}  Union{Missing, Float64}
+  26 │ referral_source            Textual                     String7
+  27 │ diagnosis                  Textual                     AbstractString
+</code></pre><p>Based on what we understand about the real world meaning of each column, we can fix some specific column scitypes like this:</p><pre><code class="language- hljs">data = coerce(
+    data,
+    :age=&gt; Continuous,
+    :sex =&gt; Multiclass,
+    :referral_source =&gt; Multiclass,
+);</code></pre><pre><code class="nohighlight hljs">┌ Info: Trying to coerce from `Union{Missing, Int64}` to `Continuous`.
+└ Coerced to `Union{Missing,Continuous}` instead.
+┌ Info: Trying to coerce from `Union{Missing, InlineStrings.String1}` to `Multiclass`.
+└ Coerced to `Union{Missing,Multiclass}` instead.
+</code></pre><p>And we can simultaneously ensure all <code>Textual</code> scitypes (mostly &quot;true&quot;/&quot;false&quot; answers in the subject questionnaire) are re-encoded as <code>OrderedFactor</code>:</p><pre><code class="language- hljs">data = coerce(data, Textual =&gt; OrderedFactor);</code></pre><p>Re-run <code>schema(data)</code> to check the coercions worked.</p><p>There is no separate binary scitype in Julia, only <code>Finite{2}</code> and <code>Multiclass{2}</code>. We use the latter for data with a natural choice of &quot;positive&quot; class, as we have for the <code>diagnosis</code> field and true/false questions in the subject questionnaire, and use <code>Multiclass{2}</code> otherwise, as we have for <code>sex</code>.</p><p><strong>Going deeper.</strong> For more on scientific types see the <a href="https://juliaai.github.io/ScientificTypes.jl/dev/">ScientificTypes.jl documentation</a>. See also the MLJ manual entry, <a href="https://juliaai.github.io/MLJ.jl/dev/working_with_categorical_data/#Working-with-Categorical-Data">Working with Categorical Data</a>. Scientific types are formal Julia abstract types, and so they have no instances. If you know something about Julia&#39;s type system, you will understand <code>Finite</code> and <code>Infinite</code> in the diagram above as abstract supertypes, which get used in MLJ method dispatch. <code>Multiclass</code> and <code>Ordered</code> factor columns are encoded as <code>CategoricalVector</code>s from the <a href="https://categoricalarrays.juliadata.org/stable/">CategoricalArrays.jl</a> package, which means they are stored internally as integer arrays for efficiency. ■</p><p>Here&#39;s how we can see that &quot;negative&quot; diagnoses are over-represented in our data:</p><pre><code class="language- hljs">import StatsBase
+d = StatsBase.countmap(data.diagnosis)</code></pre><pre><code class="nohighlight hljs">Dict{CategoricalArrays.CategoricalValue{String, UInt32}, Int64} with 2 entries:
+  CategoricalValue(CategoricalArrays.CategoricalPool{String, UInt32}([&quot;negative&quot;, &quot;positive&quot;], true), 1) =&gt; 2580
+  CategoricalValue(CategoricalArrays.CategoricalPool{String, UInt32}([&quot;negative&quot;, &quot;positive&quot;], true), 2) =&gt; 220</code></pre><p>Julia is being a bit too verbose with data types here. We can fix this like this:</p><pre><code class="language- hljs">@info &quot;diagnosis class counts&quot; d[&quot;negative&quot;] d[&quot;positive&quot;]</code></pre><pre><code class="nohighlight hljs">┌ Info: diagnosis class counts
+│   d[&quot;negative&quot;] = 2580
+└   d[&quot;positive&quot;] = 220
+</code></pre><p>There are about 15 times more negative outcomes as positive ones.</p><p>Before proceeding any further, we set aside 30% of our data for final testing. We instruct MLJ&#39;s <code>partition</code> function to shuffle observations and make sure each split has the same representation of &quot;positive&quot; and &quot;negative&quot; classes (the partition is stratified):</p><pre><code class="language- hljs">data, data_test = partition(
+    data,
+    0.7;
+    stratify=data.diagnosis,
+    rng=stable_rng(),
+);
+ntrain = nrows(data)
+ntest = nrows(data_test)
+@info &quot;size of datasets&quot; ntrain ntest
+proportions_train = StatsBase.proportionmap(data_test.diagnosis)
+proportions_test = StatsBase.proportionmap(data_test.diagnosis)
+@info &quot;diagnosis distribution&quot; proportions_train[&quot;positive&quot;] proportions_test[&quot;positive&quot;]</code></pre><pre><code class="nohighlight hljs">┌ Info: size of datasets
+│   ntrain = 1960
+└   ntest = 840
+┌ Info: diagnosis distribution
+│   proportions_train[&quot;positive&quot;] = 0.07857142857142857
+└   proportions_test[&quot;positive&quot;] = 0.07857142857142857
+</code></pre><h2 id="missing"><a class="docs-heading-anchor" href="#missing">5. Missing value imputation</a><a id="missing-1"></a><a class="docs-heading-anchor-permalink" href="#missing" title="Permalink"></a></h2><blockquote><p>Cleaning a dataset by finding reasonable proxies for missing values</p></blockquote><p>To remove missing values, we will use an imputation algorithm called <code>FillImputer</code>.  To search for available models related to imputation, you can run <code>models(&quot;impute&quot;)</code>. Unlike the <code>DecisionTreeClassifier</code> we used earlier, <code>FillImputer</code> is immediately available (no need to <code>@load</code> it). To see all currently loaded models, run <code>localmodels()</code>.</p><p>Enter <code>?FillImputer</code> in the REPL to pull up its document string. From there we can see that, by default, <code>FillImputer</code>:</p><ul><li>replaces missing values in a <code>Continuous</code> feature with the <strong>median</strong>.</li><li>replaces missing values in a <code>Multiclass</code> or <code>OrderedFactor</code> feature with the <strong>mode</strong>.</li></ul><p>Let&#39;s start by seeing how we would train such a model on all the training data:</p><pre><code class="language- hljs">model = FillImputer()
+mach = machine(model, data);
+fit!(mach)</code></pre><pre><code class="nohighlight hljs">[ Info: Training machine(FillImputer(features = Symbol[], …), …).
+</code></pre><p>Now, as <code>FillImputer</code> is a &quot;transformer&quot; rather than a supervised learner, we use <code>transform</code> instead of <code>predict</code> to get the imputed output:</p><pre><code class="language- hljs">data_clean = transform(mach, data);</code></pre><p>Missing values are now gone, which you can check by doing <code>schema(data_clean)</code>.</p><h2 id="pipeline"><a class="docs-heading-anchor" href="#pipeline">6. Outlier removal and other data preprocessing</a><a id="pipeline-1"></a><a class="docs-heading-anchor-permalink" href="#pipeline" title="Permalink"></a></h2><blockquote><p>Removing outliers and combining this and other common preprocessing steps in a model pipeline</p></blockquote><p>The dangers of automated outlier removal notwithstanding (Barnett and Lewis, <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.4710370219">1994</a>), we employ a K-nearest neighbor algorithm for detecting outliers in our training data (Knorr et al., <a href="https://link.springer.com/article/10.1007/s007780050006">2000</a>).</p><p>To apply this algorithm (and some later supervised learners) we need all our features to be <code>Continuous</code>, and to have a normal range of values, i.e. to be standardized. We use <a href="https://en.wikipedia.org/wiki/One-hot">one-hot encoding</a> to transform our <code>OrderedFactor</code> and <code>Multiclass</code> features into <code>Continuous</code> ones, and <code>Standardizer</code> to standardize those features. Both these models are built-in MLJ models.</p><p>Instead of applying each data preprocessing step separately, we can combine these steps into a single model <strong>pipeline</strong> using Julia&#39;s pipe syntax <code>|&gt;</code>, which MLJ extends:</p><pre><code class="language- hljs">preprocess = FillImputer() |&gt; OneHotEncoder(drop_last=true) |&gt; Standardizer()</code></pre><pre><code class="nohighlight hljs">UnsupervisedPipeline(
+  fill_imputer = FillImputer(
+        features = Symbol[], 
+        continuous_fill = MLJTransforms._median, 
+        count_fill = MLJTransforms._round_median, 
+        finite_fill = MLJTransforms._mode), 
+  one_hot_encoder = OneHotEncoder(
+        features = Symbol[], 
+        drop_last = true, 
+        ordered_factor = true, 
+        ignore = false), 
+  standardizer = Standardizer(
+        features = Symbol[], 
+        ignore = false, 
+        ordered_factor = false, 
+        count = false), 
+  cache = true)</code></pre><p>A pipeline is an example of a <strong>composite</strong> model, namely a model that has other models as hyperparameters, which leads to <strong>nested hyper-parameters</strong>, which can be accessed like this:</p><pre><code class="language- hljs">preprocess.one_hot_encoder.drop_last</code></pre><pre><code class="nohighlight hljs">true</code></pre><p>Let&#39;s apply this complete pipeline to get our sought-after continuous features:</p><pre><code class="language- hljs">mach = machine(preprocess, data)
+fit!(mach, verbosity=0)
+data_continuous =  transform(mach, data);
+data_continuous[1:3,1:5]</code></pre><pre><code class="nohighlight hljs">3×5 DataFrame
+ Row │ age        sex__F     on_thyroxine__f  query_on_thyroxine__f  on_antithyroid_medication__f
+     │ Float64    Float64    Float64          Float64                Float64
+─────┼────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ -1.05864    0.662447         0.363629               0.120355                      0.111312
+   2 │  1.00378    0.662447         0.363629               0.120355                      0.111312
+   3 │ -0.243267  -1.50878          0.363629               0.120355                      0.111312
+</code></pre><p><strong>Going deeper.</strong> MLJ provides very flexible tools for constructing composite models, beyond the linear pipelines we will consider here. Refer to the <a href="https://juliaai.github.io/MLJ.jl/dev/learning_networks/#Learning-Networks">Learning Networks</a> section of the manual for more on this advanced topic. ■</p><p>We are ready to instantiate our K-nearest neighbor outlier detector. We additionally need the <code>ProbabilisticDetector</code> wrapper for detectors, so that the detector&#39;s predictions are probabilistic. This wrapper is provided by the package <a href="https://outlierdetectionjl.github.io/OutlierDetection.jl/dev/documentation/simple-usage/">OutlierDetection.jl</a> (Muhr et al., <a href="https://doi.org/10.48550/arXiv.2211.04550">2022</a>) which we must explicitly import. Training and prediction proceeds following a familiar pattern:</p><pre><code class="language- hljs">import OutlierDetection
+KNNDetector = @load KNNDetector pkg=OutlierDetectionNeighbors verbosity=0
+detector = OutlierDetection.ProbabilisticDetector(KNNDetector())
+mach = machine(detector, data_continuous)
+fit!(mach)
+data.detector_outcome = predict(mach, data_continuous); # add results to the dataframe
+first(data.detector_outcome, 3)</code></pre><pre><code class="nohighlight hljs">3-element CategoricalDistributions.UnivariateFiniteVector{OrderedFactor{2}, String, UInt8, Float64}:
+ UnivariateFinite{OrderedFactor{2}}(normal=&gt;0.936, outlier=&gt;0.0637)
+ UnivariateFinite{OrderedFactor{2}}(normal=&gt;0.96, outlier=&gt;0.04)
+ UnivariateFinite{OrderedFactor{2}}(normal=&gt;0.966, outlier=&gt;0.0343)</code></pre><p>We now choose a rejection rate, which should not be too high or we will remove informative inliers. Having experimented with different rates, we choose a rate we know to optimize the out-of-sample performance of the supervised models to be introduced later, about 5%. From this rate, we determine the threshold probability of normality, and dump the corresponding outlier subjects:</p><pre><code class="language- hljs">using Statistics # to get the `quantile` method
+rejection_rate = 0.05 # chosen based on experimentation
+threshold = quantile(pdf.(data.detector_outcome, &quot;normal&quot;), rejection_rate)
+data = filter(data) do row
+    pdf(row.detector_outcome, &quot;normal&quot;) &gt; threshold
+end;
+proportion_accepted = nrows(data)/ntrain</code></pre><pre><code class="nohighlight hljs">0.95</code></pre><p><strong>Going deeper.</strong> Having used it to remove outliers, we make no further use of <code>data_continuous</code>. Later, when we perform cross validation to estimate performance of our supervised models, we will re-apply our data preprocessing to each training and validation fold, but using learned parameters (such as the mean and variance computed in standardization) based only on the <em>training</em> fold. This mitigates <a href="https://en.wikipedia.org/wiki/Leakage_(machine_learning)">data leakage</a> into our validation sets. Having combined our preprocessing algorithms into a single pipeline model makes this rather easy to do.  ■</p><h2 id="evaluate"><a class="docs-heading-anchor" href="#evaluate">7. Evaluating a supervised model</a><a id="evaluate-1"></a><a class="docs-heading-anchor-permalink" href="#evaluate" title="Permalink"></a></h2><blockquote><p>How to estimate the expected performance of a supervised learner, using: (i) A simple holdout set; and (ii) Sophisticated cross-validation tools</p></blockquote><p>We are almost ready to train our first supervised predictive model. In preparation, we horizontally split our training data into a table of features <code>X</code>, and a vector target <code>y</code>, the diagnosis we want to predict, given new features.</p><pre><code class="language- hljs">y, X, _ = unpack(data, ==(:diagnosis), !=(:detector_outcome));
+first(schema(X).names, 5)</code></pre><pre><code class="nohighlight hljs">5-element Vector{Symbol}:
+ :age
+ :sex
+ :on_thyroxine
+ :query_on_thyroxine
+ :on_antithyroid_medication</code></pre><p>We have dropped the <code>detector_outcome</code> field, which is no longer relevant.</p><p><strong>Going deeper.</strong> To interpret this application of <code>unpack</code>, note that <code>==(:diagnosis)</code> defines a function such that <code>==(:diagnosis)(x)</code> is <code>true</code> if <code>x == :diagnosis</code>, and <code>false</code> otherwise. The <code>unpack</code> command takes any column of <code>data</code> which has a name on which this function returns <code>true</code>, and puts it into <code>y</code>. Of the remaining columns, any with name <em>not</em> equal to <code>:detector_outcome</code> goes into <code>X</code>, while the last returned value, discarded here, is everything remaining (in this case the <code>:detector_outcome</code> column).  By default, a single column is always returned as a vector instead of a table. ■</p><p>The first supervised model we will train is a <a href="https://en.wikipedia.org/wiki/Gradient_boosting">gradient tree boosting model</a>. For tabular data where the columns have distinct interpretations - so-called <em>structured data</em>, this is often the best performing model. For image data, audio or video, and for some types of natural language processing, neural networks may be a better first choice. A gradient tree booster is relatively quick to train, and, as a byproduct of training, it can rank the importance of our features. We will use this to apply recursive feature elimination, discussed later.</p><p>We will use the gradient tree booster <code>EvoTreeClassifier</code> from the EvoTrees.jl package, combining it with the same data preprocessing discussed above. Note that this model cannot be provided an RNG, but only the seed for an internally created RNG.</p><pre><code class="language- hljs">EvoTreeClassifier = @load EvoTreeClassifier verbosity=0
+bare_booster = EvoTreeClassifier(seed=123)
+booster = preprocess |&gt; bare_booster;</code></pre><p>We will now estimate the expected precision at 0.95 recall in two ways: (i) by hand, using a simple holdout set, and (ii) using stratified cross-validation and MLJ&#39;s <code>evaluate</code> function.</p><h3 id="A-holdout-performance-estimate-(by-hand)"><a class="docs-heading-anchor" href="#A-holdout-performance-estimate-(by-hand)">A holdout performance estimate (by hand)</a><a id="A-holdout-performance-estimate-(by-hand)-1"></a><a class="docs-heading-anchor-permalink" href="#A-holdout-performance-estimate-(by-hand)" title="Permalink"></a></h3><p>For an objective estimate of performance, and without touching our reserved test set, we split our training indices further into <code>core_train</code> and <code>validation</code> sets, in the ratio 60:40:</p><pre><code class="language- hljs">core_train, validation = partition(eachindex(y), 0.6; stratify=y);</code></pre><p>We train on <code>core_train</code>:</p><pre><code class="language- hljs">mach = machine(booster, X, y)
+fit!(mach, rows=core_train, verbosity=0);</code></pre><p>And we predict on <code>validation</code>:</p><pre><code class="language- hljs">yhat = predict(mach, rows=validation)
+first(yhat, 3)</code></pre><pre><code class="nohighlight hljs">3-element CategoricalDistributions.UnivariateFiniteVector{OrderedFactor{2}, String, UInt32, Float32}:
+ UnivariateFinite{OrderedFactor{2}}(negative=&gt;0.00182, positive=&gt;0.998)
+ UnivariateFinite{OrderedFactor{2}}(negative=&gt;0.00177, positive=&gt;0.998)
+ UnivariateFinite{OrderedFactor{2}}(negative=&gt;0.00224, positive=&gt;0.998)</code></pre><p>Our metric is defined like this:</p><pre><code class="language- hljs">precision_at_95 = PrecisionAtFixedRecall(0.95)</code></pre><pre><code class="nohighlight hljs">PrecisionAtFixedRecall(
+  recall_threshold = 0.95)</code></pre><p>And we evaluate like so:</p><pre><code class="language- hljs">precision_at_95(yhat, y[validation])</code></pre><pre><code class="nohighlight hljs">0.8870235934664247</code></pre><p>This is an estimate of the expected precision if we choose a probability threshold for the positive class giving us 95% recall. The mechanics of thresholding are discussed later. Unfortunately, this single estimate does not come with any associated estimate of uncertainty. We have no firm basis for rejecting the possibility that, by chance, our empirical estimate is significantly larger than the true population value. Our second approach attempts to address this issue.</p><h3 id="Stratified-cross-validation-(automated)"><a class="docs-heading-anchor" href="#Stratified-cross-validation-(automated)">Stratified cross-validation (automated)</a><a id="Stratified-cross-validation-(automated)-1"></a><a class="docs-heading-anchor-permalink" href="#Stratified-cross-validation-(automated)" title="Permalink"></a></h3><p>Recall that in <a href="https://en.wikipedia.org/wiki/Cross-validation_(statistics)">k-fold cross-validation</a> we split a data set into train and validation sets in <code>k</code> different ways, using a partition of the data into <code>k</code> so-called <strong>folds</strong>. Each fold is a training set, and the fold&#39;s complement the corresponding validation set. We thus get <code>k</code> separate estimates of expected performance, whose mean and variance furnish a confidence interval for the expected performance in the general population.</p><p>Unfortunately, as the individual fold estimates are not truly independent, this naive approach is flawed, as is well known; see, e.g., Dietterich (<a href="https://doi.org/10.1162/089976698300017197">1998</a>). Some variants of the method attempt to improve the quality of the CI (we adopt one shortly) but ultimately better estimates rely on complicated specifics of the predictive model, and on assumptions about the underlying data-generating process. This is an active area of research.</p><p>Data scientists typically report the naive CI&#39;s, with the admonition that such estimates are not 100% reliable.</p><p>Here&#39;s how we can quickly get a CI for the precision at 0.95 recall, using six-fold cross-validation. Here we are using all rows of our training data <code>(X, y)</code> to construct the folds. To restrict the data used, include a <code>rows=...</code> specification.</p><pre><code class="language- hljs">evaluate(booster, X, y; resampling=StratifiedCV(nfolds=6), measure=precision_at_95)</code></pre><pre><code class="nohighlight hljs">PerformanceEvaluation object with these fields:
+  model, tag, measure, operation,
+  measurement (per-fold aggregate), uncertainty_radius_95 (1.96*SE),
+  per_fold, per_observation,
+  fitted_params_per_fold, report_per_fold,
+  train_test_rows, resampling, repeats
+Tag: ProbabilisticPipeline-436
+Extract:
+┌────────────────────────────┬───────────┬─────────────┬─────────┐
+│ measure                    │ operation │ measurement │ 1.96*SE │
+├────────────────────────────┼───────────┼─────────────┼─────────┤
+│ PrecisionAtFixedRecall(    │ predict   │ 0.869       │ 0.099   │
+│   recall_threshold = 0.95) │           │             │         │
+└────────────────────────────┴───────────┴─────────────┴─────────┘
+┌────────────────────────────────────────────┐
+│ per_fold                                   │
+├────────────────────────────────────────────┤
+│ [0.913, 0.646, 0.914, 0.875, 0.914, 0.955] │
+└────────────────────────────────────────────┘
+Apply `describe` to this result for a named tuple summary.</code></pre><p>The bottom box shows the individual cross-validation scores, while their aggregate (in this case, mean) is reported under &quot;measurement&quot; in the top box. The number under &quot;1.96*SE&quot; is the 95% uncertainty radius. We use <code>StratifiedCV</code> (there is also a vanilla <code>CV</code>) to ensure each fold has a similar distribution of positives in the target.</p><p>To get the earlier holdout estimate, use <code>resampling=[(core_train, validation),]</code> instead. One could also do <code>resampling=Holdout(fraction_train=0.6)</code>, but in this case, the split is not stratified.</p><p>Empirically, it has been shown that the quality of cross-validation estimates improve if one combines multiple estimates by repeating cross-validation with row-shuffling in between. This is sometimes called <strong>Monte Carlo cross-validation</strong>.  We achieve this with the <code>repeats</code> keyword, but must also specify an RNG (or <code>shuffle=true</code>) to ensure the shuffling happens. At the same time, let us introduce some other metrics for comparison:</p><pre><code class="language- hljs">precision_at_90 = PrecisionAtFixedRecall(0.9)
+metrics = [
+    precision_at_95,
+    average_precision,
+    balanced_accuracy,
+    accuracy,
+]
+evaluation = evaluate(
+    booster,
+    X,
+    y;
+    resampling=StratifiedCV(nfolds=6, rng=stable_rng()),
+    repeats=3,
+    measures=metrics,
+)</code></pre><pre><code class="nohighlight hljs">PerformanceEvaluation object with these fields:
+  model, tag, measure, operation,
+  measurement (per-fold aggregate), uncertainty_radius_95 (1.96*SE),
+  per_fold, per_observation,
+  fitted_params_per_fold, report_per_fold,
+  train_test_rows, resampling, repeats
+Tag: ProbabilisticPipeline-590
+Extract:
+┌───┬────────────────────────────┬──────────────┬─────────────┬─────────┐
+│   │ measure                    │ operation    │ measurement │ 1.96*SE │
+├───┼────────────────────────────┼──────────────┼─────────────┼─────────┤
+│ A │ PrecisionAtFixedRecall(    │ predict      │ 0.868       │ 0.047   │
+│   │   recall_threshold = 0.95) │              │             │         │
+│ B │ AveragePrecision()         │ predict      │ 0.967       │ 0.015   │
+│ C │ BalancedAccuracy(          │ predict_mode │ 0.96        │ 0.011   │
+│   │   adjusted = false)        │              │             │         │
+│ D │ Accuracy()                 │ predict_mode │ 0.9873      │ 0.0027  │
+└───┴────────────────────────────┴──────────────┴─────────────┴─────────┘
+┌───┬───────────────────────────────────────────────────────────────────────────
+│   │ per_fold                                                                 ⋯
+├───┼───────────────────────────────────────────────────────────────────────────
+│ A │ [0.913, 0.957, 0.956, 0.824, 0.858, 0.875, 0.913, 0.937, 0.917, 0.75, 0. ⋯
+│ B │ [0.912, 0.985, 0.996, 0.961, 0.887, 0.988, 0.982, 0.98, 0.993, 0.936, 0. ⋯
+│ C │ [0.993, 0.955, 0.974, 0.904, 0.97, 0.953, 0.951, 0.975, 0.977, 0.925, 0. ⋯
+│ D │ [0.987, 0.99, 0.99, 0.977, 0.984, 0.99, 0.987, 0.99, 0.997, 0.977, 0.987 ⋯
+└───┴───────────────────────────────────────────────────────────────────────────
+                                                                1 column omitted
+Apply `describe` to this result for a named tuple summary.</code></pre><h2 id="rfe"><a class="docs-heading-anchor" href="#rfe">8. Recursive feature elimination</a><a id="rfe-1"></a><a class="docs-heading-anchor-permalink" href="#rfe" title="Permalink"></a></h2><blockquote><p>Identifying and removing uninformative features using a supervised model that can rank features, and including the corresponding feature selection in other model pipelines</p></blockquote><p>By working with a reduced feature set, we can avoid the <a href="https://en.wikipedia.org/wiki/Curse_of_dimensionality">curse of dimensionality</a>, which avails us of more computationally intensive models, such as support vector machines, and simplifies interpretation. Some models also appear to perform better when less informative features are eliminated.</p><p>Here&#39;s a demonstration of extracting feature importances using the gradient tree booster introduced earlier:</p><pre><code class="language- hljs">mach = machine(preprocess, X)
+fit!(mach, verbosity=0)
+X_continuous = transform(mach, X)
+mach = machine(bare_booster, X_continuous, y)
+fit!(mach, verbosity=0)
+predict(mach, rows=1:3) # predictions for the first three subjects</code></pre><pre><code class="nohighlight hljs">3-element CategoricalDistributions.UnivariateFiniteVector{OrderedFactor{2}, String, UInt32, Float32}:
+ UnivariateFinite{OrderedFactor{2}}(negative=&gt;1.0, positive=&gt;8.07e-5)
+ UnivariateFinite{OrderedFactor{2}}(negative=&gt;1.0, positive=&gt;5.57e-5)
+ UnivariateFinite{OrderedFactor{2}}(negative=&gt;0.941, positive=&gt;0.0588)</code></pre><pre><code class="language- hljs">feature_importances(mach)</code></pre><pre><code class="nohighlight hljs">29-element Vector{Pair{Symbol, Float64}}:
+                          :TSH =&gt; 0.8465732486025339
+              :on_thyroxine__f =&gt; 0.0807252692038523
+                          :TT4 =&gt; 0.02436441018351323
+                           :T3 =&gt; 0.01170242150570036
+           :thyroid_surgery__f =&gt; 0.01108429739929545
+                          :age =&gt; 0.008957494419934006
+                          :FTI =&gt; 0.00888975533456939
+                          :T4U =&gt; 0.0029528247804422206
+               :T3_measured__f =&gt; 0.0017558634258870965
+                       :sex__F =&gt; 0.0011257671108760275
+         :query_hypothyroid__f =&gt; 0.001000719642876672
+         :referral_source__SVI =&gt; 0.0005633197799465425
+            :I131_treatment__f =&gt; 0.0001724462704739558
+                     :tumor__f =&gt; 0.00011125643389966268
+        :query_hyperthyroid__f =&gt; 7.558836638324587e-6
+              :T4U_measured__f =&gt; 7.11352735204822e-6
+              :FTI_measured__f =&gt; 4.4913813736086414e-6
+ :on_antithyroid_medication__f =&gt; 1.7375521191483677e-6
+              :TT4_measured__f =&gt; 4.608716007683241e-9
+        :query_on_thyroxine__f =&gt; 0.0
+                      :sick__f =&gt; 0.0
+                  :pregnant__f =&gt; 0.0
+                   :lithium__f =&gt; 0.0
+                    :goitre__f =&gt; 0.0
+                     :psych__f =&gt; 0.0
+              :TSH_measured__f =&gt; 0.0
+        :referral_source__STMW =&gt; 0.0
+        :referral_source__SVHC =&gt; 0.0
+        :referral_source__SVHD =&gt; 0.0</code></pre><p>The precise definition of &quot;importance&quot; is a heuristic one, specific to tree-based models. Other popular model-agnostic approaches to defining and calculating feature importances are Shapley values and LIME explanations, which are not discussed here; see Henninger and Strobl (<a href="https://link.springer.com/article/10.1007/s41237-024-00253-2">2025</a>).</p><p>We now wrap our bare gradient booster (which expects <code>Continuous</code> features) in recursive feature elimination:</p><pre><code class="language- hljs">bare_booster_with_rfe(n) = RecursiveFeatureElimination(bare_booster, n_features=n, step=0.25);</code></pre><p>The model <code>bare_booster_with_rfe(n)</code> is a new predictive supervised learner. When we train this model this triggers multiple training events under the hood. First, the core booster is trained on all the data. Then:</p><ol><li><p>The features are ranked by importance.</p></li><li><p>Up to 25% of the worst features are dropped from the training data.</p></li><li><p>We begin again at Step 1, unless the number of features remaining is <code>n</code>.</p></li></ol><p>Predictions for such a model, are based on the last training event (<code>n</code> features).</p><p>For purposes of illustration, let&#39;s see if reducing the number of features to four has any noticeable impact on performance.  The <code>evaluate</code> command accepts a vector of models, optionally tagged with names, for easy model comparison:</p><pre><code class="language- hljs"># To avoid re-typing `evaluate` options:
+options() = (
+    resampling=StratifiedCV(nfolds=6, rng=stable_rng()),
+    measures=metrics,
+    repeats=3,
+    verbosity=0,
+)
+evaluations = evaluate(
+    [
+        &quot;booster&quot; =&gt; preprocess |&gt; bare_booster,
+        &quot;booster (2 features)&quot; =&gt; preprocess |&gt; bare_booster_with_rfe(2),
+        &quot;booster (4 features)&quot; =&gt; preprocess |&gt; bare_booster_with_rfe(4),
+        &quot;booster (8 features)&quot; =&gt; preprocess |&gt; bare_booster_with_rfe(8),
+    ],
+    X,
+    y; # this semicolon is important!
+    options()...,
+);</code></pre><p>Here a vector of evaluation objects is being returned, but we can get a nice summary table like this:</p><pre><code class="language- hljs">describe.(evaluations) |&gt; DataFrames.DataFrame</code></pre><pre><code class="nohighlight hljs">4×5 DataFrame
+ Row │ tag                   PrecisionAtFixedRecall  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String                Measurement{Float64}    Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ booster                          0.868±0.047           0.967±0.015           0.96±0.011          0.9873±0.0027
+   2 │ booster (2 features)             0.766±0.058           0.974±0.012           0.965±0.011         0.9909±0.0019
+   3 │ booster (4 features)             0.82±0.11             0.973±0.015           0.962±0.015         0.99±0.0032
+   4 │ booster (8 features)             0.81±0.11             0.969±0.014           0.965±0.011         0.9884±0.0022
+</code></pre><p>Okay, no real improvement here. Hower, we can apply the same feature selection ahead of training some other supervised model. The <code>transform</code> method, which is implemented for models wrapped with <code>RecursiveFeatureElimination</code>, performs precisely that feature selection:</p><pre><code class="language- hljs">mach = machine(bare_booster_with_rfe(4), X_continuous, y)
+fit!(mach)
+predict(mach, X_continuous) # booster predictions based on reduced features
+X_reduced = transform(mach, X_continuous) # the reduced features themselves
+schema(X_reduced)</code></pre><pre><code class="nohighlight hljs">┌────────────────────┬────────────┬─────────┐
+│ names              │ scitypes   │ types   │
+├────────────────────┼────────────┼─────────┤
+│ TSH                │ Continuous │ Float64 │
+│ on_thyroxine__f    │ Continuous │ Float64 │
+│ TT4                │ Continuous │ Float64 │
+│ thyroid_surgery__f │ Continuous │ Float64 │
+└────────────────────┴────────────┴─────────┘
+</code></pre><p>This feature comes with one caveat: If, when inserting a <code>RecursiveFeatureElimination</code> model in a pipeline, we want it interpreted as a <em>transformer</em> and not a <em>predictor</em>, we need to first wrap it using MLJ&#39;s <code>Transformer</code> wrapper. So we define</p><pre><code class="language- hljs">reducer(n) = Transformer(bare_booster_with_rfe(n));</code></pre><p>Let&#39;s demonstrate this by applying recursive feature elimination (as learned by the booster) to ordinary logistic regression (called logistic classification in MLJ):</p><pre><code class="language- hljs">LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels verbosity=0
+bare_linear = LogisticClassifier()
+
+evaluations_linear = evaluate(
+    [
+        &quot;linear&quot; =&gt; preprocess |&gt; bare_linear,
+        &quot;linear (2 features)&quot; =&gt; preprocess |&gt; reducer(2) |&gt; bare_linear,
+        &quot;linear (4 features)&quot; =&gt; preprocess |&gt; reducer(4) |&gt; bare_linear,
+        &quot;linear (8 features)&quot; =&gt; preprocess |&gt; reducer(8) |&gt; bare_linear,
+    ],
+    X,
+    y;
+    options()...,
+)
+describe.(evaluations_linear) |&gt; DataFrames.DataFrame</code></pre><pre><code class="nohighlight hljs">4×5 DataFrame
+ Row │ tag                  PrecisionAtFixedRecall  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String               Measurement{Float64}    Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ linear                            0.54±0.15           0.936±0.018           0.923±0.021         0.986±0.0028
+   2 │ linear (2 features)               0.69±0.16           0.971±0.014           0.933±0.018         0.9878±0.0029
+   3 │ linear (4 features)               0.8±0.13            0.965±0.017           0.934±0.016         0.9878±0.0023
+   4 │ linear (8 features)               0.79±0.13           0.965±0.014           0.941±0.014         0.9885±0.0022
+</code></pre><p>Here we see a definite benefit.</p><h2 id="tuning"><a class="docs-heading-anchor" href="#tuning">9. Hyper-parameter tuning</a><a id="tuning-1"></a><a class="docs-heading-anchor-permalink" href="#tuning" title="Permalink"></a></h2><blockquote><p>Optimizing hyper-parameters with a visual plot, or with a model wrapper that creates self-tuning models</p></blockquote><p>Let us build a new supervised model we can train on the data <code>(X, y)</code> by combining a simple decision tree classifier (as applied earlier to the iris dataset) with our previously described data preprocessing steps:</p><pre><code class="language- hljs">bare_tree = DecisionTreeClassifier(rng=stable_rng())</code></pre><pre><code class="nohighlight hljs">DecisionTreeClassifier(
+  max_depth = -1, 
+  min_samples_leaf = 1, 
+  min_samples_split = 2, 
+  min_purity_increase = 0.0, 
+  n_subfeatures = 0, 
+  post_prune = false, 
+  merge_purity_threshold = 1.0, 
+  display_depth = 5, 
+  feature_importance = :impurity, 
+  rng = StableRNGs.LehmerRNG(state=0x000000000000000000000000000001d5))</code></pre><pre><code class="language- hljs">tree = preprocess |&gt; bare_tree;</code></pre><p>The <code>bare_tree</code> hyper-parameter <code>min_samples_split</code> is a regularization parameter: a lower value reduces the tendency of the tree to over-fit to the training data (by pruning the tree in some way we won&#39;t go into here). The default value, 2, corresponds to no regularization. Let&#39;s increase the value and see if that has any impact on performance.</p><pre><code class="language- hljs">tree_regularized = deepcopy(tree)
+# mutate nested hyper-parameter:
+tree_regularized.decision_tree_classifier.min_samples_split = 5
+# compare performance using previous `evaluate` options:
+evaluations = evaluate(
+    [&quot;tree&quot; =&gt; tree, &quot;tree (regularized)&quot; =&gt; tree_regularized],
+    X,
+    y;
+    options()...,
+)
+describe.(evaluations) |&gt; DataFrames.DataFrame</code></pre><pre><code class="nohighlight hljs">2×5 DataFrame
+ Row │ tag                 PrecisionAtFixedRecall  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String              Measurement{Float64}    Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ tree                           0.85±0.15         0.9992±0.0013            0.988±0.0092         0.995±0.0021
+   2 │ tree (regularized)             0.972±0.017       0.99954±0.00055          0.9917±0.006         0.9973±0.0011
+</code></pre><p>To automate experimenting with hyper-parameter values, MLJ provides two methods. The first, which works for a single hyper-parameter, is visual.</p><h3 id="Learning-curves"><a class="docs-heading-anchor" href="#Learning-curves">Learning curves</a><a id="Learning-curves-1"></a><a class="docs-heading-anchor-permalink" href="#Learning-curves" title="Permalink"></a></h3><p>We now explore the effects of varying <code>min_samples_split</code> with a visual plot. For plotting, we use <a href="https://docs.juliaplots.org/latest/">Plots.jl</a>. Another popular plotting package in Julia is <a href="https://docs.makie.org/stable/">Makie.jl</a>.</p><pre><code class="language- hljs">r = range(tree, :(decision_tree_classifier.min_samples_split), lower=2, upper=21)
+_, _, splits, precisions = learning_curve(
+    tree,
+    X,
+    y,
+    range=r,
+    resampling=StratifiedCV(nfolds=3),
+    measure=precision_at_95,
+    verbosity=0,
+)
+using Plots
+fig = scatter(splits, precisions, legend=false)
+xlabel!(fig, &quot;min_samples_split&quot;)
+ylabel!(fig, &quot;precision at 0.95 recall&quot;)
+title!(fig, &quot;Decision Tree Learning Curve&quot;)
+savefig(fig, localfile(&quot;tree_learning_curve.svg&quot;));</code></pre><p>Note that <code>localfile</code> was defined <a href="#setup">above</a>.</p><p><img src="../tree_learning_curve.svg" alt/></p><blockquote><p>Figure 3. A learning curve for visualizing impact on performance of the <code>min_samples_split</code> hyper-parameter.</p></blockquote><h3 id="Tuning-as-model-wrapper"><a class="docs-heading-anchor" href="#Tuning-as-model-wrapper">Tuning as model wrapper</a><a id="Tuning-as-model-wrapper-1"></a><a class="docs-heading-anchor-permalink" href="#Tuning-as-model-wrapper" title="Permalink"></a></h3><p>For a more principled approach to tuning, and for dealing with more than one hyper-parameter, MLJ implements tuning as a model wrapper. For illustration, we add a second regularization parameter, <code>max_depth</code>, to the search space:</p><pre><code class="language- hljs">r2 = range(tree, :(decision_tree_classifier.max_depth), values=[-1, 1, 2, 3])
+tuned_tree = TunedModel(
+    tree;
+    range = [r, r2],      # defined above
+    tuning=Grid(goal=32, shuffle=false), # test on a parameter grid with about 32 points
+    resampling=StratifiedCV(nfolds=3),
+    measure=precision_at_95,
+);</code></pre><p>Here <code>tuned_tree</code> is a new supervised model, which we can think of as a &quot;self-tuning&quot; version of the original <code>tree</code> model. Stated differently, it is a new model in which the hyper-parameters <code>min_samples_split</code> and <code>max_depth</code> have become <em>learned</em> parameters. When we train <code>tuned_model</code> on data <code>(X, y)</code>, the following happens behind the scenes:</p><ol><li><p>A sequence of <code>tree</code> mutations <code>tree1</code>, <code>tree2</code>, <code>tree3</code>, ... , of <code>tree</code>, with hyper-parameters varying over the specified <code>range</code>, are constructed.</p></li><li><p><code>evaluate</code> is called on each model mutant, applying the specified <code>resampling</code> strategy to <code>(X, y)</code>, to get <em>out-of-sample</em> estimates of the expected precision at 0.95 recall.</p></li><li><p>The mutant with the best performance is identified.</p></li><li><p>The best performer is retrained using <em>all</em> supplied data.</p></li></ol><p>After we train the model, we can inspect various intermediate outcomes of the process using <code>report</code>.</p><pre><code class="language- hljs">mach = machine(tuned_tree, X, y)
+fit!(mach);
+rprt = report(mach)
+keys(rprt)</code></pre><pre><code class="nohighlight hljs">(:best_model, :best_history_entry, :history, :best_report, :plotting)</code></pre><pre><code class="language- hljs">rprt.best_model.decision_tree_classifier.min_samples_split</code></pre><pre><code class="nohighlight hljs">5</code></pre><p>There is also a plot summarizing the tuning process:</p><pre><code class="language- hljs">fig = plot(mach)
+savefig(fig, localfile(&quot;tuned_tree.svg&quot;));</code></pre><p><img src="../tuned_tree.svg" alt/></p><blockquote><p>Figure 4. Plot for visualizing the impact on performance of multiple hyper-parameters.</p></blockquote><p>The larger the circles in the bottom left plot, the larger the precision at 0.95 recall.</p><p>Because we need out-of-sample estimates in the optimization process, there is less data available for training in each estimate of performance. For that reason, tuning is no guarantee of better performance, especially when the number of subjects is small.</p><p>Here is a comparison of our tree and its self-tuning counterpart:</p><pre><code class="language- hljs">evaluations = evaluate(
+    [&quot;tree&quot; =&gt; tree, &quot;tree with tuning&quot; =&gt; tuned_tree],
+    X,
+    y;
+    options()...,
+)
+describe.(evaluations) |&gt; DataFrames.DataFrame</code></pre><pre><code class="nohighlight hljs">2×5 DataFrame
+ Row │ tag               PrecisionAtFixedRecall  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String            Measurement{Float64}    Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ tree                         0.85±0.15           0.9992±0.0013         0.988±0.0092          0.995±0.0021
+   2 │ tree with tuning             0.933±0.027         0.9988±0.001          0.9917±0.0063         0.9953±0.0024
+</code></pre><p><strong>Going deeper.</strong> An important reason for implementing tuning as a model wrapper, is to guard against <a href="https://en.wikipedia.org/wiki/Leakage_(machine_learning)">data leakage</a>. With the complete optimization process internalized in the fitting of the meta-model, the inadvertent use of training data for validating hyper-parameter choices is precluded.</p><p>When we <code>evaluate</code> the <code>tuned_tree</code> model above we trigger <a href="https://mlr.mlr-org.com/articles/tutorial/nested_resampling.html">nested resampling</a>: For each fold in an outer resampling loop we are training <code>tuned_model</code>, which itself requires, for each hyper-parameter set, an inner resampling loop, to get the out-of-sample estimates on which the choice of best parameter will be based. Note also that the actual hyper-parameters selected may be different for each fold in the outer loop.</p><p>Because nested resampling can be computationally expensive, it is sometimes avoided, but in doing so one may run into data leakage concerns. ■</p><p>The <code>TunedModel</code> wrapper is a feature-rich component of MLJ. For a deeper dive, refer to the <a href="https://juliaai.github.io/MLJ.jl/dev/tuning_models/">documentation</a>.</p><h2 id="imbalance"><a class="docs-heading-anchor" href="#imbalance">10. Correcting for class imbalance</a><a id="imbalance-1"></a><a class="docs-heading-anchor-permalink" href="#imbalance" title="Permalink"></a></h2><blockquote><p>Synthesizing new subjects to correct for the imbalance in positive and negative outcomes</p></blockquote><p>The most naive way to correct for our excess of negative diagnoses in the training data, is to randomly duplicate subjects with positive outcomes, and add these to the training dataset. This is an example of <strong>oversampling</strong>. In the more commonly applied variations of this idea, one synthesizes, using some heuristic, new data examples which are not literal copies of existing examples, but are close to them in some sense. Of course, we always check the performance of models trained with oversampled data using using data that is <em>not</em> oversampled.</p><p>For the current dataset, and for several supervised models we experimented with, we observed, at best, modest benefits to oversampling, with respect to our target metric. To show the benefit for other metrics, we nevertheless include some oversampled models in our later comparisons.</p><p>Let&#39;s see how oversampling works in an example.  We will use the <code>SMOTE</code> oversampler (Chawla et al., <a href="https://www.jair.org/index.php/jair/article/view/10302">2002</a>) from the Imbalance.jl package (Wisam and Blaom, <a href="https://joss.theoj.org/papers/10.21105/joss.06310">2024</a>). This oversampler requires the features to be oversampled to be <code>Continuous</code>. We set the desired ratios of each class, relative to the majority class (here &quot;negative&quot;), using the <code>ratios</code> hyper-parameter. If <code>ratios</code> is left unspecified, the distribution for classes in the outputs will be a uniform one, with no oversampling of the majority class.</p><pre><code class="language- hljs">SMOTE = @load SMOTE pkg=Imbalance verbosity=0
+smote = SMOTE(rng=stable_rng(), ratios=Dict(&quot;positive&quot;=&gt;0.5, &quot;negative&quot;=&gt;1.0))
+mach = machine(smote)                         # no data provided here, and no `fit!`
+X_over, y_over = transform(mach, X_continuous, y);
+proportions = StatsBase.proportionmap(y_over)
+@info &quot;diagnosis distribution&quot; proportions[&quot;positive&quot;] proportions[&quot;negative&quot;]
+@info &quot;data set sizes&quot; length(y) length(y_over)</code></pre><pre><code class="nohighlight hljs">┌ Info: diagnosis distribution
+│   proportions[&quot;positive&quot;] = 0.3332047821056691
+└   proportions[&quot;negative&quot;] = 0.6667952178943309
+┌ Info: data set sizes
+│   length(y) = 1862
+└   length(y_over) = 2593
+</code></pre><p><strong>Going deeper.</strong> There are two new aspects to this workflow worth commenting on. An oversampler just transforms the data provided. Nothing is &quot;learned&quot;, in the sense there is nothing extracted from the data that can be generalized to new data examples. This is in contrast to a supervised predictive model, like a decision tree. Oversamplers have the type <code>Static</code> in MLJ, and for such models:</p><ul><li>We do not provide the <code>machine</code> constructor any training data.</li><li>There is no need to <code>fit!</code> the machine - we can immediately apply <code>transform</code>.</li></ul><p>There is a variation <code>SMOTE</code> that handles categorical data, <code>SMOTENC</code>.  However, for the thyroid dataset we mostly found it more effective to perform oversampling after one-hot encoding and standardization, rather than before it. ■</p><p>In MLJ, an oversampler can be combined with a supervised learner using the <code>BalancedModel</code> wrapper. This delivers a new supervised learning model behaving just like the original one, except that, under the hood, oversampling happens whenever the model is trained. Here is a demonstration:</p><pre><code class="language- hljs">balanced_bare_booster = BalancedModel(bare_booster, oversampler=smote)
+mach = machine(balanced_bare_booster, X_continuous, y)
+fit!(mach)
+predict(mach, rows=1:3)</code></pre><pre><code class="nohighlight hljs">3-element CategoricalDistributions.UnivariateFiniteVector{OrderedFactor{2}, String, UInt32, Float32}:
+ UnivariateFinite{OrderedFactor{2}}(negative=&gt;1.0, positive=&gt;4.23e-5)
+ UnivariateFinite{OrderedFactor{2}}(negative=&gt;1.0, positive=&gt;0.000113)
+ UnivariateFinite{OrderedFactor{2}}(negative=&gt;1.0, positive=&gt;0.000188)</code></pre><p>The supervised model comparisons that follow include some models wrapped in oversampling.</p><h2 id="compare"><a class="docs-heading-anchor" href="#compare">11. Model comparisons</a><a id="compare-1"></a><a class="docs-heading-anchor-permalink" href="#compare" title="Permalink"></a></h2><blockquote><p>Comparing several supervised models wrapped in complete machine learning workflows</p></blockquote><p>All the supervised models we will consider are probabilistic predictors. To the models we have already seen, we add:</p><ul><li><p>a linear model, <code>LogisticClassifier</code> (a.k.a. logistic regression),</p></li><li><p>a <a href="https://en.wikipedia.org/wiki/Support_vector_machine">support vector machine</a> (SVM), <code>ProbabilisticSVC</code>,</p></li><li><p>a <a href="https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm">K-nearest neighbors model</a>, <code>KNNClassifier</code>,</p></li><li><p>a neural network,</p></li><li><p>a dummy model, <code>ConstantClassifier</code>, which predicts, for every new subject, the distribution of &quot;positives&quot; and &quot;negatives&quot; seen in the training subjects.</p></li></ul><p>For some models we include feature reduction (as defined in <a href="#rfe">Section 8</a>), hyper-parameter tuning (<a href="#tuning">Section 9</a>), and correction for class imbalance (<a href="#imbalance">Section 10</a>). All models except the <code>ConstantClassifier</code> include:</p><ul><li><p>missing value imputation,</p></li><li><p>one-hot encoding of <code>OrderedFactor</code> and <code>Multiclass</code> features,</p></li><li><p>feature standardization,</p></li></ul><p>which we previously combined into the <code>preprocess</code> pipeline.</p><p>The support vector machine is not tuned here, as there does not appear to be any benefit in this case, and training it is rather slow. Similarly, tuning the regularization parameter in the linear (logistic) model was found to have no benefit.</p><p>The neural network we will use is a <a href="https://en.wikipedia.org/wiki/Multilayer_perceptron">multi-layer perceptron</a> (MLP) with two hidden layers with 24 and 13 nodes respectively. The number of neurons in the input and output layers are determined directly from the data (in this case, 29 and 2 respectively). Here is how we build this neural network model:</p><pre><code class="language- hljs">NeuralNetworkClassifier = @load NeuralNetworkClassifier pkg=MLJFlux verbosity=0
+bare_neural_network = NeuralNetworkClassifier(
+    builder=MLJFlux.MLP(; hidden=(24, 13)),
+    rng = stable_rng(),
+)
+neural_network = preprocess |&gt; bare_neural_network;</code></pre><p>By default, this neural network trains for 10 epochs, which we determined is sufficient, by plotting a learning curve (see <a href="#tuning">Section 9</a>).</p><p>For more on MLJ&#39;s neural network models, refer to <a href="https://fluxml.ai/MLJFlux.jl/dev/">MLJFlux documentation</a>, which includes some demonstration of iterative model control (e.g., early stopping), which is not addressed here; see also the <a href="https://juliaai.github.io/MLJ.jl/dev/controlling_iterative_models/">Controlling Iterative Models</a> section of MLJ documentation.</p><p>Below is the complete list of supervised models to be compared. Recall that <code>reducer(4)</code>, for feature reduction, depends on the gradient tree booster.</p><pre><code class="language- hljs"># dummy:
+constant = ConstantClassifier() # a built-in model
+
+# linear:
+linear = preprocess |&gt; reducer(4) |&gt; bare_linear
+
+# decision tree:
+bare_tree = DecisionTreeClassifier(rng=stable_rng())
+tree = preprocess |&gt; bare_tree;
+
+# decision tree with tuning of `min_samples_split`:
+tuned_tree = TunedModel(
+    deepcopy(tree);
+    range=range(tree, :(decision_tree_classifier.min_samples_split), lower=2,upper=21),
+    tuning=Grid(goal=8, shuffle=false),
+    resampling=StratifiedCV(nfolds=3),
+    measure=precision_at_95,
+)
+
+# gradient tree booster:
+bare_booster = EvoTreeClassifier()
+booster = preprocess |&gt; bare_booster
+
+# a tuned gradient tree booster:
+tuned_booster = TunedModel(
+    deepcopy(booster),
+    range=range(booster, :(evo_tree_classifier.max_depth), lower=1, upper=9),
+    tuning=Grid(goal=5, shuffle=false),
+    resampling=StratifiedCV(nfolds=3),
+    measure=precision_at_95,
+)
+
+# support vector machine:
+ProbabilisticSVC = @load ProbabilisticSVC pkg=LIBSVM verbosity=0
+bare_svm = ProbabilisticSVC()
+svm = preprocess |&gt; reducer(4) |&gt; bare_svm
+
+# support vector machine with oversampling:
+balanced_svm = preprocess |&gt; reducer(5) |&gt; BalancedModel(
+    bare_svm,
+    oversampler=SMOTE(rng=stable_rng()),
+)
+
+# K-nearest neighbors model
+KNNClassifier = @load KNNClassifier pkg=NearestNeighborModels verbosity=0
+bare_knn = KNNClassifier(K=25)  # `K` chosen after some experimentation
+knn = preprocess |&gt; reducer(4) |&gt; bare_knn
+
+# K-nearest neighbors model with oversampling
+balanced_knn = preprocess |&gt; reducer(5) |&gt; BalancedModel(
+    bare_knn,
+    oversampler=SMOTE(rng=stable_rng()),
+);</code></pre><h3 id="Results"><a class="docs-heading-anchor" href="#Results">Results</a><a id="Results-1"></a><a class="docs-heading-anchor-permalink" href="#Results" title="Permalink"></a></h3><p>Below are the model comparisons. The computation takes less than 5 minutes on a laptop. We re-order the results so that models with the highest precision at 0.95 recall appear first.</p><pre><code class="language- hljs">named_models = [
+    &quot;dummy&quot; =&gt; constant,
+    &quot;linear (logistic)&quot; =&gt; linear,
+    &quot;decision tree&quot; =&gt; tree,
+    &quot;decision tree, tuned&quot; =&gt; tuned_tree,
+    &quot;gradient booster&quot; =&gt;booster,
+    &quot;gradient booster, tuned&quot; =&gt; tuned_booster,
+    &quot;SVM&quot; =&gt; svm,
+    &quot;SVM, balanced&quot; =&gt; balanced_svm,
+    &quot;KNN&quot; =&gt; knn,
+    &quot;KNN, balanced&quot; =&gt; balanced_knn,
+    &quot;neural network&quot; =&gt; neural_network,
+]
+
+@time performance_evaluations = evaluate(named_models, X, y; options()...)
+performance_summary = describe.(performance_evaluations) |&gt; DataFrames.DataFrame
+sort!(performance_summary, :PrecisionAtFixedRecall, rev=true)</code></pre><pre><code class="nohighlight hljs">129.465591 seconds (259.56 M allocations: 31.857 GiB, 12.51% gc time)
+11×5 DataFrame
+ Row │ tag                      PrecisionAtFixedRecall  AveragePrecision      BalancedAccuracy      Accuracy
+     │ String                   Measurement{Float64}    Measurement{Float64}  Measurement{Float64}  Measurement{Float64}
+─────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ decision tree                       0.91±0.11          0.99939±0.0008         0.9833±0.0079       0.9948±0.0016
+   2 │ SVM                                 0.904±0.037        0.965±0.024            0.945±0.017         0.9896±0.0028
+   3 │ decision tree, tuned                0.86±0.15          0.9981±0.0012          0.9863±0.0087       0.9961±0.0019
+   4 │ gradient booster, tuned             0.854±0.082        0.973±0.013            0.956±0.013         0.9882±0.0028
+   5 │ gradient booster                    0.842±0.076        0.969±0.013            0.955±0.015         0.9884±0.0025
+   6 │ linear (logistic)                   0.81±0.13          0.97±0.014             0.941±0.015         0.9889±0.0022
+   7 │ KNN                                 0.807±0.061        0.968±0.016            0.833±0.029         0.9749±0.0043
+   8 │ SVM, balanced                       0.776±0.09         0.961±0.016            0.9659±0.0094       0.9841±0.003
+   9 │ KNN, balanced                       0.67±0.1           0.965±0.011            0.968±0.0092        0.9726±0.003
+  10 │ neural network                      0.52±0.13          0.931±0.02             0.91±0.02           0.981±0.0032
+  11 │ dummy                               0.0±0.0            0.0±0.0                0.5±5.5e-17         0.92857±0.00055
+</code></pre><p>To better visualize the confidence intervals, we plot the results for some of the metrics:</p><p><img src="../PrecisionAtFixedRecall_estimates.svg" alt/></p><blockquote><p>Figure 5. Model comparisons for <strong>precision at 0.95 recall</strong></p></blockquote><p><img src="../AveragePrecision_estimates.svg" alt/></p><blockquote><p>Figure 6. Model comparisons for <strong>average precision</strong></p></blockquote><p><img src="../BalancedAccuracy_estimates.svg" alt/></p><blockquote><p>Figure 7. Model comparisons for <strong>balanced accuracy</strong></p></blockquote><p><strong>Going deeper.</strong> Below is the code generating plots for each metric, and saving them to disk:</p><pre><code class="language- hljs"># The tags here need to match the auto-generated column names of `performance_summary`:
+named_measures = [
+    :PrecisionAtFixedRecall =&gt; precision_at_95,
+    :AveragePrecision =&gt; average_precision,
+    :BalancedAccuracy =&gt; balanced_accuracy,
+    :Accuracy =&gt; accuracy,
+]
+
+using Measurements # a package for wrapping numbers with uncertainties
+function myplot(performance_summary)
+    plts = map(named_measures) do (name, measure)
+        sort!(performance_summary, name)
+        measurements = getproperty(performance_summary, name)
+        means = Measurements.value.(measurements)
+        uncertainties = Measurements.uncertainty.(measurements)
+        plt = scatter(
+            measurements,
+            performance_summary.tag,
+            xerror = uncertainties,
+            xlabel = name,
+            ylabel = &quot;Model&quot;,
+            markersize = 4,
+            color=:darkblue,
+            legend = false,
+            size=(600, 400),
+        )
+        savefig(plt, localfile(&quot;$(name)_estimates.svg&quot;))
+        plt
+    end
+    composite_plt = plot(plts...; plot_title=&quot;Model Comparison&quot;)
+    display(composite_plt)
+    return plts
+end
+
+plts = myplot(performance_summary)
+display(plts[1]) # to display the first plot</code></pre><p>■</p><h3 id="Commentary"><a class="docs-heading-anchor" href="#Commentary">Commentary</a><a id="Commentary-1"></a><a class="docs-heading-anchor-permalink" href="#Commentary" title="Permalink"></a></h3><p>Although the simple, untuned, decision tree achieves the best estimate of the expected precision at 0.95 recall, the estimate for the support vector machine (SVM), which is only slightly less, is much sharper (has smaller 95% confidence interval). This is clearly the preferred model.</p><p>On the other hand, the decision tree scores very well against both average precision and balanced accuracy scores, and our estimates in these cases are sharp. Meanwhile, the performance of the SVM is relatively poor. However, average precision, an approximation to the area under the precision-recall curve, is more a global measure of performance across all choices of probability threshold. Since we are focused on high recall, it&#39;s not the relevant score here.</p><p>In passing, we note that average precision is used more generally when the target is imbalanced, because the traditional <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">area under the receiver-operator characteristic</a> (AUC) is known to be less informative in that case.</p><p>Like average precision, the balanced accuracy, a proxy for accuracy correcting for class imbalance, is a broad measure of performance and not focused on the high recall regime.</p><p>The above comments notwithstanding, because of its simplicity and interpretability, we also consider the decision tree classifier in our final tests below.</p><p>Finally, we observe that while oversampling was unhelpful for improving performance of any model against the precision at 0.95 recall, it improved the balanced accuracy of both the SVM and the K-nearest neighbor (KNN) models, the latter significantly. Against average precision, oversampling reduced the variance of the SVM estimate, but did not significantly effect the expected value.</p><h2 id="threshold"><a class="docs-heading-anchor" href="#threshold">12. Probability thresholding</a><a id="threshold-1"></a><a class="docs-heading-anchor-permalink" href="#threshold" title="Permalink"></a></h2><blockquote><p>Estimating the probability threshold needed for a desired recall, and creating a model predicting either &quot;positive&quot; or &quot;negative&quot; based on that threshold</p></blockquote><p>Recall that all our models predict <em>probabilities</em> of the &quot;positive&quot; and &quot;negative&quot; class, not an actual class. To estimate a probability threshold giving us a recall of 0.95, we train our chosen model on a subset of the training data, and compute the corresponding out-of-sample recalls using the remaining training data, as we vary the probability threshold for the &quot;positive&quot; class. An MLJ method called <code>precision_recall_curve</code> automates this procedure and gives us the corresponding <code>precisions</code> at the same time.</p><p>First we must train on a subset of the full training data <code>(X, y)</code>, so we split the training indices (as we did once before):</p><pre><code class="language- hljs">core_train, validation = partition(eachindex(y), 0.6; stratify=y);</code></pre><p>Training the support vector machine on <code>core_train</code> and predicting on <code>validation</code>:</p><pre><code class="language- hljs">mach = machine(svm, X, y)
+fit!(mach, rows=core_train; verbosity=0)
+yhat = predict(mach, rows=validation);</code></pre><p>We compute our thresholds, recalls and precisions like this:</p><pre><code class="language- hljs">recalls, precisions, thresholds = precision_recall_curve(yhat, y[validation]);
+thresholds[[1,2,3,end-2,end-1,end]]</code></pre><pre><code class="nohighlight hljs">6-element Vector{Float64}:
+ 0.9999999
+ 0.9999998638338637
+ 0.9999997143934349
+ 2.411777169086804e-6
+ 2.0278551412511447e-6
+ 1.9589368164263377e-6</code></pre><p>There is one less threshold than recall or precision, and the recalls and precisions are constant on bins with boundaries in <code>[0, reverse(thresholds)..., 1]</code>.  Query the document string for details.</p><p>We note in passing that the empirical precision-recall curve appearing in <a href="#Overview">Overview</a> is generated by the following code:</p><pre><code class="language- hljs">fig = plot(recalls, precisions; legend=false)
+xlabel!(fig, &quot;recall&quot;)
+ylabel!(fig, &quot;precision&quot;)
+ylims!(fig, (0, 1.05))
+plot!(
+    [first(recalls), last(recalls)],
+    [last(precisions), last(precisions)],
+    linestyle=:dash,
+    color=:black
+)
+savefig(fig, localfile(&quot;svm_precision_recall_curve.svg&quot;));</code></pre><p>Here is the sought-after threshold:</p><pre><code class="language- hljs">i = findfirst(&gt;=(0.95), recalls)
+threshold = thresholds[i - 1]</code></pre><pre><code class="nohighlight hljs">0.40579923758201664</code></pre><p>To transform our probabilistic predictor into point predictor, we use another MLJ wrapper, <code>BinaryThresholdPredictor</code>:</p><pre><code class="language- hljs">svm_after_thresholding = BinaryThresholdPredictor(svm; threshold);</code></pre><p>We now repeat some of the preceding operations for the decision tree classifier:</p><pre><code class="language- hljs">mach = machine(tree, X, y)
+fit!(mach, rows=core_train; verbosity=0)
+yhat = predict(mach, rows=validation);
+recalls, precisions, thresholds = precision_recall_curve(yhat, y[validation])
+thresholds</code></pre><pre><code class="nohighlight hljs">2-element Vector{Float64}:
+ 1.0
+ 0.0</code></pre><p>From this we see that our simple decision tree model never predicts the positive class with probability different from zero or one, on the validation set. So, on the validation set, it makes no difference what we use to set the threshold. However, on new data, it may make a difference. So we will adopt the threshold extracted for the SVM:</p><pre><code class="language- hljs">tree_after_thresholding = BinaryThresholdPredictor(tree; threshold);</code></pre><h2 id="test"><a class="docs-heading-anchor" href="#test">13. Final testing</a><a id="test-1"></a><a class="docs-heading-anchor-permalink" href="#test" title="Permalink"></a></h2><blockquote><p>Evaluating the performance of our final hypothyroidism tests on the test subjects</p></blockquote><p>Before evaluating on the test data, we need to split it into target and features, as we did for the training data:</p><pre><code class="language- hljs">ytest, Xtest = unpack(data_test, ==(:diagnosis));</code></pre><h3 id="Support-vector-machine"><a class="docs-heading-anchor" href="#Support-vector-machine">Support vector machine</a><a id="Support-vector-machine-1"></a><a class="docs-heading-anchor-permalink" href="#Support-vector-machine" title="Permalink"></a></h3><p>We train the SVM on the full training data set <code>(X, y)</code> and predict on the test data <code>Xtest</code>, comparing prediction with <code>ytest</code> to get a <a href="https://en.wikipedia.org/wiki/Confusion_matrix">confusion matrix</a>, precision and recall. In Julia, the name <code>precision</code> is reserved for a different purpose; in MLJ you use <code>ppv</code> (positive predictive value, a synonym).</p><pre><code class="language- hljs">mach = machine(svm_after_thresholding, X, y)
+fit!(mach; verbosity=0)
+yhat = predict(mach, Xtest);
+test_confusion_matrix_svm = confmat(yhat, ytest)
+test_recall_svm = recall(yhat, ytest)
+test_precision_svm = ppv(yhat, ytest)
+@info &quot;test metrics for SVM&quot; test_confusion_matrix_svm test_recall_svm test_precision_svm</code></pre><pre><code class="nohighlight hljs">┌ Info: test metrics for SVM
+│   test_confusion_matrix_svm =
+│              ┌─────────────────┐
+│              │  Ground Truth   │
+│    ┌─────────┼────────┬────────┤
+│    │Predicted│negative│positive│
+│    ├─────────┼────────┼────────┤
+│    │negative │  765   │   2    │
+│    ├─────────┼────────┼────────┤
+│    │positive │   9    │   64   │
+│    └─────────┴────────┴────────┘
+│    
+│   test_recall_svm = 0.9696969696969697
+└   test_precision_svm = 0.8767123287671232
+</code></pre><h3 id="Decision-tree-classifier"><a class="docs-heading-anchor" href="#Decision-tree-classifier">Decision tree classifier</a><a id="Decision-tree-classifier-1"></a><a class="docs-heading-anchor-permalink" href="#Decision-tree-classifier" title="Permalink"></a></h3><p>Repeating the process for the decision tree:</p><pre><code class="language- hljs">mach = machine(tree_after_thresholding, X, y)
+fit!(mach, verbosity=0)
+yhat = predict(mach, Xtest);
+test_confusion_matrix_tree = confmat(yhat, ytest)
+test_recall_tree = recall(yhat, ytest)
+test_precision_tree = ppv(yhat, ytest) # precision
+@info(
+    &quot;test metrics for decision tree&quot;,
+    test_confusion_matrix_tree,
+    test_recall_tree,
+    test_precision_tree,
+)</code></pre><pre><code class="nohighlight hljs">┌ Info: test metrics for decision tree
+│   test_confusion_matrix_tree =
+│              ┌─────────────────┐
+│              │  Ground Truth   │
+│    ┌─────────┼────────┬────────┤
+│    │Predicted│negative│positive│
+│    ├─────────┼────────┼────────┤
+│    │negative │  772   │   1    │
+│    ├─────────┼────────┼────────┤
+│    │positive │   2    │   65   │
+│    └─────────┴────────┴────────┘
+│    
+│   test_recall_tree = 0.9848484848484849
+└   test_precision_tree = 0.9701492537313433
+</code></pre><p>Although we get better precision, this could well be an accident, because of the much larger uncertainty associated with the decision tree performance estimate. So, in our view, the support vector machine remains the better choice.</p><h2 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h2><p>Barnett, V. and Lewis, T. (1994). <em>Outliers in Statistical Data</em>, 3rd edition. John Wiley &amp; Sons, Chichester. XVII + 582 pp. Reviewed by R. Pincus, <em>Biometrical Journal</em> 37(2), 256. <a href="https://doi.org/10.1002/bimj.4710370219">doi:10.1002/bimj.4710370219</a></p><p>Blaom, A. D., Kiraly, F., Lienart, T., Simillides, Y., Arenas, D. and Vollmer, S. J. (2020). MLJ: A Julia package for composable machine learning. <em>Journal of Open Source Software</em> 5(55), 2704. <a href="https://doi.org/10.21105/joss.02704">doi:10.21105/joss.02704</a></p><p>Chawla, N. V., Bowyer, K. W., Hall, L. O. and Kegelmeyer, W. P. (2002). SMOTE: Synthetic Minority Over-sampling Technique. <em>Journal of Artificial Intelligence Research</em> 16, 321–357. <a href="https://doi.org/10.1613/jair.953">doi:10.1613/jair.953</a></p><p>Dietterich, T. G. (1998). Approximate statistical tests for comparing supervised classification learning algorithms. <em>Neural Computation</em> 10(7), 1895–1923. <a href="https://doi.org/10.1162/089976698300017197">doi:10.1162/089976698300017197</a></p><p>Henninger, M. and Strobl, C. (2025). Interpreting machine learning predictions with LIME and Shapley values: theoretical insights, challenges, and meaningful interpretations. <em>Behaviormetrika</em> 52(1), 45–75. <a href="https://doi.org/10.1007/s41237-024-00253-2">doi:10.1007/s41237-024-00253-2</a></p><p>Knorr, E. M., Ng, R. T. and Tucakov, V. (2000). Distance-based outliers: algorithms and applications. <em>The VLDB Journal</em> 8(3–4), 237–253. <a href="https://doi.org/10.1007/s007780050006">doi:10.1007/s007780050006</a></p><p>Muhr, D., Affenzeller, M. and Blaom, A. D. (2022). OutlierDetection.jl: A modular outlier detection ecosystem for the Julia programming language. arXiv:2211.04550. <a href="https://doi.org/10.48550/arXiv.2211.04550">doi:10.48550/arXiv.2211.04550</a></p><p>Quinlan, R. (1986). <em>Thyroid Disease</em> [Dataset]. UCI Machine Learning Repository. <a href="https://doi.org/10.24432/C5D010">doi:10.24432/C5D010</a></p><p>Roesch, E., Greener, J. G., MacLean, A. L., Nassar, H., Rackauckas, C., Holy, T. E. and Stumpf, M. P. H. (2023). Julia for biologists. <em>Nature Methods</em> 20(5), 655–664. <a href="https://doi.org/10.1038/s41592-023-01832-z">doi:10.1038/s41592-023-01832-z</a></p><p>Storopoli, J., Huijzer, R. and Alonso, L. (2021). <em>Julia Data Science</em>. ISBN 9798489859165. <a href="https://juliadatascience.github.io/JuliaDataScience/">https://juliadatascience.github.io/JuliaDataScience</a></p><p>Wisam, E. and Blaom, A. D. (2024). Imbalance: A comprehensive multi-interface Julia toolbox to address class imbalance. <em>Journal of Open Source Software</em> 9(95), 6310. <a href="https://doi.org/10.21105/joss.06310">doi:10.21105/joss.06310</a></p><p>Zeng, Y., Arisa, O., Corvalan, N., Bateman, F., Schmidt, K., Peer, C. and Figg, W. D. (2026). A comparison of pharmacometric software programs for atezolizumab population pharmacokinetic simulation. <em>European Journal of Clinical Pharmacology</em> 82(2), 42. <a href="https://doi.org/10.1007/s00228-025-03974-9">doi:10.1007/s00228-025-03974-9</a></p><hr/><p>¹In fact, a file named Manifest.toml, generated by the package manager, allows you to recreate an <em>exact</em> replica the environment later on. However, small differences across computing platforms mean this method is only 100% reliable when sharing the environment with someone using the same platform (e.g., a silicon Mac). Refer to <a href="https://pkgdocs.julialang.org/v1/">documentation</a> for details.</p><p>²&quot;Going deeper&quot; sections can be safely skipped on a first reading.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../../">« Home</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.19.0 on <span class="colophon-date" title="Sunday 1 November 2026 20:32">Sunday 1 November 2026</span>. Using Julia version 1.13.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
